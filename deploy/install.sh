@@ -71,17 +71,32 @@ get_grafana_route()
     fi
 }
 
-if [ "$1" != "" ];then
-    tag_number="$1"
-else
-    while [[ "$tag_correct" != "y" ]]
-    do
+while [[ "$info_correct" != "y" ]] && [[ "$info_correct" != "Y" ]]
+do
+    # init variables
+    install_namespace=""
+    tag_number=""
+
+    if [ "$1" != "" ];then
+        tag_number="$1"
+    else
         read -r -p "$(tput setaf 2)Please input Federator.ai Operator tag:$(tput sgr 0) " tag_number </dev/tty
-        default="y"
-        read -r -p "$(tput setaf 2)Is tag \"${tag_number}\" correct? [default: y]: $(tput sgr 0)" tag_correct </dev/tty
-        tag_correct=${tag_correct:-$default}
-    done
-fi
+    fi
+
+    default="federatorai"
+    read -r -p "$(tput setaf 2)Enter the namespace you want to install Federator.ai [default: federatorai]: $(tput sgr 0)" install_namespace </dev/tty
+    install_namespace=${install_namespace:-$default}
+
+    echo -e "\n----------------------------------------"
+    echo "tag_number = $tag_number"
+    echo "install_namespace = $install_namespace"
+    echo "----------------------------------------"
+
+    default="y"
+    read -r -p "$(tput setaf 2)Is the above information correct? [default: y]: $(tput sgr 0)" info_correct </dev/tty
+    info_correct=${info_correct:-$default}
+done
+
 
 openshift_version=`oc version 2>/dev/null|grep "oc v"|cut -d '.' -f2`
 
@@ -110,13 +125,17 @@ do
     echo "Done"
 done
 
+# Modify federator.ai operator yaml(s)
+# for tag
 sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
+# for namespace
+sed -i "s/name: federatorai/name: ${install_namespace}/g" 00*.yaml
+sed -i "s/namespace: federatorai/namespace: ${install_namespace}/g" 01*.yaml 03*.yaml 05*.yaml 06*.yaml 07*.yaml
 
-operator_namespace=`cat 00-name*.yaml|grep "name:"|awk '{print $2}'`
 echo -e "\n$(tput setaf 2)Starting apply Federator.ai operator yaml files$(tput sgr 0)"
 kubectl apply -f .
 echo "Processing..."
-wait_until_pods_ready 600 20 $operator_namespace 1
+wait_until_pods_ready 600 20 $install_namespace 1
 echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully$(tput sgr 0)"
 
 alamedaservice_example="alamedaservice_sample.yaml"
@@ -150,17 +169,12 @@ if [[ "$interactive_install" == "y" ]]; then
     while [[ "$information_correct" != "y" ]] && [[ "$information_correct" != "Y" ]]
     do
         # init variables
-        install_namespace=""
         enable_execution=""
         prometheus_address=""
         storage_type=""
         log_size=""
         data_size=""
         storage_class=""
-
-        default="alameda"
-        read -r -p "$(tput setaf 127)Enter the namespace you want to install Federator.ai [default: alameda]: $(tput sgr 0)" install_namespace </dev/tty
-        install_namespace=${install_namespace:-$default}
 
         default="y"
         read -r -p "$(tput setaf 127)Do you want to enable execution? [default: y]: $(tput sgr 0): " enable_execution </dev/tty
@@ -244,7 +258,7 @@ if [[ "$interactive_install" == "y" ]]; then
 
 __EOF__
     fi
-    kubectl create ns $install_namespace &>/dev/null
+    
     kubectl apply -f $alamedaservice_example &>/dev/null
     echo "Processing..."
     wait_until_pods_ready 900 20 $install_namespace 5
