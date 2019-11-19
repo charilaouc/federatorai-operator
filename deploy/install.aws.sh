@@ -23,6 +23,7 @@
 #   -l = log_size
 #   -d = data_size
 #   -c = storage_class
+#   -a = AWS ECR url
 #################################################################################################################
 
 is_pod_ready()
@@ -196,7 +197,24 @@ get_grafana_route()
     fi
 }
 
-while getopts "t:n:e:p:s:l:d:c:" o; do
+get_restapi_route()
+{
+    if [ "$openshift_minor_version" != "" ] ; then
+        link=`oc get route -n $1 2>/dev/null|grep "federatorai-rest" |awk '{print $2}'`
+        if [ "$link" != "" ] ; then
+            echo -e "\n========================================"
+            echo "You can now access Federatorai REST API through $(tput setaf 6)http://${link} $(tput sgr 0)"
+            echo "Default login credential is $(tput setaf 6)admin/admin$(tput sgr 0)"
+            echo "The REST API online document can be find in $(tput setaf 6)http://${link}/apis/v1/swagger/index.html $(tput sgr 0)"
+            echo "========================================"
+        else
+            echo "Warning! Failed to obtain Federatorai REST API route address."
+        fi
+    fi
+}
+
+
+while getopts "t:n:e:p:s:l:d:c:a:" o; do
     case "${o}" in
         t)
             t_arg=${OPTARG}
@@ -222,6 +240,9 @@ while getopts "t:n:e:p:s:l:d:c:" o; do
         c)
             c_arg=${OPTARG}
             ;;
+        a)
+            a_arg=${OPTARG}
+            ;;
         *)
             echo "Warning! wrong paramter, ignore it."
             ;;
@@ -245,6 +266,7 @@ done
 [ "${l_arg}" != "" ] && log_size="${l_arg}"
 [ "${d_arg}" != "" ] && data_size="${d_arg}"
 [ "${c_arg}" != "" ] && storage_class="${c_arg}"
+[ "${a_arg}" != "" ] && ecr_url="${a_arg}"
 
 kubectl version|grep -q "^Server"
 if [ "$?" != "0" ];then
@@ -335,8 +357,13 @@ do
 done
 
 # Modify federator.ai operator yaml(s)
-# for tag
-sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
+# for tag (with or without ECR)
+if [ "$ecr_url" != "" ]; then
+    sed -i "s|quay.io/prophetstor/federatorai-operator-ubi:latest|$ecr_url:stable|g" 03*.yaml
+else
+    sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
+fi
+
 if [ "$need_upgrade" = "y" ];then
     # for upgrade - stop operator before applying new alamedaservice
     sed -i "s/replicas: 1/replicas: 0/g" 03*.yaml
@@ -537,6 +564,7 @@ __EOF__
     fi
 
     get_grafana_route $install_namespace
+    get_restapi_route $install_namespace
     echo -e "$(tput setaf 6)\nInstall Alameda $tag_number successfully$(tput sgr 0)"
     leave_prog
     exit 0
