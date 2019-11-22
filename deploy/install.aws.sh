@@ -420,6 +420,10 @@ done
 wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 1
 echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully$(tput sgr 0)"
 
+# special version for aws marketplace only =======
+leave_prog
+# special version for aws marketplace only =======
+
 alamedaservice_example="alamedaservice_sample.yaml"
 alamedascaler_example="alamedascaler.yaml"
 
