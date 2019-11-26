@@ -424,6 +424,7 @@ echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully
 
 # special version for aws marketplace only =======
 leave_prog
+exit 0
 # special version for aws marketplace only =======
 
 alamedaservice_example="alamedaservice_sample.yaml"
