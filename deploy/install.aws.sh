@@ -360,6 +360,8 @@ done
 # for tag (with or without ECR)
 if [ "$ecr_url" != "" ]; then
     sed -i "s|quay.io/prophetstor/federatorai-operator-ubi:latest|$ecr_url:stable|g" 03*.yaml
+    sed -i "/\- federatorai-operator/d" 03*.yaml
+    sed -i "/command:/d" 03*.yaml
 else
     sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
 fi
