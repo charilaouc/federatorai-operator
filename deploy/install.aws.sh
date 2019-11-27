@@ -299,7 +299,9 @@ if [ "$silent_mode_disabled" = "y" ];then
         install_namespace=""
         tag_number=""
 
-        read -r -p "$(tput setaf 2)Please input Federator.ai Operator tag:$(tput sgr 0) " tag_number </dev/tty
+        # For 4.2 install.aws.sh, fix tag_number
+        #read -r -p "$(tput setaf 2)Please input Federator.ai Operator tag:$(tput sgr 0) " tag_number </dev/tty
+        tag_number="v4.2.301"
 
         if [ "$need_upgrade" = "y" ];then
             echo -e "\n$(tput setaf 11)Previous build with tag$(tput setaf 1) $previous_tag $(tput setaf 11)detected in namespace$(tput setaf 1) $previous_alameda_namespace$(tput sgr 0)"
@@ -359,7 +361,7 @@ done
 # Modify federator.ai operator yaml(s)
 # for tag (with or without ECR)
 if [ "$ecr_url" != "" ]; then
-    sed -i "s|quay.io/prophetstor/federatorai-operator-ubi:latest|$ecr_url:stable|g" 03*.yaml
+    sed -i "s|quay.io/prophetstor/federatorai-operator-ubi:latest|$ecr_url|g" 03*.yaml
     sed -i "/\- federatorai-operator/d" 03*.yaml
     sed -i "/command:/d" 03*.yaml
 else
