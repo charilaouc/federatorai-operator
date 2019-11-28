@@ -2,28 +2,14 @@
 
 #################################################################################################################
 #
-#   This script is created for installing Federator.ai Operator
+#   This script is created for installing Federator.ai Operator on AWS
 #
 #   1. Interactive Mode
-#      Usage: ./install.sh
+#      Usage: ./install.sh --image-path 88888976.dkr.ecr.us-east-1.amazonaws.com/888888-37c8-4328-91b2-62c1acd2a04b/cg-1231030144/federatorai-operator:4.2-latest
+#                   --role-arn eks.amazonaws.com/role-arn:arn:aws:iam::63508888888:role/EKS_AWSMP_Metering
 #
-#   2. Silent Mode - Persistent storage
-#      Usage: ./install.sh -t v4.2.260 -n federatorai -e y -p https://prometheus-k8s.openshift-monitoring:9091 \
-#                   -s persistent -l 11 -d 12 -c managed-nfs-storage
-#
-#   3. Silent Mode - Ephemeral storage
-#      Usage: ./install.sh -t v4.2.260 -n federatorai -e y -p https://prometheus-k8s.openshift-monitoring:9091 \
-#                   -s ephemeral
-#
-#   -t = tag_number
-#   -n = install_namespace
-#   -e = enable_execution
-#   -p = prometheus_address
-#   -s = storage_type
-#   -l = log_size
-#   -d = data_size
-#   -c = storage_class
-#   -a = AWS ECR url
+#   --image-path <space> AWS ECR url
+#   --role-arn <space> AWS role arn
 #################################################################################################################
 
 is_pod_ready()
@@ -214,8 +200,29 @@ get_restapi_route()
 }
 
 
-while getopts "t:n:e:p:s:l:d:c:a:" o; do
+while getopts "t:n:e:p:s:l:d:c:-:" o; do
     case "${o}" in
+        -)
+            case "${OPTARG}" in
+                image-path)
+                    ecr_url="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    if [ "$ecr_url" = "" ]; then
+                        echo "Error! Missing --${OPTARG} value"
+                        exit
+                    fi
+                    ;;
+                role-arn)
+                    role_arn="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    if [ "$role_arn" = "" ]; then
+                        echo "Error! Missing --${OPTARG} value"
+                        exit
+                    fi
+                    ;;
+                *)
+                    echo "Unknown option --${OPTARG}"
+                    exit
+                    ;;
+            esac;;
         t)
             t_arg=${OPTARG}
             ;;
@@ -240,14 +247,22 @@ while getopts "t:n:e:p:s:l:d:c:a:" o; do
         c)
             c_arg=${OPTARG}
             ;;
-        a)
-            a_arg=${OPTARG}
-            ;;
         *)
             echo "Warning! wrong paramter, ignore it."
             ;;
     esac
 done
+
+# ecr_url & role_arn both are empty or both has value
+if [ "$ecr_url" != "" ] || [ "$role_arn" != "" ]; then
+    if [ "$ecr_url" = "" ]; then
+        echo "Missing --image-path parameter"
+        exit
+    elif [ "$role_arn" = "" ]; then
+        echo "Missing --role-arn parameter"
+        exit
+    fi
+fi
 
 [ "${t_arg}" = "" ] && silent_mode_disabled="y"
 [ "${n_arg}" = "" ] && silent_mode_disabled="y"
@@ -266,7 +281,6 @@ done
 [ "${l_arg}" != "" ] && log_size="${l_arg}"
 [ "${d_arg}" != "" ] && data_size="${d_arg}"
 [ "${c_arg}" != "" ] && storage_class="${c_arg}"
-[ "${a_arg}" != "" ] && ecr_url="${a_arg}"
 
 kubectl version|grep -q "^Server"
 if [ "$?" != "0" ];then
@@ -364,6 +378,10 @@ if [ "$ecr_url" != "" ]; then
     sed -i "s|quay.io/prophetstor/federatorai-operator-ubi:latest|$ecr_url|g" 03*.yaml
     sed -i "/\- federatorai-operator/d" 03*.yaml
     sed -i "/command:/d" 03*.yaml
+cat >> 01*.yaml << __EOF__
+  annotations:
+    ${role_arn}
+__EOF__
 else
     sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
 fi
