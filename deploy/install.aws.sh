@@ -380,7 +380,7 @@ if [ "$ecr_url" != "" ]; then
     sed -i "/command:/d" 03*.yaml
 cat >> 01*.yaml << __EOF__
   annotations:
-    ${role_arn}
+    eks.amazonaws.com/role-arn: ${role_arn}
 __EOF__
 else
     sed -i "s/ubi:latest/ubi:${tag_number}/g" 03*.yaml
