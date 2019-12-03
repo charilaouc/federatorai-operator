@@ -222,13 +222,13 @@ check_aws_version()
         [ "$awscli_version_minor" -gt "$awscli_required_version_minor" ]; then
             return 0
     fi
-    
+
     if [ "$awscli_version_major" = "$awscli_required_version_major" ] && \
         [ "$awscli_version_minor" = "$awscli_required_version_minor" ] && \
         [ "$awscli_version_build" -ge "$awscli_required_version_build" ]; then
             return 0
     fi
-        
+
     echo -e "\n$(tput setaf 10)Error! AWS CLI version must be $awscli_required_version or greater.$(tput sgr 0)"
     exit 9
 }
@@ -311,7 +311,7 @@ EOF
     if [ "$result" != "" ]; then
         echo "The policy $POLICY_NAME already exists"
     fi
-        
+
     aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn $POLICY_ARN
 }
 
