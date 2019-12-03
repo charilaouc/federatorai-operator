@@ -6,7 +6,7 @@
 #
 #   1. Interactive Mode
 #      Usage: ./install.sh --image-path 88888976.dkr.ecr.us-east-1.amazonaws.com/888888-37c8-4328-91b2-62c1acd2a04b/cg-1231030144/federatorai-operator:4.2-latest
-#                   --role-arn eks.amazonaws.com/role-arn:arn:aws:iam::63508888888:role/EKS_AWSMP_Metering
+#                   --role-arn arn:aws:iam::63508888888:role/eks_mp_metering
 #
 #   --image-path <space> AWS ECR url
 #   --role-arn <space> AWS role arn
@@ -199,6 +199,126 @@ get_restapi_route()
     fi
 }
 
+check_aws_version()
+{
+    awscli_required_version="1.16.283"
+    awscli_required_version_major=`echo $awscli_required_version | cut -d'.' -f1`
+    awscli_required_version_minor=`echo $awscli_required_version | cut -d'.' -f2`
+    awscli_required_version_build=`echo $awscli_required_version | cut -d'.' -f3`
+
+    # aws --version: aws-cli/2.0.0dev0
+    awscli_version=`aws --version | cut -d' ' -f1 | cut -d'/' -f2`
+    awscli_version_major=`echo $awscli_version | cut -d'.' -f1`
+    awscli_version_minor=`echo $awscli_version | cut -d'.' -f2`
+    awscli_version_build=`echo $awscli_version | cut -d'.' -f3`
+    awscli_version_build=${awscli_version_build%%[^0-9]*}   # remove everything from the first non-digit
+
+    if [ "$awscli_version_major" -gt "$awscli_required_version_major" ]; then
+        return 0
+    fi
+
+    if [ "$awscli_version_major" = "$awscli_required_version_major" ] && \
+        [ "$awscli_version_minor" -gt "$awscli_required_version_minor" ]; then
+            return 0
+    fi
+    
+    if [ "$awscli_version_major" = "$awscli_required_version_major" ] && \
+        [ "$awscli_version_minor" = "$awscli_required_version_minor" ] && \
+        [ "$awscli_version_build" -ge "$awscli_required_version_build" ]; then
+            return 0
+    fi
+        
+    echo -e "\n$(tput setaf 10)Error! AWS CLI version must be $awscli_required_version or greater.$(tput sgr 0)"
+    exit 9
+}
+
+setup_aws_iam_role()
+{
+    REGION_NAME=$aws_region
+    CLUSTER_NAME=$eks_cluster
+
+    # Create an OIDC provider for the cluster
+    ISSUER_URL=$(aws eks describe-cluster \
+                    --name $CLUSTER_NAME \
+                    --region $REGION_NAME \
+                    --query cluster.identity.oidc.issuer \
+                    --output text )
+    ISSUER_URL_WITHOUT_PROTOCOL=$(echo $ISSUER_URL | sed 's/https:\/\///g' )
+    ISSUER_HOSTPATH=$(echo $ISSUER_URL_WITHOUT_PROTOCOL | sed "s/\/id.*//" )
+    # Grab all certificates associated with the issuer hostpath and save them to files. The root certificate is last
+    rm -f *.crt || echo "No files that match *.crt exist"
+    ROOT_CA_FILENAME=$(openssl s_client -showcerts -connect $ISSUER_HOSTPATH:443 < /dev/null 2>&1 \
+                        | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".crt"; print > out } END {print "cert"a".crt"}')
+    ROOT_CA_FINGERPRINT=$(openssl x509 -fingerprint -noout -in $ROOT_CA_FILENAME \
+                        | sed 's/://g' | sed 's/SHA1 Fingerprint=//')
+    result=$(aws iam create-open-id-connect-provider \
+                --url $ISSUER_URL \
+                --thumbprint-list $ROOT_CA_FINGERPRINT \
+                --client-id-list sts.amazonaws.com \
+                --region $REGION_NAME 2>&1 | grep EntityAlreadyExists)
+    if [ "$result" != "" ]; then
+        echo "A provider for $ISSUER_URL already exists"
+    fi
+
+    ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+    PROVIDER_ARN="arn:aws:iam::$ACCOUNT_ID:oidc-provider/$ISSUER_URL_WITHOUT_PROTOCOL"
+    ROLE_NAME="FederatorAI-$CLUSTER_NAME"
+    POLICY_NAME="AWSMarketplaceMetering-$CLUSTER_NAME"
+    POLICY_ARN="arn:aws:iam::$ACCOUNT_ID:policy/$POLICY_NAME"
+
+    # Update trust relationships of pod execution roles so pods on our cluster can assume them
+    cat > trust-policy.json << EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "$PROVIDER_ARN"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity"
+        }
+    ]
+}
+EOF
+
+#            "Condition": {
+#                "StringEquals": {
+#                    "${ISSUER_URL_WITHOUT_PROTOCOL}:sub": "system:serviceaccount:${NAMESPACE}:aws-serviceaccount"
+#                }
+#            }
+    result=$(aws iam create-role \
+                --role-name $ROLE_NAME \
+                --assume-role-policy-document file://trust-policy.json 2>&1 | grep EntityAlreadyExists)
+    if [ "$result" != "" ]; then
+        echo "The IAM role $ROLE_NAME already exists"
+    fi
+
+    # Attach policy to give required permission to call RegisterUsage API
+cat > iam-policy.json << EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "aws-marketplace:RegisterUsage"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+    result=$(aws iam create-policy \
+        --policy-name $POLICY_NAME \
+        --policy-document file://iam-policy.json 2>&1 | grep EntityAlreadyExists)
+    if [ "$result" != "" ]; then
+        echo "The policy $POLICY_NAME already exists"
+    fi
+        
+    aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn $POLICY_ARN
+}
+
 
 while getopts "t:n:e:p:s:l:d:c:-:" o; do
     case "${o}" in
@@ -211,9 +331,16 @@ while getopts "t:n:e:p:s:l:d:c:-:" o; do
                         exit
                     fi
                     ;;
-                role-arn)
-                    role_arn="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
-                    if [ "$role_arn" = "" ]; then
+                cluster)
+                    eks_cluster="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    if [ "$ecr_url" = "" ]; then
+                        echo "Error! Missing --${OPTARG} value"
+                        exit
+                    fi
+                    ;;
+                region)
+                    aws_region="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    if [ "$aws_region" = "" ]; then
                         echo "Error! Missing --${OPTARG} value"
                         exit
                     fi
@@ -253,13 +380,16 @@ while getopts "t:n:e:p:s:l:d:c:-:" o; do
     esac
 done
 
-# ecr_url & role_arn both are empty or both has value
-if [ "$ecr_url" != "" ] || [ "$role_arn" != "" ]; then
+# ecr_url, eks_cluster, aws_region all are empty or all have values
+if [ "$ecr_url" != "" ] || [ "$eks_cluster" != ""] || [ "$aws_region" != ""]; then
     if [ "$ecr_url" = "" ]; then
         echo "Missing --image-path parameter"
         exit
-    elif [ "$role_arn" = "" ]; then
-        echo "Missing --role-arn parameter"
+    elif [ "$eks_cluster" = "" ]; then
+        echo "Missing --cluster parameter"
+        exit
+    elif [ "$aws_region" = "" ]; then
+        echo "Missing --region parameter"
         exit
     fi
 fi
@@ -291,6 +421,11 @@ fi
 echo "Checking environment version..."
 check_version
 echo "...Passed"
+
+echo -e "Checking AWS CLI version..."
+check_aws_version
+echo "...Passed"
+echo
 
 which curl > /dev/null 2>&1
 if [ "$?" != "0" ];then
@@ -359,6 +494,14 @@ mkdir -p $file_folder
 current_location=`pwd`
 cd $file_folder
 
+# Setup AWS IAM role for service account
+echo -e "\n$(tput setaf 2)Setting AWS IAM role for service account...$(tput sgr 0)"
+setup_aws_iam_role
+role_arn=$(aws iam get-role --role-name ${ROLE_NAME} --query Role.Arn --output text)
+echo "Done"
+
+# Download federator.ai operator ymal(s)
+echo -e "\n$(tput setaf 2)Downloading Federator.ai operator yaml files...$(tput sgr 0)"
 operator_files=`curl --silent https://api.github.com/repos/containers-ai/federatorai-operator/contents/deploy/upstream?ref=${tag_number} 2>&1|grep "\"name\":"|cut -d ':' -f2|cut -d '"' -f2`
 
 for file in `echo $operator_files`
