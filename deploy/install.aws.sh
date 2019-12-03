@@ -6,10 +6,11 @@
 #
 #   1. Interactive Mode
 #      Usage: ./install.sh --image-path 88888976.dkr.ecr.us-east-1.amazonaws.com/888888-37c8-4328-91b2-62c1acd2a04b/cg-1231030144/federatorai-operator:4.2-latest
-#                   --role-arn arn:aws:iam::63508888888:role/eks_mp_metering
+#                   --cluster awsmp-new --region us-west-2
 #
 #   --image-path <space> AWS ECR url
-#   --role-arn <space> AWS role arn
+#   --cluster <space> AWS EKS cluster name
+#   --region <space> AWS region
 #################################################################################################################
 
 is_pod_ready()
@@ -257,7 +258,7 @@ setup_aws_iam_role()
                 --client-id-list sts.amazonaws.com \
                 --region $REGION_NAME 2>&1 | grep EntityAlreadyExists)
     if [ "$result" != "" ]; then
-        echo "A provider for $ISSUER_URL already exists"
+        echo "The provider for $ISSUER_URL already exists"
     fi
 
     ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -282,11 +283,6 @@ setup_aws_iam_role()
 }
 EOF
 
-#            "Condition": {
-#                "StringEquals": {
-#                    "${ISSUER_URL_WITHOUT_PROTOCOL}:sub": "system:serviceaccount:${NAMESPACE}:aws-serviceaccount"
-#                }
-#            }
     result=$(aws iam create-role \
                 --role-name $ROLE_NAME \
                 --assume-role-policy-document file://trust-policy.json 2>&1 | grep EntityAlreadyExists)
