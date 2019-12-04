@@ -208,7 +208,7 @@ check_aws_version()
     awscli_required_version_build=`echo $awscli_required_version | cut -d'.' -f3`
 
     # aws --version: aws-cli/2.0.0dev0
-    awscli_version=`aws --version | cut -d' ' -f1 | cut -d'/' -f2`
+    awscli_version=`aws --version 2>&1 | cut -d' ' -f1 | cut -d'/' -f2`
     awscli_version_major=`echo $awscli_version | cut -d'.' -f1`
     awscli_version_minor=`echo $awscli_version | cut -d'.' -f2`
     awscli_version_build=`echo $awscli_version | cut -d'.' -f3`
