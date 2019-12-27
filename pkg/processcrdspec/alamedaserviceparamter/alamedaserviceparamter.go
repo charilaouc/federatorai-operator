@@ -25,7 +25,8 @@ var (
 		notifierList,
 		federatoraiAgentList,
 		fedemeterList,
-		federatoraiAgentGPUList,
+		// Ignore resources relate to vpa/gpu in RedHat Marketplace.
+		// federatoraiAgentGPUList,
 		federatoraiRestList,
 	}
 
@@ -92,16 +93,17 @@ var (
 	}
 
 	excutionList = []string{
-		"ClusterRoleBinding/alameda-evictionerCRB.yaml",
-		"ClusterRoleBinding/admission-controllerCRB.yaml",
-		"ClusterRole/alameda-evictionerCR.yaml",
-		"ClusterRole/admission-controllerCR.yaml",
-		"ServiceAccount/alameda-evictionerSA.yaml",
-		"ServiceAccount/admission-controllerSA.yaml",
-		"Secret/admission-controller-tls.yaml",
-		"Deployment/admission-controllerDM.yaml",
-		"Deployment/alameda-evictionerDM.yaml",
-		"Service/admission-controllerSV.yaml",
+		// Ignore resources relate to vpa/gpu in RedHat Marketplace.
+		// "ClusterRoleBinding/alameda-evictionerCRB.yaml",
+		// "ClusterRoleBinding/admission-controllerCRB.yaml",
+		// "ClusterRole/alameda-evictionerCR.yaml",
+		// "ClusterRole/admission-controllerCR.yaml",
+		// "ServiceAccount/alameda-evictionerSA.yaml",
+		// "ServiceAccount/admission-controllerSA.yaml",
+		// "Secret/admission-controller-tls.yaml",
+		// "Deployment/admission-controllerDM.yaml",
+		// "Deployment/alameda-evictionerDM.yaml",
+		// "Service/admission-controllerSV.yaml",
 		"Deployment/alameda-executorDM.yaml",
 		"ServiceAccount/alameda-executorSA.yaml",
 		"ClusterRole/alameda-executorCR.yaml",
