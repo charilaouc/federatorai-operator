@@ -699,7 +699,7 @@ spec:
     policy: stable
     enableExecution: false
     scalingTool:
-        type: vpa
+        type: hpa
     selector:
         matchLabels:
             app: ${nginx_name}
