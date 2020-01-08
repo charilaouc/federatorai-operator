@@ -510,6 +510,9 @@ done
 
 echo "Done"
 
+# For 4.2-rhmp, change default vpa alamedascaler to hpa
+sed -i "s/type: vpa/type: hpa/g" alamedascaler.yaml
+
 sed -i "s/version: latest/version: ${tag_number}/g" ${alamedaservice_example}
 
 echo "========================================"

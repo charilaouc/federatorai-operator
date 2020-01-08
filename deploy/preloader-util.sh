@@ -353,6 +353,40 @@ patch_datahub_for_preloader()
     echo "Duration patch_datahub_for_preloader = $duration" >> $debug_log
 }
 
+patch_recommender_to_specified_mode()
+{
+    target_mode="$1"
+    start=`date +%s`
+    echo -e "\n$(tput setaf 6)Patching recommender to $target_mode mode...$(tput sgr 0)"
+    kubectl get cm alameda-recommender-config -n $install_namespace -o yaml | grep -q " data_source = \"$target_mode\""
+    if [ "$?" != "0" ]; then
+        if [ "$target_mode" = "workload" ]; then
+            original_mode="cloud"
+        else
+            original_mode="workload"
+        fi
+        kubectl get cm alameda-recommender-config -n $install_namespace -o yaml | sed -e "s|data_source = \"$original_mode\"|data_source = \"$target_mode\"|g"|kubectl apply -f -
+        if [ "$?" != "0" ]; then
+            echo -e "\n$(tput setaf 1)Error in patching recommender configmap to $target_mode mode.$(tput sgr 0)"
+            leave_prog
+            exit 8
+        fi
+        echo ""
+        recommender_pod_name="`kubectl get pods -n $install_namespace -o name|grep "alameda-recommender"|cut -d '/' -f2`"
+        kubectl delete pod $recommender_pod_name -n $install_namespace
+        if [ "$?" != "0" ]; then
+            echo -e "\n$(tput setaf 1)Error in deleting recommender pod.$(tput sgr 0)"
+            leave_prog
+            exit 8
+        fi
+        wait_until_pods_ready 600 30 $install_namespace 5
+    fi
+    echo "Done"
+    end=`date +%s`
+    duration=$((end-start))
+    echo "Duration patch_recommender_to_specified_mode ($target_mode) = $duration" >> $debug_log
+}
+
 patch_datahub_back_to_normal()
 {
     start=`date +%s`
@@ -978,6 +1012,7 @@ if [ "$prepare_environment" = "y" ]; then
     new_nginx_example
     patch_datahub_for_preloader
     patch_grafana_for_preloader
+    patch_recommender_to_specified_mode "cloud"
     check_influxdb_retention
     add_alamedascaler_for_nginx
 fi
@@ -1012,6 +1047,7 @@ if [ "$revert_environment" = "y" ]; then
     delete_nginx_example
     patch_datahub_back_to_normal
     patch_grafana_back_to_normal
+    patch_recommender_to_specified_mode "workload"
     clean_environment_operations
 fi
 
