@@ -1,4 +1,4 @@
-package manager
+package main
 
 import (
 	"context"
@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/containers-ai/federatorai-operator/cmd/patch/prometheus"
+	prom_op_api "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,6 +62,8 @@ var (
 
 func init() {
 	rootCmd.AddCommand(upgrader.UpgradeRootCmd)
+	rootCmd.AddCommand(prometheus.PromCheckCmd)
+	rootCmd.AddCommand(prometheus.PromApplyCmd)
 
 	rootCmd.Flags().StringVar(&configurationFilePath, "config", "/etc/federatorai/operator/operator.toml", "File path to federatorai-operator coniguration")
 }
@@ -242,6 +246,14 @@ func execute() {
 		os.Exit(1)
 	}
 	if err := apiregistrationv1beta1.AddToScheme(mgr.GetScheme()); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+	if err := prom_op_api.AddToScheme(mgr.GetScheme()); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
+	if err := apiextensionv1beta1.AddToScheme(mgr.GetScheme()); err != nil {
 		log.Error(err, "")
 		os.Exit(1)
 	}

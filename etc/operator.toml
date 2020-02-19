@@ -13,3 +13,9 @@ outputPaths = ["stdout", "/var/log/alameda/federatorai-operator.log"]
   [grpc.log]
   outputLevel = "info" # one of 'debug', 'info', 'warn', 'error' (default info)
   outputPaths = []
+
+[patch]
+  [patch.prometheus]
+    [patch.prometheus.config]
+    configMapName = "prometheus-k8s"
+    secretName = "prometheus-k8s"
