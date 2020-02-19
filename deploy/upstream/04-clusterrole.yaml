@@ -114,6 +114,7 @@ rules:
   - list
   - watch
   - update
+  - get
 - apiGroups:
   - extensions
   - apps
