@@ -1,4 +1,3 @@
-FETCH := $(shell git fetch --all)
 DBG         ?= 0
 PROJECT     ?= federatorai-operator
 ORG_PATH    ?= github.com/containers-ai
@@ -8,7 +7,7 @@ LD_FLAGS    ?= -X $(REPO_PATH)/pkg/version.Raw=$(VERSION)
 BUILD_DEST  ?= bin/federatorai-operator
 MUTABLE_TAG ?= latest
 IMAGE		= federatorai-operator
-IMAGE_TAG	?= $(shell git describe --always --dirty --tags --abbrev=7)
+IMAGE_TAG	?= $(shell git describe --always --dirty --abbrev=7)
 
 FIRST_GOPATH:=$(firstword $(subst :, ,$(shell go env GOPATH)))
 GOBINDATA_BIN=$(FIRST_GOPATH)/bin/go-bindata
