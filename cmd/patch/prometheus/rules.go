@@ -56,10 +56,7 @@ func PatchMissingRules(k8sClient client.Client, missingRulesMap map[string]strin
 		return err
 	}
 	promSvcURL := patch_utils.GetPromSvcURLFromAlamedaService(validAlamSvc)
-	logger.Info(fmt.Sprintf("prometheus servcie URL: %s", promSvcURL))
-	promSvcNS, promSvcName := patch_utils.GetPromSvcNamespacedNamedBySvcURL(promSvcURL)
-	logger.Info(fmt.Sprintf("prometheus servcie namespace: %s", promSvcNS))
-	logger.Info(fmt.Sprintf("prometheus servcie name: %s", promSvcName))
+	promSvcNS, _ := patch_utils.GetPromSvcNamespacedNamedBySvcURL(promSvcURL)
 
 	prometheusList, err := patch_utils.ListPrometheuses(k8sCli, client.InNamespace(promSvcNS))
 	if err != nil {

@@ -6,7 +6,6 @@ import (
 	k8SUtils "github.com/containers-ai/alameda/pkg/utils/kubernetes"
 	federatoraiapi "github.com/containers-ai/federatorai-operator/pkg/apis"
 	prom_op_api "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/spf13/viper"
 	apiextensionsv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -43,13 +42,6 @@ func InitK8SClient() {
 	}
 }
 
-func InitConfig() {
-	viper.SetConfigFile(configurationFilePath)
-
-	if err := viper.ReadInConfig(); err != nil {
-		panic(errors.New("Read configuration file failed: " + err.Error()))
-	}
-}
 func GetK8SClient() client.Client {
 	return k8sCli
 }

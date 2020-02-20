@@ -39,7 +39,7 @@ func ListPrometheusRules(k8sClient client.Client, opts ...client.ListOption) ([]
 	}
 
 	if len(promRuleList.Items) == 0 {
-		return nil, fmt.Errorf("No any prometheusrule found")
+		return nil, fmt.Errorf("No prometheusrule CR found")
 	}
 
 	return promRuleList.Items, nil
@@ -54,8 +54,23 @@ func ListPrometheuses(k8sClient client.Client, opts ...client.ListOption) ([]*pr
 	}
 
 	if len(promList.Items) == 0 {
-		return nil, fmt.Errorf("No any prometheus CR found")
+		return nil, fmt.Errorf("No prometheus CR found")
 	}
 
 	return promList.Items, nil
+}
+
+func ListServiceMonitors(k8sClient client.Client, opts ...client.ListOption) ([]*prom_op_api.ServiceMonitor, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	smList := &prom_op_api.ServiceMonitorList{}
+	if err := k8sClient.List(ctx, smList, opts...); err != nil {
+		return nil, err
+	}
+
+	if len(smList.Items) == 0 {
+		return nil, fmt.Errorf("No servicemonitor CR found")
+	}
+
+	return smList.Items, nil
 }

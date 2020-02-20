@@ -9,24 +9,24 @@ import (
 	"strings"
 	"time"
 
-	"github.com/containers-ai/federatorai-operator/cmd/patch/prometheus"
-	prom_op_api "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-
 	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/pkg/apis/autoscaling/v1alpha1"
 	fedOperator "github.com/containers-ai/federatorai-operator"
 	assets "github.com/containers-ai/federatorai-operator/assets"
+	"github.com/containers-ai/federatorai-operator/cmd/patch/prometheus"
 	"github.com/containers-ai/federatorai-operator/cmd/upgrader"
 	"github.com/containers-ai/federatorai-operator/pkg/apis"
 	assetsBin "github.com/containers-ai/federatorai-operator/pkg/assets"
+	"github.com/containers-ai/federatorai-operator/pkg/consts"
 	"github.com/containers-ai/federatorai-operator/pkg/controller"
 	"github.com/containers-ai/federatorai-operator/pkg/lib/resourceread"
 	fedOperatorLog "github.com/containers-ai/federatorai-operator/pkg/log"
 	alamedaserviceparamter "github.com/containers-ai/federatorai-operator/pkg/processcrdspec/alamedaserviceparamter"
 	"github.com/containers-ai/federatorai-operator/pkg/protocol/grpc"
 	"github.com/containers-ai/federatorai-operator/pkg/version"
+	prom_op_api "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	routev1 "github.com/openshift/api/route/v1"
 	securityv1 "github.com/openshift/api/security/v1"
@@ -65,7 +65,7 @@ func init() {
 	rootCmd.AddCommand(prometheus.PromCheckCmd)
 	rootCmd.AddCommand(prometheus.PromApplyCmd)
 
-	rootCmd.Flags().StringVar(&configurationFilePath, "config", "/etc/federatorai/operator/operator.toml", "File path to federatorai-operator coniguration")
+	rootCmd.Flags().StringVar(&configurationFilePath, "config", consts.DefaultConfigPath, "File path to federatorai-operator coniguration")
 }
 
 func Execute() {
@@ -74,13 +74,6 @@ func Execute() {
 		os.Exit(1)
 	}
 }
-
-const (
-	envVarPrefix  = "FEDERATORAI_OPERATOR"
-	allowEmptyEnv = true
-
-	defaultLogOutputPath = "/var/log/alameda/federatorai-operator.log"
-)
 
 var (
 	metricsPort           int32
@@ -105,10 +98,10 @@ func initConfiguration() {
 
 func initViperSetting() {
 
-	viper.SetEnvPrefix(envVarPrefix)
+	viper.SetEnvPrefix(consts.EnvVarPrefix)
 	viper.AutomaticEnv()
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
-	viper.AllowEmptyEnv(allowEmptyEnv)
+	viper.SetEnvKeyReplacer(strings.NewReplacer(strings.Split(consts.EnvReplacerOldNew, ";")...))
+	viper.AllowEmptyEnv(consts.AllowEmptyEnv)
 }
 
 func mergeViperValueWithDefaultConfig() {
@@ -128,7 +121,7 @@ func initLogger() {
 
 	logPaths := viper.GetStringSlice("log.outputPaths")
 	if len(logPaths) == 0 {
-		fedOperatorConfig.Log.AppendOutput(defaultLogOutputPath)
+		fedOperatorConfig.Log.AppendOutput(consts.DefaultLogOutputPath)
 	} else {
 		for _, logPath := range logPaths {
 			fedOperatorConfig.Log.AppendOutput(logPath)
@@ -142,7 +135,7 @@ func initLogger() {
 
 	grpcLogPaths := viper.GetStringSlice("grpc.log.outputPaths")
 	if len(grpcLogPaths) == 0 {
-		fedOperatorConfig.GRPC.Log.AppendOutput(defaultLogOutputPath)
+		fedOperatorConfig.GRPC.Log.AppendOutput(consts.DefaultLogOutputPath)
 	} else {
 		for _, grpcLogPath := range grpcLogPaths {
 			fedOperatorConfig.GRPC.Log.AppendOutput(grpcLogPath)
