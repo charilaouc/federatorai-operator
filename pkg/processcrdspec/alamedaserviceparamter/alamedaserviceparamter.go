@@ -343,6 +343,7 @@ type AlamedaServiceParamter struct {
 	EnableDispatcher                    bool
 	EnablePreloader                     bool
 	EnableWeavescope                    bool
+	AutoPatchPrometheusRules            bool
 	ImageLocation                       string
 	Version                             string
 	PrometheusService                   string
@@ -382,6 +383,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		EnableGUI:                           instance.Spec.EnableGUI,
 		EnableDispatcher:                    *instance.Spec.EnableDispatcher,
 		EnablePreloader:                     instance.Spec.EnablePreloader,
+		AutoPatchPrometheusRules:            instance.Spec.AutoPatchPrometheusRules,
 		EnableWeavescope:                    instance.Spec.EnableWeavescope,
 		ImageLocation:                       instance.Spec.ImageLocation,
 		Version:                             instance.Spec.Version,
