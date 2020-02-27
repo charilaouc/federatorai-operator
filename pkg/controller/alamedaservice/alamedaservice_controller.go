@@ -516,11 +516,13 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 	imageConfig = setImageConfigWithEnv(imageConfig)
 
 	podTemplateConfig := component.NewDefaultPodTemplateConfig(namespace)
+	clusterType := resourceapply.CheckClusterType(r.apiextclient.ApiextensionsV1beta1())
 	componentConfg := component.NewComponentConfig(podTemplateConfig, alamedaService,
 		component.WithNamespace(namespace.Name),
 		component.WithImageConfig(imageConfig),
 		component.WithPodSecurityPolicyGroup(r.podSecurityPolicesApiGroupVersion.Group),
 		component.WithPodSecurityPolicyVersion(r.podSecurityPolicesApiGroupVersion.Version),
+		component.WithFedermeterConfig(clusterType),
 	)
 	return componentConfg
 }
