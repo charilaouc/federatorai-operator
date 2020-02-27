@@ -52,7 +52,8 @@ type ComponentConfig struct {
 
 	FederatoraiAgentGPU FederatoraiAgentGPUConfig
 
-	Image ImageConfig
+	Image           ImageConfig
+	FedemeterConfig FedemeterConfig
 }
 
 func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha1.AlamedaService, opts ...ComponentConfigOption) *ComponentConfig {
@@ -70,6 +71,7 @@ func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha
 		PodTemplateConfig:        ptc,
 		FederatoraiAgentGPU:      NewDefaultFederatoraiAgentGPUConfig(),
 		Image:                    NewDefautlImageConfig(),
+		FedemeterConfig:          NewDefaultFedemeterConfig(),
 	}
 
 	for _, opt := range opts {
