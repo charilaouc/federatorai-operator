@@ -1,22 +1,51 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: federatorai.v4.1.20
+  name: federatorai.v4.2.553
   namespace: placeholder
   annotations:
     capabilities: Auto Pilot
     categories: "AI/Machine Learning, OpenShift Optional"
     certified: "false"
     repository: https://quay.io/repository/prophetstor/federatorai-operator-ubi
-    containerImage: quay.io/prophetstor/federatorai-operator-ubi:v4.1.20
-    createdAt: 2019-06-30T10:00:00Z
+    containerImage: quay.io/prophetstor/federatorai-operator-ubi:v4.2.553
+    createdAt: 2020-02-24T17:33:58Z
     description: Federator.ai Operator provides easy configuration and management of AI-based Kubernetes resource orchestrator
     support: ProphetStor Data Services, Inc.
-    alm-examples: >-
-        [{"apiVersion":"federatorai.containers.ai/v1alpha1","kind":"AlamedaService","metadata":{"name":"my-alamedaservice"},"spec":{"selfDriving":false,"enableExecution":true,"enableGui":true,"version":"v4.1.39","prometheusService":"https://prometheus-k8s.openshift-monitoring:9091","storages":[{"usage":"log","type":"ephemeral"},{"usage":"data","type":"ephemeral"}]}}]
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "federatorai.containers.ai/v1alpha1",
+          "kind": "AlamedaService",
+          "metadata": {
+            "name": "my-alamedaservice"
+          },
+          "spec": {
+            "keycode": {
+              "codeNumber": "GRV7J-LA4TX-KPPIT-S6GRS-NK4EB-ILFRQ"
+            },
+            "autoPatchPrometheusRules": true,
+            "selfDriving": false,
+            "enableExecution": true,
+            "enableGui": true,
+            "version": "v4.2.553",
+            "prometheusService": "https://prometheus-k8s.openshift-monitoring:9091",
+            "storages": [
+              {
+                "usage": "log",
+                "type": "ephemeral"
+              },
+              {
+                "usage": "data",
+                "type":"ephemeral"
+              }
+            ]
+          }
+        }
+      ]
 spec:
-  replaces: federatorai.v0.1.0
-  version: 4.1.20
+  replaces: federatorai.v4.2.552
+  version: 4.2.553
   maturity: stable
   displayName: Federator.ai
   description: |
@@ -41,11 +70,13 @@ spec:
         metadata:
           name: my-alamedaservice
         spec:
+          keycode:
+            codeNumber: GRV7J-LA4TX-KPPIT-S6GRS-NK4EB-ILFRQ
           # experimental feature, set true to enable
           selfDriving: false
           enableExecution: true
           enableGui: true
-          version: v4.1.39
+          version: v4.2.601
           prometheusService: https://prometheus-k8s.openshift-monitoring:9091
           # storages is optional. Omit this field if not needed.
           storages:
@@ -69,7 +100,7 @@ spec:
     url: https://github.com/containers-ai/federatorai-operator/blob/master/docs/quickstart.md
   labels:
     alm-owner-federatorai: federatorai-operator
-    alm-status-descriptors: federatorai-operator.4.1.20
+    alm-status-descriptors: federatorai-operator.4.2.553
   selector:
     matchLabels:
       alm-owner-federatorai: federatorai-operator
@@ -148,6 +179,7 @@ spec:
           - "*"
         - apiGroups:
           - autoscaling.containers.ai
+          - analysis.containers.ai
           resources:
           - "*"
           verbs:
@@ -167,7 +199,7 @@ spec:
           - persistentvolumeclaims
           - serviceaccounts
           verbs:
-          - delete #[issue 150]for openshift v3.09
+          - delete
           - get
           - list
           - watch
@@ -175,6 +207,7 @@ spec:
         - apiGroups:
           - ""
           resources:
+          - endpoints
           - pods
           verbs:
           - get
@@ -187,6 +220,7 @@ spec:
           - ""
           resources:
           - replicationcontrollers
+          - ingresses
           verbs:
           - "*"
         - apiGroups:
@@ -202,7 +236,7 @@ spec:
           resources:
           - secrets
           verbs:
-          - delete #[issue 150]for openshift v3.09
+          - delete
           - create
           - list
           - watch
@@ -211,7 +245,7 @@ spec:
           resources:
           - configmaps
           verbs:
-          - delete #[issue 150]for openshift v3.09
+          - delete
           - create
           - list
           - update
@@ -231,18 +265,23 @@ spec:
           - rbac.authorization.k8s.io
           resources:
           - clusterroles
+          - clusterroles/finalizers
           - clusterrolebindings
+          - roles
+          - rolebindings
           verbs:
-          - delete #[issue 150]for openshift v3.09
+          - delete
           - create
           - list
           - watch
           - update
+          - get
         - apiGroups:
           - extensions
           - apps
           resources:
           - deployments
+          - statefulsets
           verbs:
           - "*"
         - apiGroups:
@@ -285,6 +324,114 @@ spec:
           - horizontalpodautoscalers
           verbs:
           - list
+        - apiGroups:
+          - ""
+          resources:
+          - pods/log
+          - replicationcontrollers
+          - services
+          - nodes
+          - persistentvolumes
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - cronjobs
+          - jobs
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - extensions
+          - apps
+          resources:
+          - daemonsets
+          - deployments
+          - deployments/scale
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+        - apiGroups:
+          - extensions
+          resources:
+          - deployments/scale
+          verbs:
+          - update
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - storageclasses
+          verbs:
+          - list
+          - watch
+        - apiGroups:
+          - extensions
+          - policy
+          resources:
+          - podsecuritypolicies
+          verbs:
+          - "*"
+        - apiGroups:
+          - extensions
+          - policy
+          resourceNames:
+          - federatorai-alameda-weave-scope
+          resources:
+          - podsecuritypolicies
+          verbs:
+          - use
+        - apiGroups:
+          - volumesnapshot.external-storage.k8s.io
+          resources:
+          - volumesnapshots
+          - volumesnapshotdatas
+          verbs:
+          - list
+          - watch
+        - apiGroups:
+          - security.openshift.io 
+          resources:
+          - securitycontextconstraints 
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - update
+          - delete
+        - apiGroups:
+          - notifying.containers.ai
+          resources:
+          - "*"
+          verbs:
+          - "*"
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - prometheusrules
+          verbs:
+          - create
+          - get
+          - list
+          - update
+          - delete
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - prometheuses
+          verbs:
+          - list
+      - serviceAccountName: alameda-gc
+        rules: []
       permissions:
       - serviceAccountName: federatorai-operator
         rules:
@@ -320,6 +467,74 @@ spec:
           verbs:
           - create
           - get
+        - apiGroups:
+          - ""
+          resources:
+          - pods/log
+          - replicationcontrollers
+          - services
+          - nodes
+          - persistentvolumes
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - cronjobs
+          - jobs
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - extensions
+          - apps
+          resources:
+          - deployments
+          - deployments/scale
+          - replicasets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - extensions
+          resources:
+          - deployments/scale
+          verbs:
+          - update
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - storageclasses
+          verbs:
+          - list
+          - watch
+        - apiGroups:
+          - extensions
+          resources:
+          - podsecuritypolicies
+          verbs:
+          - "*"
+        - apiGroups:
+          - extensions
+          resourceNames:
+          - federatorai-alameda-weave-scope
+          resources:
+          - podsecuritypolicies
+          verbs:
+          - use
+        - apiGroups:
+          - volumesnapshot.external-storage.k8s.io
+          resources:
+          - volumesnapshots
+          - volumesnapshotdatas
+          verbs:
+          - list
+          - watch
       deployments:
       - name: federatorai-operator
         spec:
@@ -339,9 +554,21 @@ spec:
                 app: Federator.ai
             spec:
               serviceAccountName: federatorai-operator
+              initContainers:
+                - name: upgrader
+                  image: quay.io/prophetstor/federatorai-operator-ubi:v4.2.553
+                  command:
+                  - federatorai-operator
+                  args:
+                  - "upgrade"
+                  - "influxdb"
+                  volumeMounts:
+                  - mountPath: /var/log/alameda
+                    name: log
               containers:
                 - name: federatorai-operator
-                  image: quay.io/prophetstor/federatorai-operator-ubi:v4.1.20
+                  # Replace this with the built image name
+                  image: quay.io/prophetstor/federatorai-operator-ubi:v4.2.553
                   imagePullPolicy: IfNotPresent
                   command:
                   - federatorai-operator
@@ -350,6 +577,10 @@ spec:
                       valueFrom:
                         fieldRef:
                           fieldPath: metadata.annotations['olm.targetNamespaces']
+                    - name: NAMESPACE_NAME
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.namespace
                     - name: POD_NAME
                       valueFrom:
                         fieldRef:
@@ -358,3 +589,9 @@ spec:
                       value: "federatorai-operator"
                     - name: DISABLE_OPERAND_RESOURCE_PROTECTION
                       value: "true"
+                  volumeMounts:
+                  - mountPath: /var/log/alameda
+                    name: log
+              volumes:
+                - name: log
+                  emptyDir: {}
