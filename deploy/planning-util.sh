@@ -479,13 +479,13 @@ check_support_controller()
     echo -e "\n$(tput setaf 6)Checking if controller supported...$(tput sgr 0)"
     if [ "$openshift_minor_version" != "" ]; then
         # OpenShift
-        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_name" != "nginx-ex" ] || [ "$owner_reference_kind" != "DeploymentConfig" ]; then
-            echo -e "\n$(tput setaf 1)Error! We only support internal NGINX pod for now.$(tput sgr 0)"
+        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_kind" != "DeploymentConfig" ]; then
+            echo -e "\n$(tput setaf 1)Warning! We only support internal NGINX pod for now.$(tput sgr 0)"
         fi
     else
         # K8S
-        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_name" != "nginx-deployment" ] || [ "$owner_reference_kind" != "Deployment" ]; then
-            echo -e "\n$(tput setaf 1)Error! We only support internal NGINX pod for now.$(tput sgr 0)"
+        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_kind" != "Deployment" ]; then
+            echo -e "\n$(tput setaf 1)Warning! We only support internal NGINX pod for now.$(tput sgr 0)"
         fi
     fi
     echo "Done."

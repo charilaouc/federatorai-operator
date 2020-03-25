@@ -908,7 +908,7 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: nginx-stable
+    app: ${nginx_name}
 __EOF__
     
         kubectl apply -f $nginx_svc_yaml
