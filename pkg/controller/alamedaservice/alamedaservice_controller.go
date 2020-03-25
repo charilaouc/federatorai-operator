@@ -280,6 +280,30 @@ func (r *ReconcileAlamedaService) Reconcile(request reconcile.Request) (reconcil
 	resource := r.removeUnsupportedResource(*asp.GetInstallResource())
 	installResource := &resource
 
+	if asp.AutoPatchPrometheusRules {
+		if ok, missingRulesMap, err := prom_patch.RulesCheck(prom_patch.GetK8SClient()); err != nil {
+			log.V(-1).Info("check prometheusrules failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
+			return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+		} else if !ok {
+			if err = prom_patch.PatchMissingRules(prom_patch.GetK8SClient(), missingRulesMap); err != nil {
+				log.V(-1).Info("patch prometheusrules failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
+				return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+			}
+		}
+
+		/*
+			if ok, err := prom_patch.RelabelingCheck(prom_patch.GetK8SClient()); err != nil {
+				log.V(-1).Info("check relabelings failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
+				return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+			} else if !ok {
+				if err = prom_patch.PatchRelabelings(prom_patch.GetK8SClient()); err != nil {
+					log.V(-1).Info("patch relabeling failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
+					return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+				}
+			}
+		*/
+	}
+
 	if err = r.syncCustomResourceDefinition(instance, clusterRoleGC, asp, installResource); err != nil {
 		log.Error(err, "create crd failed")
 	}
@@ -372,30 +396,6 @@ func (r *ReconcileAlamedaService) Reconcile(request reconcile.Request) (reconcil
 	if err := r.createAlamedaNotificationTopics(clusterRoleGC, installResource); err != nil {
 		log.V(-1).Info("create AlamedaNotificationTopic failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-	}
-
-	if asp.AutoPatchPrometheusRules {
-		if ok, missingRulesMap, err := prom_patch.RulesCheck(prom_patch.GetK8SClient()); err != nil {
-			log.V(-1).Info("check prometheusrules failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
-			return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-		} else if !ok {
-			if err = prom_patch.PatchMissingRules(prom_patch.GetK8SClient(), missingRulesMap); err != nil {
-				log.V(-1).Info("patch prometheusrules failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
-				return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-			}
-		}
-
-		/*
-			if ok, err := prom_patch.RelabelingCheck(prom_patch.GetK8SClient()); err != nil {
-				log.V(-1).Info("check relabelings failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
-				return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-			} else if !ok {
-				if err = prom_patch.PatchRelabelings(prom_patch.GetK8SClient()); err != nil {
-					log.V(-1).Info("patch relabeling failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
-					return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
-				}
-			}
-		*/
 	}
 
 	//Uninstall Execution Component
