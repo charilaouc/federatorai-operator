@@ -687,7 +687,7 @@ spec:
         app: ${nginx_name}
     spec:
       containers:
-      - name: nginx
+      - name: ${nginx_name}
         image: nginx:1.7.9
         resources:
             limits:
