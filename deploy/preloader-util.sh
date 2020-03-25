@@ -13,6 +13,9 @@
 #       [-v] # Revert environment to normal mode
 #       [-n nginx_prefix_name] # Specify nginx prefix name (optional)
 #       [-h] # Display script usage
+#   Standalone options:
+#       [-i] # Install Nginx
+#       [-k] # Remove Nginx
 #
 #################################################################################################################
 
@@ -30,6 +33,9 @@ show_usage()
         [-v] # Revert environment to normal mode
         [-n nginx_prefix_name] # Specify nginx prefix name (optional)
         [-h] # Display script usage
+    Standalone options:
+        [-i] # Install Nginx
+        [-k] # Remove Nginx
 
 __EOF__
     exit 1
@@ -854,10 +860,17 @@ if [ "$#" -eq "0" ]; then
     exit
 fi
 
-while getopts "f:ecpvrdhn:" o; do
+
+while getopts "f:ecpvrdhikn:" o; do
     case "${o}" in
         p)
             prepare_environment="y"
+            ;;
+        i)
+            install_nginx="y"
+            ;;
+        k)
+            remove_nginx="y"
             ;;
         c)
             clean_environment="y"
@@ -987,6 +1000,14 @@ if [ "$revert_environment" = "y" ]; then
     patch_grafana_back_to_normal
     patch_recommender_to_specified_mode "workload"
     clean_environment_operations
+fi
+
+if [ "$install_nginx" = "y" ]; then
+    new_nginx_example
+fi
+
+if [ "$remove_nginx" = "y" ]; then
+    delete_nginx_example
 fi
 
 leave_prog
