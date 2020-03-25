@@ -43,11 +43,6 @@ __EOF__
     exit 1
 }
 
-is_pod_ready()
-{
-  [[ "$(kubectl get po "$1" -n "$2" -o 'jsonpath={.status.conditions[?(@.type=="Ready")].status}')" == 'True' ]]
-}
-
 pods_ready()
 {
   [[ "$#" == 0 ]] && return 0
@@ -55,7 +50,7 @@ pods_ready()
   namespace="$1"
 
   kubectl get pod -n $namespace \
-    -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}' \
+    -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}' |egrep -v "\-build|\-deploy"\
       | while read name status _junk; do
           if [ "$status" != "True" ]; then
             echo "Waiting pod $name in namespace $namespace to be ready..."
@@ -156,43 +151,6 @@ wait_until_pods_ready()
   leave_prog
   exit 4
 }
-
-wait_until_openshift_nginx_pods_ready()
-{
-  period="$1"
-  interval="$2"
-  namespace="$3"
-  target_pod_number="$4"
-
-  wait_pod_creating=1
-  for ((i=0; i<$period; i+=$interval)); do
-
-    if [[ "$wait_pod_creating" = "1" ]]; then
-        # check if pods created
-        if [[ "`kubectl get po -n $namespace 2>/dev/null|wc -l`" -ge "$target_pod_number" ]]; then
-            wait_pod_creating=0
-            echo -e "\nChecking nginx pods..."
-        else
-            echo "Waiting for nginx pods in namespace $namespace to be created..."
-        fi
-    else
-        # check if pods running
-        if [[ "`kubectl get po -n $namespace 2>/dev/null|egrep -v '\-build|\-deploy'|grep -i running | wc -l`" -ge "$target_pod_number" ]]; then
-            echo -e "\nAll nginx pods in ns $namespace are ready."
-            return 0
-        fi
-        echo "Waiting for nginx pods in namespace $namespace to be ready..."
-    fi
-
-    sleep "$interval"
-
-  done
-
-  echo -e "\n$(tput setaf 1)Warning!! Waited for $period seconds, but nginx pods are not ready yet. Please check $namespace namespace$(tput sgr 0)"
-  leave_prog
-  exit 4
-}
-
 
 wait_until_data_pump_finish()
 {
@@ -541,34 +499,139 @@ new_nginx_example()
     else
         if [ "$openshift_minor_version" != "" ]; then
             # OpenShift
-            oc new-project $nginx_ns
-            oc new-app centos/nginx-112-centos7~https://github.com/sclorg/nginx-ex
-            wait_until_openshift_nginx_pods_ready 600 30 $nginx_ns 1
-            nginx_dc_name="`kubectl get dc -n $nginx_ns 2>/dev/null|grep -v "NAME"|awk '{print $1}'`"
             nginx_openshift_yaml="nginx_openshift.yaml"
             cat > ${nginx_openshift_yaml} << __EOF__
-spec:
-  template:
-    spec:
-      containers:
-        - name: ${nginx_dc_name}
-          resources:
-            limits:
-                cpu: "150m"
-                memory: "400Mi"
-            requests:
-                cpu: "100m"
-                memory: "50Mi"
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "metadata": {},
+    "items": [
+        {
+            "apiVersion": "apps.openshift.io/v1",
+            "kind": "DeploymentConfig",
+            "metadata": {
+                "labels": {
+                    "app": "${nginx_name}"
+                },
+                "name": "${nginx_name}"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "app": "${nginx_name}",
+                    "deploymentconfig": "${nginx_name}"
+                },
+                "strategy": {
+                    "resources": {},
+                    "rollingParams": {
+                        "intervalSeconds": 1,
+                        "maxSurge": "25%",
+                        "maxUnavailable": "25%",
+                        "timeoutSeconds": 600,
+                        "updatePeriodSeconds": 1
+                    },
+                    "type": "Rolling"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "app": "${nginx_name}",
+                            "deploymentconfig": "${nginx_name}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "twalter/openshift-nginx:stable-alpine",
+                                "imagePullPolicy": "Always",
+                                "name": "nginx",
+                                "ports": [
+                                    {
+                                        "containerPort": 8081,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources":
+                                {
+                                    "limits":
+                                        {
+                                        "cpu": "150m",
+                                        "memory": "400Mi"
+                                        },
+                                    "requests":
+                                        {
+                                        "cpu": "100m",
+                                        "memory": "50Mi"
+                                        }
+                                },
+                                "terminationMessagePath": "/dev/termination-log"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "labels": {
+                    "app": "${nginx_name}"
+                },
+                "name": "${nginx_name}"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "port": 8081,
+                        "protocol": "TCP",
+                        "targetPort": 8081
+                    }
+                ],
+                "selector": {
+                    "app": "${nginx_name}",
+                    "deploymentconfig": "${nginx_name}"
+                }
+            }
+        },
+        {
+            "apiVersion": "route.openshift.io/v1",
+            "kind": "Route",
+            "metadata": {
+                "labels": {
+                    "app": "${nginx_name}"
+                },
+                "name": "${nginx_name}"
+            },
+            "spec": {
+                "port": {
+                    "targetPort": 8081
+                },
+                "to": {
+                    "kind": "Service",
+                    "name": "${nginx_name}"
+                },
+                "weight": 100,
+                "wildcardPolicy": "None"
+            }
+        }
+    ]
+}
 __EOF__
-            kubectl patch dc $nginx_dc_name -n $nginx_ns --type merge --patch "$(cat $nginx_openshift_yaml)"
+            oc new-project $nginx_ns
+            oc apply -f ${nginx_openshift_yaml}
             if [ "$?" != "0" ]; then
-                echo -e "\n$(tput setaf 1)Error! patch NGINX app failed.$(tput sgr 0)"
+                echo -e "\n$(tput setaf 1)Error! create NGINX app failed.$(tput sgr 0)"
                 leave_prog
                 exit 8
             fi
-
             echo ""
-            wait_until_openshift_nginx_pods_ready 600 30 $nginx_ns 1
+            wait_until_pods_ready 600 30 $nginx_ns 1
             oc project $install_namespace
         else
             # K8S
@@ -628,13 +691,6 @@ add_alamedascaler_for_nginx()
     nginx_alamedascaler_file="nginx_alamedascaler_file"
     kubectl get alamedascaler -n ${nginx_ns} 2>/dev/null|grep -q "nginx-alamedascaler"
     if [ "$?" != "0" ]; then
-        if [ "$openshift_minor_version" != "" ]; then
-            # OpenShift
-            label_name="nginx-ex"
-        else
-            # K8S
-            label_name="$nginx_name"
-        fi
         cat > ${nginx_alamedascaler_file} << __EOF__
 apiVersion: autoscaling.containers.ai/v1alpha1
 kind: AlamedaScaler
@@ -648,7 +704,7 @@ spec:
         type: ${autoscaling_method}
     selector:
         matchLabels:
-            app: ${label_name}
+            app: ${nginx_name}
 __EOF__
         kubectl apply -f ${nginx_alamedascaler_file}
         if [ "$?" != "0" ]; then
