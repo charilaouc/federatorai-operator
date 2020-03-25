@@ -264,39 +264,34 @@ get_recommended_prometheus_url()
         prometheus_protocol="http"
     fi
 
+    found_none="n"
     while read namespace name _junk
     do
         prometheus_namespace="$namespace"
         prometheus_svc_name="$name"
-    done<<<"$(kubectl get svc --all-namespaces --show-labels|grep -i prometheus|grep $prometheus_port |sort|head -1)"
+        found_none="y"
+    done<<<"$(kubectl get svc --all-namespaces --show-labels|grep -i prometheus|grep 9090|grep " None "|sort|head -1)"
+
+    if [ "$prometheus_svc_name" = "" ]; then
+        while read namespace name _junk
+        do
+            prometheus_namespace="$namespace"
+            prometheus_svc_name="$name"
+        done<<<"$(kubectl get svc --all-namespaces --show-labels|grep -i prometheus|grep $prometheus_port |sort|head -1)"
+    fi
 
     key="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/selector:/{getline; print}'|cut -d ":" -f1|xargs`"
     value="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/selector:/{getline; print}'|cut -d ":" -f2|xargs`"
 
-    prometheus_pod_total_number="0"
     if [ "${key}" != "" ] && [ "${value}" != "" ]; then
         prometheus_pod_name="`kubectl get pods -l "${key}=${value}" -n $prometheus_namespace|grep -v NAME|awk '{print $1}'|grep ".*\-[0-9]$"|sort -n|head -1`"
-        prometheus_pod_total_number="`kubectl get pods -l "${key}=${value}" -n $prometheus_namespace|grep -v NAME|wc -l`"
     fi
 
     # Assign default value
-    if [ "$prometheus_pod_name" != "" ]; then
-        #To fix prometheus inconsist data issue
-        if [[ "$openshift_minor_version" == "11" ]] || [[ "$openshift_minor_version" == "12" ]]; then
-            prometheus_url="$prometheus_protocol://$prometheus_pod_name.prometheus-operated.openshift-monitoring:$prometheus_port"
-        else # k8s
-            if [ "$prometheus_pod_total_number" -gt "1" ]; then
-                prometheus_url="$prometheus_protocol://$prometheus_pod_name.$prometheus_svc_name.$prometheus_namespace:$prometheus_port"
-            else
-                prometheus_url="$prometheus_protocol://$prometheus_svc_name.$prometheus_namespace:$prometheus_port"
-            fi
-        fi
+    if [ "$found_none" = "y" ] && [ "$prometheus_pod_name" != "" ]; then
+        prometheus_url="$prometheus_protocol://$prometheus_pod_name.$prometheus_svc_name.$prometheus_namespace:$prometheus_port"
     else
-        if [[ "$openshift_minor_version" == "11" ]] || [[ "$openshift_minor_version" == "12" ]]; then
-            prometheus_url="$prometheus_protocol://prometheus-operated.openshift-monitoring:$prometheus_port"
-        else # k8s
-            prometheus_url="$prometheus_protocol://$prometheus_svc_name.$prometheus_namespace:$prometheus_port"
-        fi
+        prometheus_url="$prometheus_protocol://$prometheus_svc_name.$prometheus_namespace:$prometheus_port"
     fi
 }
 
