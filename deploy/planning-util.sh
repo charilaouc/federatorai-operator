@@ -295,7 +295,13 @@ rest_api_get_controller_planning()
     granularity="3600"
     type="recommendation"
 
-    planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deploymentconfigs?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    if [ "$openshift_minor_version" != "" ]; then
+        # OpenShift
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deploymentconfigs?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    else
+        # K8S
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deployments?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    fi
 
     replica_number="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.replicas'`"
     if [ "$replica_number" = "" ]; then
@@ -507,13 +513,6 @@ generate_controller_patch()
 
     check_support_controller
 
-    if [ "$openshift_minor_version" != "" ]; then
-        # OpenShift
-        crtl_name="nginx-ex"
-    else
-        # K8S
-        crtl_name="nginx"
-    fi
 
     image_name="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.template.spec.containers[0].image'`"
 
@@ -523,7 +522,7 @@ spec:
     spec:
       containers:
         - image: ${image_name}
-          name: ${crtl_name}
+          name: ${owner_reference_name}
           resources:
             requests:
               cpu: ${requests_pod_cpu}m
