@@ -819,6 +819,56 @@ enable_preloader_in_alamedaservice()
     echo "Duration enable_preloader_in_alamedaservice = $duration" >> $debug_log
 }
 
+add_svc_for_nginx()
+{
+    # K8S only
+    if [ "$openshift_minor_version" = "" ]; then
+        start=`date +%s`
+        echo -e "\n$(tput setaf 6)Adding svc for NGINX ...$(tput sgr 0)"
+        
+        # Check if svc already exist
+        kubectl get svc nginx-svc -n $nginx_ns &>/dev/null
+        if [ "$?" = "0" ]; then
+            echo "svc already exist in namespace $nginx_ns"
+            echo "Done"
+            return
+        fi
+
+        nginx_svc_yaml="nginx_svc.yaml"
+        cat > ${nginx_svc_yaml} << __EOF__
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: ${nginx_ns}
+  labels:
+    app: nginx-svc
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 31020
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: nginx-stable
+__EOF__
+    
+        kubectl apply -f $nginx_svc_yaml
+        if [ "$?" != "0" ]; then
+            echo -e "\n$(tput setaf 1)Error! Apply NGINX svc yaml failed.$(tput sgr 0)"
+            leave_prog
+            exit 8
+        fi
+
+        echo "Done"
+        end=`date +%s`
+        duration=$((end-start))
+        echo "Duration add_svc_for_nginx = $duration" >> $debug_log
+    fi
+}
+
 disable_preloader_in_alamedaservice()
 {
     start=`date +%s`
@@ -1004,6 +1054,7 @@ fi
 
 if [ "$install_nginx" = "y" ]; then
     new_nginx_example
+    add_svc_for_nginx
 fi
 
 if [ "$remove_nginx" = "y" ]; then
