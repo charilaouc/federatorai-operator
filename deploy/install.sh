@@ -280,8 +280,8 @@ get_recommended_prometheus_url()
         done<<<"$(kubectl get svc --all-namespaces --show-labels|grep -i prometheus|grep $prometheus_port |sort|head -1)"
     fi
 
-    key="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/selector:/{getline; print}'|cut -d ":" -f1|xargs`"
-    value="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/selector:/{getline; print}'|cut -d ":" -f2|xargs`"
+    key="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/ selector:/{getline; print}'|cut -d ":" -f1|xargs`"
+    value="`kubectl get svc $prometheus_svc_name -n $prometheus_namespace -o yaml|awk '/ selector:/{getline; print}'|cut -d ":" -f2|xargs`"
 
     if [ "${key}" != "" ] && [ "${value}" != "" ]; then
         prometheus_pod_name="`kubectl get pods -l "${key}=${value}" -n $prometheus_namespace|grep -v NAME|awk '{print $1}'|grep ".*\-[0-9]$"|sort -n|head -1`"
