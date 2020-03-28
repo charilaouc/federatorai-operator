@@ -159,6 +159,9 @@ data:
     granularities = ["1m"]
     metricTypes = ["current_offset"]
     predictor = "SARIMAX"
+    [units.valueKeys]
+      scalerNamespace = "alameda_scaler_namespace"
+      scalerName = "alameda_scaler_name"
     
       [units.metric]
       scope = "metric"
@@ -189,7 +192,10 @@ data:
     granularities = ["1m"]
     metricTypes = ["current_offset"]
     predictor = "SARIMAX"
-    
+    [units.valueKeys]
+      scalerNamespace = "alameda_scaler_namespace"
+      scalerName = "alameda_scaler_name"
+
       [units.metric]
       scope = "metric"
       category = "kafka"
