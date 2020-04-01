@@ -18,3 +18,27 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - autoscaling.containers.ai
+  resources:
+  - alamedascalers
+  verbs:
+  - get
+  - list
+  - create
+  - delete
