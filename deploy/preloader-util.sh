@@ -1024,6 +1024,9 @@ if [ "$nginx_name_specified" = "y" ]; then
     if [ "$nginx_name" = "" ]; then
         echo -e "\n$(tput setaf 1)nginx name needs to be specified with n parameter.$(tput sgr 0)"
     fi
+else
+    # Set default nginx name
+    nginx_name="nginx-prepared"
 fi
 
 kubectl version|grep -q "^Server"
@@ -1052,9 +1055,6 @@ fi
 
 file_folder="/tmp/preloader"
 nginx_ns="nginx-preloader-sample"
-if [ "$nginx_name" = "" ]; then
-    nginx_name="nginx-stable"
-fi
 
 debug_log="debug.log"
 
