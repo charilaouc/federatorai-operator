@@ -548,7 +548,7 @@ spec:
         - name: ${nginx_dc_name}
           resources:
             limits:
-                cpu: "100m"
+                cpu: "150m"
                 memory: "400Mi"
             requests:
                 cpu: "100m"
@@ -590,7 +590,7 @@ spec:
         image: nginx:1.7.9
         resources:
             limits:
-                cpu: "100m"
+                cpu: "150m"
                 memory: "400Mi"
             requests:
                 cpu: "100m"
