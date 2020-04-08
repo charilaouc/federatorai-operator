@@ -12,20 +12,23 @@ show_usage()
     cat << __EOF__
 
     Usage:
-        Requirements:
+        Scenario A (For Resource Allocation):
+          Requirements:
             --namespace <space> target namespace name [e.g., --namespace nginx]
-            # we currently support Deployment name, Deployment Configuration name, or StatefulSet name.
-            --pod-name <space> target pod name [e.g., --pod-name nginx-stable-1-lvr4d]
-        Operations:
-            --get-current-pod-resources
-            --get-pod-planning
+            --controller-name <space> controller name [e.g., --controller-name nginx-ex]
+          Operations:
+            --get-current-controller-resources
+            --get-controller-planning
             --generate-controller-patch
             --apply-controller-patch <space> patch file full path [e.g., --apply-controller-patch /tmp/planning-util/$controller_patch_yaml]
+        Scenario B (For Namespace Quotas):
+          Requirements:
+            --namespace <space> target namespace name [e.g., --namespace nginx]
+          Operations:
             --get-current-namespace-quotas
             --get-namespace-planning
             --generate-namespace-quota-patch
             --apply-namespace-quota-patch <space> patch file full path [e.g., --apply-namespace-quota-patch /tmp/planning-util/$namespace_patch_yaml]
-
 __EOF__
     exit 1
 }
@@ -42,7 +45,7 @@ pods_ready()
   namespace="$1"
 
   kubectl get pod -n $namespace \
-    -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}' \
+    -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}' |egrep -v "\-build|\-deploy"\
       | while read name status _junk; do
           if [ "$status" != "True" ]; then
             echo "Waiting pod $name in namespace $namespace to be ready..."
@@ -283,6 +286,61 @@ rest_api_get_pod_planning()
     echo "Duration rest_api_get_pod_planning = $duration" >> $debug_log
 }
 
+rest_api_get_controller_planning()
+{
+    start=`date +%s`
+    echo -e "\n$(tput setaf 6)Getting planning for controller ($owner_reference_name) in ns ($target_namespace)...$(tput sgr 0)"
+    interval_start_time="$start"
+    interval_end_time=$(($interval_start_time + 3599)) #59min59sec
+    granularity="3600"
+    type="recommendation"
+
+    if [ "$openshift_minor_version" != "" ]; then
+        # OpenShift
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deploymentconfigs?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    else
+        # K8S
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deployments?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    fi
+
+    replica_number="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.replicas'`"
+    if [ "$replica_number" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Failed to get replica number from controller ($owner_reference_name) in ns $target_namespace$(tput sgr 0)"
+        leave_prog
+        exit 8
+    fi
+    echo "replica_number= $replica_number"
+
+    limits_pod_cpu="`echo $planning_values |awk '{print $1}'`"
+    requests_pod_cpu="`echo $planning_values |awk '{print $2}'`"
+    limits_pod_memory="`echo $planning_values |awk '{print $3}'`"
+    requests_pod_memory="`echo $planning_values |awk '{print $4}'`"
+
+    # Round up the result (planning / replica)
+    limits_pod_cpu=`echo "($limits_pod_cpu + $replica_number - 1)/$replica_number" | bc`
+    requests_pod_cpu=`echo "($requests_pod_cpu + $replica_number - 1)/$replica_number" | bc`
+    limits_pod_memory=`echo "($limits_pod_memory + $replica_number - 1)/$replica_number" | bc`
+    requests_pod_memory=`echo "($requests_pod_memory + $replica_number - 1)/$replica_number" | bc`
+
+    echo "-------Planning for controller $owner_reference_name"
+    echo "resources.limits.cpu = $limits_pod_cpu(m)"
+    echo "resources.limits.momory = $limits_pod_memory(byte)"
+    echo "resources.requests.cpu = $requests_pod_cpu(m)"
+    echo "resources.requests.memory = $requests_pod_memory(byte)"
+    echo "--------------------------------------------"
+
+    if [ "$limits_pod_cpu" = "" ] || [ "$requests_pod_cpu" = "" ] || [ "$limits_pod_memory" = "" ] || [ "$requests_pod_memory" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Failed to get controller ($owner_reference_name) planning. Missing value.$(tput sgr 0)"
+        leave_prog
+        exit 8
+    fi
+
+    echo "Done."
+    end=`date +%s`
+    duration=$((end-start))
+    echo "Duration rest_api_get_controller_planning = $duration" >> $debug_log
+}
+
 rest_api_get_namespace_planning()
 {
     start=`date +%s`
@@ -322,7 +380,10 @@ get_needed_info()
     rest_api_login
     rest_api_get_cluster_name
     if [ "$do_pod_related" != "" ]; then
-        get_controller_info
+        get_controller_info_from_pod
+    fi
+    if [ "$do_controller_related" != "" ]; then
+        get_controller_info_from_controller
     fi
 }
 
@@ -334,7 +395,7 @@ get_owner_reference()
     echo "$owner_ref"
 }
 
-get_controller_info()
+get_controller_info_from_pod()
 {
     start=`date +%s`
     echo -e "\n$(tput setaf 6)Getting pod controller type and name...$(tput sgr 0)"
@@ -376,8 +437,47 @@ get_controller_info()
     echo "Done."
     end=`date +%s`
     duration=$((end-start))
-    echo "Duration get_controller_info = $duration" >> $debug_log
+    echo "Duration get_controller_info_from_pod = $duration" >> $debug_log
 }
+
+get_controller_info_from_controller()
+{
+    start=`date +%s`
+    echo -e "\n$(tput setaf 6)Getting controller type...$(tput sgr 0)"
+    owner_reference_kind=""
+    owner_reference_name="$target_controller_name"
+
+    kubectl get Deployment $owner_reference_name -n $target_namespace > /dev/null 2>&1
+    if [ "$?" = "0" ]; then
+        owner_reference_kind="Deployment"
+    else
+        kubectl get DeploymentConfig $owner_reference_name -n $target_namespace > /dev/null 2>&1
+        if [ "$?" = "0" ]; then
+            owner_reference_kind="DeploymentConfig"
+        else
+            kubectl get StatefulSet $owner_reference_name -n $target_namespace > /dev/null 2>&1
+            if [ "$?" = "0" ]; then
+                owner_reference_kind="StatefulSet"
+            fi
+        fi
+    fi
+
+    echo "target_namespace = $target_namespace"
+    echo "owner_reference_kind = $owner_reference_kind"
+    echo "owner_reference_name = $owner_reference_name"
+
+    if [ "$owner_reference_kind" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Failed to find owner_reference_kind. Only support DeploymentConfig, Deployment, or StatefulSet for now.$(tput sgr 0)"
+        leave_prog
+        exit 8
+    fi
+
+    echo "Done."
+    end=`date +%s`
+    duration=$((end-start))
+    echo "Duration get_controller_info_from_controller = $duration" >> $debug_log
+}
+
 
 check_support_controller()
 {
@@ -385,13 +485,13 @@ check_support_controller()
     echo -e "\n$(tput setaf 6)Checking if controller supported...$(tput sgr 0)"
     if [ "$openshift_minor_version" != "" ]; then
         # OpenShift
-        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_name" != "nginx-stable" ] || [ "$owner_reference_kind" != "DeploymentConfig" ]; then
-            echo -e "\n$(tput setaf 1)Error! We only support internal NGINX pod for now.$(tput sgr 0)"
+        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_kind" != "DeploymentConfig" ]; then
+            echo -e "\n$(tput setaf 1)Warning! We only support internal NGINX pod for now.$(tput sgr 0)"
         fi
     else
         # K8S
-        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_name" != "nginx-deployment" ] || [ "$owner_reference_kind" != "Deployment" ]; then
-            echo -e "\n$(tput setaf 1)Error! We only support internal NGINX pod for now.$(tput sgr 0)"
+        if [ "$target_namespace" != "nginx-preloader-sample" ] || [ "$owner_reference_kind" != "Deployment" ]; then
+            echo -e "\n$(tput setaf 1)Warning! We only support internal NGINX pod for now.$(tput sgr 0)"
         fi
     fi
     echo "Done."
@@ -406,19 +506,13 @@ generate_controller_patch()
     echo -e "\n$(tput setaf 6)Generating controller patch...$(tput sgr 0)"
 
     if [ "$limits_pod_cpu" = "" ] || [ "$requests_pod_cpu" = "" ] || [ "$limits_pod_memory" = "" ] || [ "$requests_pod_memory" = "" ]; then
-        echo "Calling function 'get pod planning' first..."
-        rest_api_get_pod_planning
+        echo -e "\n$(tput setaf 1)Error! Please specify either --get-pod-planning or --get-controller-planning before --generate-controller-patch option.$(tput sgr 0)"
+        leave_prog
+        exit 8
     fi
 
     check_support_controller
 
-    if [ "$openshift_minor_version" != "" ]; then
-        # OpenShift
-        crtl_name="nginx-stable"
-    else
-        # K8S
-        crtl_name="nginx"
-    fi
 
     image_name="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.template.spec.containers[0].image'`"
 
@@ -428,7 +522,7 @@ spec:
     spec:
       containers:
         - image: ${image_name}
-          name: ${crtl_name}
+          name: ${owner_reference_name}
           resources:
             requests:
               cpu: ${requests_pod_cpu}m
@@ -542,6 +636,22 @@ display_pod_resources()
     echo "Duration display_pod_resources = $duration" >> $debug_log
 }
 
+display_controller_resources()
+{
+    start=`date +%s`
+    echo -e "\n$(tput setaf 6)Getting current controller resources...$(tput sgr 0)"
+    echo "target_namespace= $target_namespace"
+    echo "target_controller_name= $target_controller_name"
+    echo "--------------------------------------------"
+    kubectl get $owner_reference_kind $target_controller_name -n $target_namespace -o json |jq '.spec.template.spec.containers[].resources'
+    echo "--------------------------------------------"
+    echo "Done."
+    end=`date +%s`
+    duration=$((end-start))
+    echo "Duration display_controller_resources = $duration" >> $debug_log
+}
+
+
 display_namespace_quotas()
 {
     start=`date +%s`
@@ -584,14 +694,28 @@ while getopts "h-:" o; do
                         exit
                     fi
                     ;;
+                controller-name)
+                    target_controller_name="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    if [ "$target_controller_name" = "" ]; then
+                        echo -e "\n$(tput setaf 1)Error! Missing --${OPTARG} value$(tput sgr 0)"
+                        show_usage
+                        exit
+                    fi
+                    ;;
                 get-current-pod-resources)
                     should_get_current_pod_resources="y"
+                    ;;
+                get-current-controller-resources)
+                    should_get_current_controller_resources="y"
                     ;;
                 get-current-namespace-quotas)
                     should_get_current_namespace_quotas="y"
                     ;;
                 get-pod-planning)
                     should_get_pod_planning="y"
+                    ;;
+                get-controller-planning)
+                    should_get_controller_planning="y"
                     ;;
                 get-namespace-planning)
                     should_get_namespace_planning="y"
@@ -635,26 +759,40 @@ while getopts "h-:" o; do
     esac
 done
 
+if [ "$should_get_pod_planning" != "" ] && [ "$should_get_controller_planning" != "" ]; then
+    echo -e "\n$(tput setaf 1)Error! Can only choose either --get-pod-planning or --get-controller-planning option$(tput sgr 0)"
+    exit 5
+fi
+
 if [ "$should_get_current_pod_resources" != "" ] || [ "$should_get_pod_planning" != "" ] || [ "$should_gen_controller_patch" != "" ] || [ "$should_apply_controller_patch" != "" ]; then
-    do_pod_related="y"
+    if [ "$target_pod_name" != "" ] && [ "$target_namespace" != "" ]; then
+        do_pod_related="y"
+    fi
+fi
+
+if [ "$should_get_current_controller_resources" != "" ] || [ "$should_get_controller_planning" != "" ] || [ "$should_gen_controller_patch" != "" ] || [ "$should_apply_controller_patch" != "" ]; then
+    if [ "$target_controller_name" != "" ] && [ "$target_namespace" != "" ]; then
+        do_controller_related="y"
+    fi
 fi
 
 if [ "$should_get_current_namespace_quotas" != "" ] || [ "$should_get_namespace_planning" != "" ] || [ "$should_gen_namespace_quota_patch" != "" ] || [ "$should_apply_namespace_quota_patch" != "" ]; then
-    do_ns_related="y"
+    if [ "$target_namespace" != "" ]; then
+        do_ns_related="y"
+    fi
 fi
 
-if [ "$do_pod_related" != "" ]; then
-    [ "$target_namespace" = "" ] && show_usage
-    [ "$target_pod_name" = "" ] && show_usage
-elif [ "$do_ns_related" != "" ]; then
-    [ "$target_namespace" = "" ] && show_usage
-else
-    echo -e "\n$(tput setaf 1)Error! At least one operation must be specified.$(tput sgr 0)"
+if [ "$do_pod_related" = "" ] && [ "$do_controller_related" = "" ] && [ "$do_ns_related" = "" ]; then
+    echo -e "\n$(tput setaf 1)Error! Missing or wrong parameters.$(tput sgr 0)"
     show_usage
 fi
 
 [ "$should_get_current_pod_resources" = "" ] && should_get_current_pod_resources="n"
 [ "$should_get_pod_planning" = "" ] && should_get_pod_planning="n"
+
+[ "$should_get_current_controller_resources" = "" ] && should_get_current_controller_resources="n"
+[ "$should_get_controller_planning" = "" ] && should_get_controller_planning="n"
+
 [ "$should_gen_controller_patch" = "" ] && should_gen_controller_patch="n"
 [ "$should_apply_controller_patch" = "" ] && should_apply_controller_patch="n"
 [ "$should_get_current_namespace_quotas" = "" ] && should_get_current_namespace_quotas="n"
@@ -664,6 +802,7 @@ fi
 
 echo "target_namespace = $target_namespace"
 echo "target_pod_name = $target_pod_name"
+echo "target_controller_name = $target_controller_name"
 
 kubectl version|grep -q "^Server"
 if [ "$?" != "0" ];then
@@ -715,8 +854,16 @@ if [ "$should_get_current_pod_resources" = "y" ];then
     display_pod_resources
 fi
 
+if [ "$should_get_current_controller_resources" = "y" ];then
+    display_controller_resources
+fi
+
 if [ "$should_get_pod_planning" = "y" ];then
     rest_api_get_pod_planning
+fi
+
+if [ "$should_get_controller_planning" = "y" ];then
+    rest_api_get_controller_planning
 fi
 
 if [ "$should_gen_controller_patch" = "y" ];then
@@ -725,7 +872,11 @@ fi
 
 if [ "$should_apply_controller_patch" = "y" ];then
     apply_controller_patch
-    display_pod_resources
+    if [ "$do_pod_related" = "y" ]; then
+        display_pod_resources
+    elif [ "$do_controller_related" = "y" ]; then
+        display_controller_resources
+    fi
 fi
 
 if [ "$should_get_current_namespace_quotas" = "y" ];then
