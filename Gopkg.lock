@@ -35,18 +35,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e1e7ad502da821f8742a9cea53121aafea0ec154bb2cd3c0b547d2160a77d51f"
+  digest = "1:6cfb97deb6733c4c686045a9a3c690a76a764c30c1fe08597219f70c13531574"
   name = "github.com/containers-ai/alameda"
   packages = [
-    "admission-controller",
-    "admission-controller/pkg/service",
     "operator/api",
     "operator/api/v1alpha1",
     "operator/api/validate",
     "operator/pkg/utils",
     "pkg/consts",
-    "pkg/framework/datahub",
-    "pkg/grpc",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
@@ -54,12 +50,14 @@
   revision = "370fbf66e80cf812af0a208f158b2879195153f5"
 
 [[projects]]
-  branch = "master"
-  digest = "1:4a7e159e128a061c60eaf6e59dbd677489687cb9cde78c93a9a27e9318456eed"
+  branch = "4.2-meemaw"
+  digest = "1:dc9df731632bce7d93c3ff183ae16c26bd5b7b754a6c7cf782bf437ce67c6b14"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
+    "alameda_api/v1alpha1/datahub/applications",
     "alameda_api/v1alpha1/datahub/common",
+    "alameda_api/v1alpha1/datahub/data",
     "alameda_api/v1alpha1/datahub/events",
     "alameda_api/v1alpha1/datahub/gpu",
     "alameda_api/v1alpha1/datahub/licenses",
@@ -69,13 +67,14 @@
     "alameda_api/v1alpha1/datahub/rawdata",
     "alameda_api/v1alpha1/datahub/recommendations",
     "alameda_api/v1alpha1/datahub/resources",
+    "alameda_api/v1alpha1/datahub/schemas",
     "alameda_api/v1alpha1/datahub/scores",
     "alameda_api/v1alpha1/datahub/weavescope",
     "common",
     "datahub/keycodes",
   ]
   pruneopts = "NT"
-  revision = "7b60172c85622e5359791d9b0a52692c57843e4d"
+  revision = "b889c9fe50a8d942ffd83355e648e9d59c87b543"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -1187,7 +1186,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/containers-ai/alameda/admission-controller",
     "github.com/containers-ai/alameda/operator/api/v1alpha1",
     "github.com/containers-ai/alameda/pkg/utils/kubernetes",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub",

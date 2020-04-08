@@ -104,6 +104,6 @@ version="v1.4.7"
   branch = "master"
   name = "github.com/influxdata/influxdb1-client"
 
-[[constraint]]
+[[override]]
   name = "github.com/containers-ai/api"
-  branch = "master"
+  branch = "4.2-meemaw"
