@@ -33,14 +33,21 @@ data:
     terminating_time = 30
     algo_interval = 60
     upper_resource_tolerance = 0
-    lower_resource_tolerance = 0.25
+    lower_resource_tolerance = 0
+    prediction_resource_tolerance = 0
+    current_lag_threshold = 0.02
     qos_threshold = 0
     [kafka.weight]
     cpu = 0
     memory = 0
     storage = 0
-    scaling_up_weight = 0
-    scaling_down_weight = 1
-    scaling_down_speed = 200
+    scaling_up = 0
+    scaling_down = 200
+    queue = 1
     [kafka.policy]
     cost_selection_max = true
+    shift_best_execution_time_seconds = 0
+    scaling_down_percent = 0.9
+    [kafka.prediction]
+    prediction_shift_start_seconds = 0
+    prediction_shift_total_seconds = 300
