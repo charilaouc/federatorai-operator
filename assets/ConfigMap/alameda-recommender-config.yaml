@@ -46,7 +46,7 @@ data:
     queue = 1
     [kafka.policy]
     cost_selection_max = true
-    shift_best_execution_time_seconds = 60
+    shift_best_execution_time_seconds = 0
     scaling_down_percent = 0.9
     [kafka.prediction]
     prediction_shift_start_seconds = 0
