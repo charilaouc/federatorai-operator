@@ -195,6 +195,8 @@ data:
     [units.valueKeys]
       scalerNamespace = "alameda_scaler_namespace"
       scalerName = "alameda_scaler_name"
+      resourceK8SNamespace = "resource_k8s_namespace"
+      resourceK8SName = "resource_k8s_name"
 
       [units.metric]
       scope = "metric"
