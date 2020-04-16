@@ -18,3 +18,20 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - autoscaling.containers.ai
+  resources:
+  - alamedascalers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+- apiGroups:
+  - federatorai.containers.ai
+  resources:
+  - alamedaservices
+  verbs:
+  - get
+  - list
+  - update
