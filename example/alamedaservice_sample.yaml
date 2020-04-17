@@ -16,6 +16,8 @@ spec:
     tls:
       enabled: false
       insecureSkipVerify: true
+  nginx:
+    enabled: false
   keycode:
     codeNumber: D3JXN-LIFTQ-KQEZ3-WZBNI-DA3WZ-A7HKQ
   autoPatchPrometheusRules: true ## patch prometheus rules automatically

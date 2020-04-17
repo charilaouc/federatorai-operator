@@ -290,6 +290,11 @@ spec:
   - type: boolean
   - description: Specify if tls accepts any certification presented by the server.  
 
+### NginxSpec
+- Field: enabled
+  - type: boolean
+  - description: Specify if nginx hpa is enabled.
+
 ### StorageSpec
 
 - Field: usage

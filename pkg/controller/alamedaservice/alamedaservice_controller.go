@@ -608,6 +608,9 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 	aiDispatcher := component.AIDispatcherConfig{}
 	aiDispatcher.Enabled = asp.EnableDispatcher
 
+	nginxHPA := component.NginxConfig{}
+	nginxHPA.Enabled = asp.Nginx.Enabled
+
 	clusterType := resourceapply.CheckClusterType(r.apiextclient.ApiextensionsV1beta1())
 	componentConfg := component.NewComponentConfig(podTemplateConfig, alamedaService,
 		component.WithNamespace(namespace.Name),
@@ -620,6 +623,7 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 		component.WithExecutionConfig(execition),
 		component.WithFederatoraiAgentGPUConfig(faiAgentGPU),
 		component.WithAIDispatcherConfig(aiDispatcher),
+		component.WithNginxConfig(nginxHPA),
 	)
 	return componentConfg, nil
 }

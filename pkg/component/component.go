@@ -59,6 +59,7 @@ type ComponentConfig struct {
 
 	Prometheus      PrometheusConfig
 	Kafka           KafkaConfig
+	Nginx           NginxConfig
 	FedemeterConfig FedemeterConfig
 }
 

@@ -27,6 +27,9 @@ spec:
           mountPath: /etc/alameda/federatorai-agent/transmitter.toml
           subPath: transmitter.toml
         - name: federatorai-agent-app-config
+          mountPath: /etc/alameda/federatorai-agent/input/alameda_app.toml
+          subPath: alameda_app.toml
+        - name: federatorai-agent-app-config
           mountPath: /etc/alameda/federatorai-agent/input/alameda_kafka.toml
           subPath: alameda_kafka.toml
         - name: federatorai-agent-app-config
@@ -61,6 +64,8 @@ spec:
         items:
           - key: transmitter.toml
             path: transmitter.toml
+          - key: alameda_app.toml
+            path: alameda_app.toml
           - key: alameda_kafka.toml
             path: alameda_kafka.toml
           - key: alameda_datahub.toml

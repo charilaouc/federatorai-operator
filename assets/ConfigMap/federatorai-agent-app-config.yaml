@@ -9,23 +9,59 @@ data:
      set-logcallers = true
      output-level = "info" # debug, info, warn, error, fatal, none
 
+    {{if .Kafka.Enabled}}
     [input_jobs]
-        {{if .Kafka.Enabled}}
         [input_jobs.kafka]
         name = "kafka"
         schedule-spec = "@every 30s"
-        lib-path = "/lib/inputlib/inputlib_kafka.so"
+        lib-path = "/lib/inputlib/inputlib_app.so"
         lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_kafka.toml"
-        {{end}}
+    {{end}}
+
+    {{if .Nginx.Enabled}}
+    [input_jobs]
+        [input_jobs.nginx]
+        name = "nginx"
+        schedule-spec = "@every 30s"
+        lib-path = "/lib/inputlib/inputlib_app.so"
+        lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_app.toml"
+    {{end}}
 
     [output_jobs]
-        {{if .Kafka.Enabled}}
         [output_jobs.datahub]
         name = "datahub"
         schedule-spec = "@every 30s"
         lib-path = "/lib/outputlib/outputlib_datahub.so"
         lib-configuration = "/etc/alameda/federatorai-agent/output/alameda_datahub.toml"
-        {{end}}
+
+  alameda_app.toml: |
+    [global]
+    interval = 60
+    timerange = 180
+    granularity = 60
+
+    [datasource.prometheus]
+    datatype = "prometheus"
+    url = "{{.Prometheus.Address}}"
+    bearer_token_file = "{{.Prometheus.BearerTokenFile}}"
+    insecure_skip_verify = {{.Prometheus.TLS.InsecureSkipVerify}}
+
+    {{if .Nginx.Enabled}}
+    [[datasource.prometheus.measurement]]
+    name = "nginx_http_response_total"
+    expr = "sum (haproxy_server_http_responses_total) by (exported_service, exported_namespace)"
+    tags = ["exported_service", "exported_namespace"]
+    [datasource.prometheus.measurement.element.value]
+    type = "float"
+
+    # sum (haproxy_server_http_average_response_latency_milliseconds) by (exported_service, exported_namespace)
+    [[datasource.prometheus.measurement]]
+    name = "haproxy_server_http_average_response_latency_milliseconds"
+    expr = "sum (haproxy_server_http_average_response_latency_milliseconds) by (exported_service, exported_namespace)"
+    tags = ["exported_service", "exported_namespace"]
+    [datasource.prometheus.measurement.element.value]
+    type = "float"
+    {{end}}
 
   alameda_kafka.toml: |
     [global]
@@ -39,6 +75,7 @@ data:
     bearer_token_file = "{{.Prometheus.BearerTokenFile}}"
     insecure_skip_verify = {{.Prometheus.TLS.InsecureSkipVerify}}
 
+    {{if .Kafka.Enabled}}
     [[datasource.prometheus.measurement]]
     name = "kafka_topic_partition_current_offset"
     expr = "sum(delta(kafka_topic_partition_current_offset[3m])/3) by (consumergroup,topic,namespace)"
@@ -59,6 +96,7 @@ data:
     tags = ["consumergroup","topic","namespace"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
+    {{end}}
 
   alameda_datahub.toml: |
     [datahub]

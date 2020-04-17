@@ -6,6 +6,12 @@ import (
 
 type ComponentConfigOption func(*ComponentConfig)
 
+func WithNginxConfig(nginxConfig NginxConfig) ComponentConfigOption {
+	return func (cc *ComponentConfig) {
+		cc.Nginx = nginxConfig
+	}
+}
+
 func WithNamespace(namespace string) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.NameSpace = namespace

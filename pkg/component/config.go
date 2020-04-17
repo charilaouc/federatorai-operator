@@ -33,6 +33,14 @@ type KafkaConfig struct {
 	TLS  TLSConfig
 }
 
+type NginxConfig struct {
+	Enabled     bool
+}
+
+func NewDefaultNginxConfig() NginxConfig {
+	return NginxConfig{Enabled: false}
+}
+
 func NewDefaultFedemeterConfig() FedemeterConfig {
 	return FedemeterConfig{
 		FedemeterWorkerNodeLowerLimit: util.Openshift_FEDEMETER_WORKER_NODE_LOWER_LIMIT,

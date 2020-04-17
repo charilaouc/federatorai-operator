@@ -34,6 +34,10 @@ type KafkaSpec struct {
 	SASL SASLSpec `json:"sasl,omitempty"`
 }
 
+type NginxSpec struct {
+	Enabled bool  `json:"enabled"`
+}
+
 // AlamedaServiceSpec defines the desired state of AlamedaService
 // +k8s:openapi-gen=true
 type AlamedaServiceSpec struct {
@@ -58,6 +62,7 @@ type AlamedaServiceSpec struct {
 	EnableWeavescope         bool                  `json:"enableWeavescope"`
 	Keycode                  KeycodeSpec           `json:"keycode"`
 	Kafka                    KafkaSpec             `json:"kafka"`
+	Nginx                    NginxSpec             `json:"nginx"`
 
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb"`
