@@ -55,7 +55,7 @@ const (
 	admissionWebhookAnnotationKeySecretName = "secret.name"
 	serviceExposureAnnotationKey            = "servicesxposures.alamedaservices.federatorai.containers.ai"
 
-	defaultKafkaVersion              = "0.11.0.0"
+	defaultKafkaVersion              = "2.4.0"
 	defaultPrometheusBearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 )
 
