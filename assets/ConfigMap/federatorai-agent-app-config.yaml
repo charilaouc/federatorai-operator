@@ -49,7 +49,7 @@ data:
     {{if .Nginx.Enabled}}
     [[datasource.prometheus.measurement]]
     name = "nginx_http_response_total"
-    expr = "sum (haproxy_server_http_responses_total) by (exported_service, exported_namespace)"
+    expr = "sum(idelta(haproxy_server_http_responses_total[1m])) by (exported_service, exported_namespace)"
     tags = ["exported_service", "exported_namespace"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
