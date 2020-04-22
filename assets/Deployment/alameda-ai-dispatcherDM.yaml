@@ -43,7 +43,7 @@ spec:
               - --type=readiness
             initialDelaySeconds: 5
             periodSeconds: 60
-            timeoutSeconds: 5
+            timeoutSeconds: 60
           livenessProbe:
             exec:
               command:
@@ -52,7 +52,7 @@ spec:
               - --type=liveness
             initialDelaySeconds: 5
             periodSeconds: 60
-            timeoutSeconds: 5
+            timeoutSeconds: 60
           volumeMounts: 
           - name: alameda-ai-dispatcher-config
             mountPath: /etc/alameda/ai-dispatcher/ai-dispatcher.toml

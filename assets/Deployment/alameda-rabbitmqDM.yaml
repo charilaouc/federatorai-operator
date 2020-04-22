@@ -32,14 +32,14 @@ spec:
           exec:
             command: ["rabbitmqctl", "status"]
           initialDelaySeconds: 60
-          timeoutSeconds: 15
+          timeoutSeconds: 60
           periodSeconds: 60
         readinessProbe:
           exec:
             command: 
             - /prob.sh
           initialDelaySeconds: 20
-          timeoutSeconds: 30
+          timeoutSeconds: 60
           periodSeconds: 60
         imagePullPolicy: "IfNotPresent"
         env:

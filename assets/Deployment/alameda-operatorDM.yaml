@@ -70,7 +70,7 @@ spec:
           initialDelaySeconds: 5
           failureThreshold: 20
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         livenessProbe:
           exec:
             command:
@@ -79,7 +79,7 @@ spec:
           initialDelaySeconds: 5
           failureThreshold: 20
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert

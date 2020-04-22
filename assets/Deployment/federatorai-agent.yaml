@@ -43,7 +43,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 60
           successThreshold: 1
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         readinessProbe:
           exec:
             command:
@@ -54,7 +54,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 60
           successThreshold: 1
-          timeoutSeconds: 5
+          timeoutSeconds: 60
       volumes:
       - name: federatorai-agent-config
         configMap:

@@ -62,7 +62,7 @@ spec:
             - --type=readiness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         livenessProbe:
           exec:
             command:
@@ -70,7 +70,7 @@ spec:
             - --type=liveness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
       volumes:
         - name: alameda-ai-data-storage
         - name: alameda-ai-log-storage

@@ -46,7 +46,7 @@ spec:
             - --type=readiness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         livenessProbe:
           exec:
             command:
@@ -55,7 +55,7 @@ spec:
             - --type=liveness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
       volumes:
       - name:  alameda-evictioner-data-storage
       - name:  alameda-evictioner-log-storage

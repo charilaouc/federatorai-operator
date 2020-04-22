@@ -31,7 +31,7 @@ spec:
             - --type=readiness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         livenessProbe:
           exec:
             command:
@@ -40,7 +40,7 @@ spec:
             - --type=liveness
           initialDelaySeconds: 5
           periodSeconds: 60
-          timeoutSeconds: 5
+          timeoutSeconds: 60
         env:
           - name: OPERATOR_NAME
             value: alameda-analyzer
