@@ -29,6 +29,13 @@ data:
     period_count = 5
     data_source = "workload"
 
+    [nginx]
+    margin = 0
+    observation_granularity_seconds = 60
+    observation_period_seconds = 60
+    upper_resource_tolerance = 2
+    lower_resource_tolerance = 0.5
+
     [kafka]
     terminating_time = 30
     algo_interval = 60
