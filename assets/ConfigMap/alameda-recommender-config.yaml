@@ -41,6 +41,7 @@ data:
     algo_interval = 60
     upper_resource_tolerance = 0
     lower_resource_tolerance = 0
+    replica_scaling_tolerance = 0.1
     prediction_resource_tolerance = 0
     current_lag_threshold = 0.02
     qos_threshold = 0
