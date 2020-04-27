@@ -30,11 +30,14 @@ data:
     data_source = "workload"
 
     [nginx]
-    margin = 0
+    margin = 0.2
     observation_granularity_seconds = 60
     observation_period_seconds = 60
     upper_resource_tolerance = 2
     lower_resource_tolerance = 0.5
+    moving_average_period_seconds = 300
+    evaluation_type = "prediction"
+    shift_best_execution_time_seconds = 0
 
     [kafka]
     terminating_time = 30
