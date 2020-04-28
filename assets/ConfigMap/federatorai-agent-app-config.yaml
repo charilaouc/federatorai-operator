@@ -22,7 +22,7 @@ data:
     [input_jobs]
         [input_jobs.nginx]
         name = "nginx"
-        schedule-spec = "@every 30s"
+        schedule-spec = "@every 15s"
         lib-path = "/lib/inputlib/inputlib_app.so"
         lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_app.toml"
     {{end}}
@@ -30,15 +30,15 @@ data:
     [output_jobs]
         [output_jobs.datahub]
         name = "datahub"
-        schedule-spec = "@every 30s"
+        schedule-spec = "@every 15s"
         lib-path = "/lib/outputlib/outputlib_datahub.so"
         lib-configuration = "/etc/alameda/federatorai-agent/output/alameda_datahub.toml"
 
   alameda_app.toml: |
     [global]
-    interval = 60
-    timerange = 180
-    granularity = 60
+    interval = 15
+    timerange = 60
+    granularity = 15
 
     [datasource.prometheus]
     datatype = "prometheus"
@@ -49,7 +49,7 @@ data:
     {{if .Nginx.Enabled}}
     [[datasource.prometheus.measurement]]
     name = "nginx_http_response_total"
-    expr = "sum(idelta(haproxy_server_http_responses_total{code=\"2xx\"}[1m])) by (exported_service, exported_namespace)"
+    expr = "sum(delta(haproxy_server_http_responses_total[1m])) by (exported_service, exported_namespace)"
     tags = ["exported_service", "exported_namespace"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
