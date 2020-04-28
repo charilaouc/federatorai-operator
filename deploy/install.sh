@@ -509,7 +509,7 @@ echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully
 # Run check_prometheus_metrics only if not specified need_prometheus_rule_patch
 [ "${need_prometheus_rule_patch}" = "" ] && check_prometheus_metrics
 
-if [ "$need_prometheus_rule_patch" = "y" ]; then
+if [ "${patch_prometheus_rule}" = "" -a "${need_prometheus_rule_patch}" = "y" ]; then
     default="y"
     echo "$(tput setaf 127)Do you want to patch the prometheus rule to meet the Federator.ai requirement?$(tput sgr 0)"
     read -r -p "$(tput setaf 127)Choose 'n' will abort the installation process. [default: y]: $(tput sgr 0): " patch_prometheus_rule </dev/tty
