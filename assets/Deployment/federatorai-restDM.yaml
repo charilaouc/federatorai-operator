@@ -49,19 +49,17 @@ spec:
         readinessProbe:
           exec:
             command:
-            - /usr/local/bin/federatorai-rest
-            - probe
-            - --type=readiness
-          initialDelaySeconds: 5
+            - /init.sh
+            - readiness
+          initialDelaySeconds: 60
           periodSeconds: 60
           timeoutSeconds: 60
         livenessProbe:
           exec:
             command:
-            - /usr/local/bin/federatorai-rest
-            - probe
-            - --type=liveness
-          initialDelaySeconds: 5
+            - /init.sh
+            - liveness
+          initialDelaySeconds: 30
           periodSeconds: 60
           timeoutSeconds: 60
       volumes:
