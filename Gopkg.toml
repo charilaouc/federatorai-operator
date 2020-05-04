@@ -15,8 +15,7 @@ required = [
 
 [[override]]
   name = "k8s.io/code-generator"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[override]]
   name = "k8s.io/kube-openapi"
@@ -32,23 +31,19 @@ required = [
 
 [[override]]
   name = "k8s.io/api"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[override]]
   name = "k8s.io/apiextensions-apiserver"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[override]]
   name = "k8s.io/apimachinery"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[override]]
   name = "k8s.io/client-go"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[override]]
   name = "github.com/coreos/prometheus-operator"
@@ -60,8 +55,7 @@ required = [
 
 [[override]]
   name = "k8s.io/kube-aggregator"
-  # version for tag "kubernetes-1.16.3"
-  version = "kubernetes-1.16.3"
+  version = "v0.17.5"
 
 [[constraint]]
   name = "github.com/operator-framework/operator-sdk"
@@ -88,7 +82,7 @@ required = [
 
 [[constraint]]
   name = "github.com/grpc-ecosystem/go-grpc-middleware"
-  version = "1.1.0"
+  version = "1.2.0"
 
 [[constraint]]
   branch = "master"
@@ -106,4 +100,8 @@ version="v1.4.7"
 
 [[override]]
   name = "github.com/containers-ai/api"
-  branch = "4.2-meemaw"
+  branch = "master"
+
+[[constraint]]
+  name = "google.golang.org/grpc"
+  revision = "f495f5b15ae7ccda3b38c53a1bfcde4c1a58a2bc"

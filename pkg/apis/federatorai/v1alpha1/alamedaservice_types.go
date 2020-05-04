@@ -35,7 +35,15 @@ type KafkaSpec struct {
 }
 
 type NginxSpec struct {
-	Enabled bool  `json:"enabled"`
+	Enabled bool `json:"enabled"`
+}
+
+type ClusterAutoScalerSpec struct {
+	EnableExecution bool   `json:"enableExecution,omitempty"`
+	ForeseeTime     *int32 `json:"foreseeTime,omitempty"`
+	MaxNodes        *int32 `json:"maxNodes,omitempty"`
+	MaxCPU          *int32 `json:"maxCPU,omitempty"`
+	MaxMem          *int32 `json:"maxMem,omitempty"`
 }
 
 // AlamedaServiceSpec defines the desired state of AlamedaService
@@ -63,6 +71,7 @@ type AlamedaServiceSpec struct {
 	Keycode                  KeycodeSpec           `json:"keycode"`
 	Kafka                    KafkaSpec             `json:"kafka"`
 	Nginx                    NginxSpec             `json:"nginx"`
+	ClusterAutoScaler        ClusterAutoScalerSpec `json:"clusterAutoScaler"`
 
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb"`
@@ -100,9 +109,9 @@ type AlamedaComponentSpec struct {
 }
 
 type FederatoraiAgentGPUSpec struct {
-	AlamedaComponentSpec
-	Prometheus *PrometheusConfig `json:"prometheus"`
-	InfluxDB   *InfluxDBConfig   `json:"influxDB"`
+	AlamedaComponentSpec `json:",inline"`
+	Prometheus           *PrometheusConfig `json:"prometheus"`
+	InfluxDB             *InfluxDBConfig   `json:"influxDB"`
 }
 
 type PrometheusConfig struct {
@@ -254,6 +263,10 @@ type AlamedaServiceStatusCondition struct {
 
 // AlamedaService is the Schema for the alamedaservices API
 // +k8s:openapi-gen=true
+// +kubebuilder:printcolumn:name="Execution",type="boolean",JSONPath=".spec.enableExecution",description="The enable of execution"
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version",description="The type of alameda service"
+// +kubebuilder:printcolumn:name="PROMETHEUS",type="string",JSONPath=".spec.prometheusService",description="The URL of prometheus"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="The time of creation"
 type AlamedaService struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

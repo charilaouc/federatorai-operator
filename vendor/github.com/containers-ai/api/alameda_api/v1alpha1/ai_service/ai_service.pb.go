@@ -383,11 +383,11 @@ var fileDescriptor_facbad1e8d2a4adf = []byte{
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConn
+var _ grpc.ClientConnInterface
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
+const _ = grpc.SupportPackageIsVersion6
 
 // AlamedaAIServiceClient is the client API for AlamedaAIService service.
 //
@@ -400,10 +400,10 @@ type AlamedaAIServiceClient interface {
 }
 
 type alamedaAIServiceClient struct {
-	cc *grpc.ClientConn
+	cc grpc.ClientConnInterface
 }
 
-func NewAlamedaAIServiceClient(cc *grpc.ClientConn) AlamedaAIServiceClient {
+func NewAlamedaAIServiceClient(cc grpc.ClientConnInterface) AlamedaAIServiceClient {
 	return &alamedaAIServiceClient{cc}
 }
 

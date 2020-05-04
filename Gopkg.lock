@@ -50,8 +50,8 @@
   revision = "370fbf66e80cf812af0a208f158b2879195153f5"
 
 [[projects]]
-  branch = "4.2-meemaw"
-  digest = "1:dc9df731632bce7d93c3ff183ae16c26bd5b7b754a6c7cf782bf437ce67c6b14"
+  branch = "master"
+  digest = "1:36475933630a7e2d15a631721c2a030be984569f67162b1ca199ff98fc0d5c4e"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -74,7 +74,7 @@
     "datahub/keycodes",
   ]
   pruneopts = "NT"
-  revision = "b889c9fe50a8d942ffd83355e648e9d59c87b543"
+  revision = "72c71d2225b9ec0d4c5d82ee162693ce3b5810d4"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -259,7 +259,7 @@
   version = "v0.3.0"
 
 [[projects]]
-  digest = "1:38adc4fef232422783b4604f7ad0beb5f2e927495def85415112b47d49dc48cf"
+  digest = "1:e7cac0d35651915ef928d8856bc036a6334a7e8850de89bd210c7aa6be9f6a68"
   name = "github.com/grpc-ecosystem/go-grpc-middleware"
   packages = [
     ".",
@@ -267,11 +267,10 @@
     "logging/zap",
     "logging/zap/ctxzap",
     "tags",
-    "tags/zap",
   ]
   pruneopts = "NT"
-  revision = "dd15ed025b6054e5253963e355991f3070d4e593"
-  version = "v1.1.0"
+  revision = "3c51f7f332123e8be5a157c0802a228ac85bf9db"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:52094d0f8bdf831d1a2401e9b6fee5795fdc0b2a2d1f8bb1980834c289e79129"
@@ -750,10 +749,12 @@
   revision = "6af8c5fc6601ab6b41cd32742a65ce2f5bd9db57"
 
 [[projects]]
-  digest = "1:d2c237dc4281b21718395454f2e51e246e17ab620d807609e2eb4d67686e1348"
+  digest = "1:f73f399d343673916516a7c6864fbdb8d83b972f27afb4171509b98ccdc4ff95"
   name = "google.golang.org/grpc"
   packages = [
     ".",
+    "attributes",
+    "backoff",
     "balancer",
     "balancer/base",
     "balancer/roundrobin",
@@ -769,10 +770,13 @@
     "internal/backoff",
     "internal/balancerload",
     "internal/binarylog",
+    "internal/buffer",
     "internal/channelz",
     "internal/envconfig",
     "internal/grpcrand",
     "internal/grpcsync",
+    "internal/resolver/dns",
+    "internal/resolver/passthrough",
     "internal/syscall",
     "internal/transport",
     "keepalive",
@@ -780,15 +784,13 @@
     "naming",
     "peer",
     "resolver",
-    "resolver/dns",
-    "resolver/passthrough",
+    "serviceconfig",
     "stats",
     "status",
     "tap",
   ]
   pruneopts = "NT"
-  revision = "501c41df7f472c740d0674ff27122f3f48c80ce7"
-  version = "v1.21.1"
+  revision = "f495f5b15ae7ccda3b38c53a1bfcde4c1a58a2bc"
 
 [[projects]]
   digest = "1:1b91ae0dc69a41d4c2ed23ea5cffb721ea63f5037ca4b81e6d6771fbb8f45129"
@@ -832,7 +834,7 @@
   revision = "a6ecf24a6d716d933bcbc255a2f5d492285b54f5"
 
 [[projects]]
-  digest = "1:e6dbaffcc5407ea1fa7633f6ccb7e53ff3952eed041e9cbe4f97c9af87913ef1"
+  digest = "1:c1177ea44cd5053c44bc614e088eec9941762922bc8201aea9e757a89497588f"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -857,8 +859,10 @@
     "coordination/v1beta1",
     "core/v1",
     "discovery/v1alpha1",
+    "discovery/v1beta1",
     "events/v1beta1",
     "extensions/v1beta1",
+    "flowcontrol/v1alpha1",
     "networking/v1",
     "networking/v1beta1",
     "node/v1alpha1",
@@ -876,11 +880,11 @@
     "storage/v1beta1",
   ]
   pruneopts = "NT"
-  revision = "16d7abae0d2a8ab2a6a7ad1bf3300eaacd541f56"
-  version = "kubernetes-1.16.3"
+  revision = "8bc5d3899d8f1d602c4c88867ae830db7d9edc6c"
+  version = "v0.17.5"
 
 [[projects]]
-  digest = "1:269134dcaca960fb35f485ce697f532a41743c357c2567eeb5c70136c2ec3fc6"
+  digest = "1:65bd8b89902db89e0bc8ea353cfc3c78daaaa54055c5045e336903c5abe33b3b"
   name = "k8s.io/apiextensions-apiserver"
   packages = [
     "pkg/apis/apiextensions",
@@ -892,11 +896,11 @@
     "pkg/client/clientset/clientset/typed/apiextensions/v1beta1",
   ]
   pruneopts = "NT"
-  revision = "0278775368336f7d84795d0a903ea2a3a83cfd49"
-  version = "kubernetes-1.16.3"
+  revision = "a88221d77f7f1e19e61d43e53fa0e49a86f70397"
+  version = "v0.17.5"
 
 [[projects]]
-  digest = "1:498745cef87a3257f533ee2b7670d9020d92145f4eb7749cdeb0b1356606a2e5"
+  digest = "1:7b0ff695088687947b8a602c60cb7f9dba90500be5625cec9ae37dffb9b4688d"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/equality",
@@ -945,11 +949,11 @@
     "third_party/forked/golang/reflect",
   ]
   pruneopts = "NT"
-  revision = "72ed19daf4bb788ae595ae4103c404cb0fa09c84"
-  version = "kubernetes-1.16.3"
+  revision = "7378bafd8ae2c59d75cb410dd6f93a5196edc108"
+  version = "v0.17.5"
 
 [[projects]]
-  digest = "1:ed306683e2999f64cb0cdd16fbf06efd6ba5847da3d1e8f375dd52d71ddcae8e"
+  digest = "1:25628467b03a1efb78bc460b3a051b2ea592db84ef32afa473307e88f31a8119"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -977,8 +981,10 @@
     "kubernetes/typed/coordination/v1beta1",
     "kubernetes/typed/core/v1",
     "kubernetes/typed/discovery/v1alpha1",
+    "kubernetes/typed/discovery/v1beta1",
     "kubernetes/typed/events/v1beta1",
     "kubernetes/typed/extensions/v1beta1",
+    "kubernetes/typed/flowcontrol/v1alpha1",
     "kubernetes/typed/networking/v1",
     "kubernetes/typed/networking/v1beta1",
     "kubernetes/typed/node/v1alpha1",
@@ -1028,11 +1034,11 @@
     "util/workqueue",
   ]
   pruneopts = "NT"
-  revision = "6c5935290e3335b200f75d874a19be3093e9c36b"
-  version = "kubernetes-1.16.3"
+  revision = "83ff4b85fd207d431c21e3931d1b2297be73c2ae"
+  version = "v0.17.5"
 
 [[projects]]
-  digest = "1:a6aa236db5d07dff9ea1160ef316b17e131d2b1b2ad7d177431206bf389d241e"
+  digest = "1:5536c4a1d24c3cad716b40d77c1a91e7f6d193390c5d67e51f4b7278bb62cba5"
   name = "k8s.io/code-generator"
   packages = [
     "cmd/client-gen",
@@ -1060,8 +1066,8 @@
     "pkg/util",
   ]
   pruneopts = "T"
-  revision = "8e001e5d18949be7e823ccb9cfe9b60026e7bda0"
-  version = "kubernetes-1.16.3"
+  revision = "f15a378f77049d46d4214d461eb6d83716ebe6e4"
+  version = "v0.17.5"
 
 [[projects]]
   branch = "master"
@@ -1089,15 +1095,15 @@
   version = "v0.3.3"
 
 [[projects]]
-  digest = "1:4e45beffa5ab8d5b90de5de1ba0029a63c06b16b5b3f49a79ea5607f4a9cdf7e"
+  digest = "1:4c3e36dc108e0f1b73dc4d3d5419754b3e1a03e8e3d00c48e983cdf63ce4215e"
   name = "k8s.io/kube-aggregator"
   packages = [
     "pkg/apis/apiregistration",
     "pkg/apis/apiregistration/v1beta1",
   ]
   pruneopts = "NT"
-  revision = "f023614fb9ead2dd61dccdf14ef4266699d858bd"
-  version = "kubernetes-1.16.3"
+  revision = "49ea03186c3dc6dcf680512d9e21d6c5b72c0766"
+  version = "v0.17.5"
 
 [[projects]]
   digest = "1:275689e02c525bf910dcfff4627d525012ce40b6b7bc36c62f5f29df31ccda59"

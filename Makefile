@@ -96,3 +96,6 @@ code-gen:
 	deepcopy github.com/containers-ai/federatorai-operator/pkg/apis \
 	github.com/containers-ai/federatorai-operator/pkg/apis \
 	"federatorai:v1alpha1"
+
+crd-gen:
+	operator-sdk generate crds
