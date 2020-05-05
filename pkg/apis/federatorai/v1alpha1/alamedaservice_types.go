@@ -58,45 +58,45 @@ type AlamedaServiceSpec struct {
 	EnableGUI                bool                  `json:"enableGui"`
 	EnableVPA                *bool                 `json:"enableVPA"`
 	EnableGPU                *bool                 `json:"enableGPU"`
-	EnableDispatcher         *bool                 `json:"enableDispatcher"`
-	EnablePreloader          bool                  `json:"enablePreloader"`
+	EnableDispatcher         *bool                 `json:"enableDispatcher,omitempty"`
+	EnablePreloader          bool                  `json:"enablePreloader,omitempty"`
 	SelfDriving              bool                  `json:"selfDriving"`
 	AutoPatchPrometheusRules bool                  `json:"autoPatchPrometheusRules"`
 	Version                  string                `json:"version"`
-	ImageLocation            string                `json:"imageLocation"`
+	ImageLocation            string                `json:"imageLocation,omitempty"`
 	PrometheusService        string                `json:"prometheusService"`
 	Storages                 []StorageSpec         `json:"storages"`
-	ServiceExposures         []ServiceExposureSpec `json:"serviceExposures"`
-	EnableWeavescope         bool                  `json:"enableWeavescope"`
+	ServiceExposures         []ServiceExposureSpec `json:"serviceExposures,omitempty"`
+	EnableWeavescope         bool                  `json:"enableWeavescope,omitempty"`
 	Keycode                  KeycodeSpec           `json:"keycode"`
 	Kafka                    KafkaSpec             `json:"kafka"`
 	Nginx                    NginxSpec             `json:"nginx"`
-	ClusterAutoScaler        ClusterAutoScalerSpec `json:"clusterAutoScaler"`
+	ClusterAutoScaler        ClusterAutoScalerSpec `json:"clusterAutoScaler,omitempty"`
 
 	//Component Section Schema
-	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb"`
-	GrafanaSectionSet                   AlamedaComponentSpec    `json:"alamedaGrafana"`
-	AlamedaAISectionSet                 AlamedaComponentSpec    `json:"alamedaAi"`
-	AlamedaOperatorSectionSet           AlamedaComponentSpec    `json:"alamedaOperator"`
-	AlamedaDatahubSectionSet            AlamedaComponentSpec    `json:"alamedaDatahub"`
-	AlamedaEvictionerSectionSet         AlamedaComponentSpec    `json:"alamedaEvictioner"`
-	AdmissionControllerSectionSet       AlamedaComponentSpec    `json:"alamedaAdmissionController"`
-	AlamedaRecommenderSectionSet        AlamedaComponentSpec    `json:"alamedaRecommender"`
-	AlamedaExecutorSectionSet           AlamedaComponentSpec    `json:"alamedaExecutor"`
-	AlamedaFedemeterSectionSet          AlamedaComponentSpec    `json:"fedemeter"`
-	AlamedaFedemeterInfluxDBSectionSet  AlamedaComponentSpec    `json:"fedemeterInfluxdb"`
-	AlamedaWeavescopeSectionSet         AlamedaComponentSpec    `json:"alameda-weavescope"`
-	AlamedaDispatcherSectionSet         AlamedaComponentSpec    `json:"alameda-dispatcher"`
-	AlamedaRabbitMQSectionSet           AlamedaComponentSpec    `json:"alamedaRabbitMQ"`
-	AlamedaAnalyzerSectionSet           AlamedaComponentSpec    `json:"alameda-analyzer"`
-	AlamedaNotifierSectionSet           AlamedaComponentSpec    `json:"alamedaNotifier"`
-	FederatoraiAgentSectionSet          AlamedaComponentSpec    `json:"federatoraiAgent"`
-	FederatoraiAgentGPUSectionSet       FederatoraiAgentGPUSpec `json:"federatoraiAgentGPU"`
-	FederatoraiRestSectionSet           AlamedaComponentSpec    `json:"federatoraiRest"`
-	FederatoraiAgentPreloaderSectionSet AlamedaComponentSpec    `json:"federatoraiAgentPreloader"`
-	FederatoraiFrontendSectionSet       AlamedaComponentSpec    `json:"federatoraiFrontend"`
-	FederatoraiBackendSectionSet        AlamedaComponentSpec    `json:"federatoraiBackend"`
-	FederatoraiAgentAppSectionSet       AlamedaComponentSpec    `json:"federatoraiAgentApp"`
+	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb,omitempty"`
+	GrafanaSectionSet                   AlamedaComponentSpec    `json:"alamedaGrafana,omitempty"`
+	AlamedaAISectionSet                 AlamedaComponentSpec    `json:"alamedaAi,omitempty"`
+	AlamedaOperatorSectionSet           AlamedaComponentSpec    `json:"alamedaOperator,omitempty"`
+	AlamedaDatahubSectionSet            AlamedaComponentSpec    `json:"alamedaDatahub,omitempty"`
+	AlamedaEvictionerSectionSet         AlamedaComponentSpec    `json:"alamedaEvictioner,omitempty"`
+	AdmissionControllerSectionSet       AlamedaComponentSpec    `json:"alamedaAdmissionController,omitempty"`
+	AlamedaRecommenderSectionSet        AlamedaComponentSpec    `json:"alamedaRecommender,omitempty"`
+	AlamedaExecutorSectionSet           AlamedaComponentSpec    `json:"alamedaExecutor,omitempty"`
+	AlamedaFedemeterSectionSet          AlamedaComponentSpec    `json:"fedemeter,omitempty"`
+	AlamedaFedemeterInfluxDBSectionSet  AlamedaComponentSpec    `json:"fedemeterInfluxdb,omitempty"`
+	AlamedaWeavescopeSectionSet         AlamedaComponentSpec    `json:"alameda-weavescope,omitempty"`
+	AlamedaDispatcherSectionSet         AlamedaComponentSpec    `json:"alameda-dispatcher,omitempty"`
+	AlamedaRabbitMQSectionSet           AlamedaComponentSpec    `json:"alamedaRabbitMQ,omitempty"`
+	AlamedaAnalyzerSectionSet           AlamedaComponentSpec    `json:"alameda-analyzer,omitempty"`
+	AlamedaNotifierSectionSet           AlamedaComponentSpec    `json:"alamedaNotifier,omitempty"`
+	FederatoraiAgentSectionSet          AlamedaComponentSpec    `json:"federatoraiAgent,omitempty"`
+	FederatoraiAgentGPUSectionSet       FederatoraiAgentGPUSpec `json:"federatoraiAgentGPU,omitempty"`
+	FederatoraiRestSectionSet           AlamedaComponentSpec    `json:"federatoraiRest,omitempty"`
+	FederatoraiAgentPreloaderSectionSet AlamedaComponentSpec    `json:"federatoraiAgentPreloader,omitempty"`
+	FederatoraiFrontendSectionSet       AlamedaComponentSpec    `json:"federatoraiFrontend,omitempty"`
+	FederatoraiBackendSectionSet        AlamedaComponentSpec    `json:"federatoraiBackend,omitempty"`
+	FederatoraiAgentAppSectionSet       AlamedaComponentSpec    `json:"federatoraiAgentApp,omitempty"`
 }
 
 type AlamedaComponentSpec struct {
@@ -149,9 +149,9 @@ var (
 type StorageSpec struct {
 	Type        Type                              `json:"type"`
 	Usage       Usage                             `json:"usage"`
-	Size        string                            `json:"size"`
-	Class       *string                           `json:"class"`
-	AccessModes corev1.PersistentVolumeAccessMode `json:"accessMode"`
+	Size        string                            `json:"size,omitempty"`
+	Class       *string                           `json:"class,omitempty"`
+	AccessModes corev1.PersistentVolumeAccessMode `json:"accessMode,omitempty"`
 }
 
 //check StorageStruct
@@ -198,7 +198,7 @@ type KeycodeSpec struct {
 	// CodeNumber provides user to apply keycode to Federator.ai
 	CodeNumber string `json:"codeNumber"`
 	// SignatureData provides user to apply signature data which is download from ProphetStor to Federator.ai
-	SignatureData string `json:"signatureData"`
+	SignatureData string `json:"signatureData,omitempty"`
 }
 
 // KeycodeState defines type of keycode processing state

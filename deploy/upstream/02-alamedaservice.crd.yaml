@@ -189,9 +189,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -348,9 +345,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -507,9 +501,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -666,9 +657,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -825,9 +813,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -984,9 +969,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1143,9 +1125,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1302,9 +1281,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1461,9 +1437,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1621,9 +1594,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1780,9 +1750,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -1939,9 +1906,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2098,9 +2062,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2257,9 +2218,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2449,9 +2407,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2608,9 +2563,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2767,9 +2719,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -2926,9 +2875,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3111,9 +3057,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3272,9 +3215,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3431,9 +3371,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3590,9 +3527,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3749,9 +3683,6 @@ spec:
                       usage:
                         type: string
                     required:
-                    - accessMode
-                    - class
-                    - size
                     - type
                     - usage
                     type: object
@@ -3804,7 +3735,6 @@ spec:
                   type: string
               required:
               - codeNumber
-              - signatureData
               type: object
             nginx:
               properties:
@@ -3880,9 +3810,6 @@ spec:
                   usage:
                     type: string
                 required:
-                - accessMode
-                - class
-                - size
                 - type
                 - usage
                 type: object
@@ -3890,45 +3817,16 @@ spec:
             version:
               type: string
           required:
-          - alameda-analyzer
-          - alameda-dispatcher
-          - alameda-weavescope
-          - alamedaAdmissionController
-          - alamedaAi
-          - alamedaDatahub
-          - alamedaEvictioner
-          - alamedaExecutor
-          - alamedaGrafana
-          - alamedaInfluxdb
-          - alamedaNotifier
-          - alamedaOperator
-          - alamedaRabbitMQ
-          - alamedaRecommender
           - autoPatchPrometheusRules
-          - clusterAutoScaler
-          - enableDispatcher
           - enableExecution
           - enableGPU
           - enableGui
-          - enablePreloader
           - enableVPA
-          - enableWeavescope
-          - fedemeter
-          - fedemeterInfluxdb
-          - federatoraiAgent
-          - federatoraiAgentApp
-          - federatoraiAgentGPU
-          - federatoraiAgentPreloader
-          - federatoraiBackend
-          - federatoraiFrontend
-          - federatoraiRest
-          - imageLocation
           - kafka
           - keycode
           - nginx
           - prometheusService
           - selfDriving
-          - serviceExposures
           - storages
           - version
           type: object
