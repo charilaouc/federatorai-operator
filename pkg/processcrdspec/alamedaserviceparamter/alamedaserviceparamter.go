@@ -405,6 +405,7 @@ type AlamedaServiceParamter struct {
 	PrometheusService                   string
 	Kafka                               v1alpha1.KafkaSpec
 	Nginx                               v1alpha1.NginxSpec
+	ClusterAutoScaler                   v1alpha1.ClusterAutoScalerSpec
 	Storages                            []v1alpha1.StorageSpec
 	ServiceExposures                    []v1alpha1.ServiceExposureSpec
 	InfluxdbSectionSet                  v1alpha1.AlamedaComponentSpec
@@ -453,6 +454,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		PrometheusService:                   instance.Spec.PrometheusService,
 		Nginx:                               instance.Spec.Nginx,
 		Kafka:                               instance.Spec.Kafka,
+		ClusterAutoScaler:                   instance.Spec.ClusterAutoScaler,
 		Storages:                            instance.Spec.Storages,
 		ServiceExposures:                    instance.Spec.ServiceExposures,
 		InfluxdbSectionSet:                  instance.Spec.InfluxdbSectionSet,

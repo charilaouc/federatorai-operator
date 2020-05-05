@@ -98,6 +98,10 @@ data:
     type = "float"
     {{end}}
 
+  alameda_node.toml: |
+    {{if .ClusterAutoScaler.EnableExecution}}
+    {{end}}
+
   alameda_datahub.toml: |
     [datahub]
     address = "alameda-datahub.{{.NameSpace}}:50050"

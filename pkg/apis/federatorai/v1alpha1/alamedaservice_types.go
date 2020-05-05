@@ -39,7 +39,7 @@ type NginxSpec struct {
 }
 
 type ClusterAutoScalerSpec struct {
-	EnableExecution bool   `json:"enableExecution,omitempty"`
+	EnableExecution *bool  `json:"enableExecution,omitempty"`
 	ForeseeTime     *int32 `json:"foreseeTime,omitempty"`
 	MaxNodes        *int32 `json:"maxNodes,omitempty"`
 	MaxCPU          *int32 `json:"maxCPU,omitempty"`
@@ -302,6 +302,11 @@ func (as *AlamedaService) SetDefaultValue() {
 	if as.Spec.EnableGPU == nil {
 		enable := false
 		as.Spec.EnableGPU = &enable
+	}
+
+	if as.Spec.ClusterAutoScaler.EnableExecution == nil {
+		enable := true
+		as.Spec.ClusterAutoScaler.EnableExecution = &enable
 	}
 }
 
