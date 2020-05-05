@@ -53,7 +53,7 @@ depend-update:
 	dep ensure -update
 
 .PHONY: build
-build: pkg/assets/bindata.go cmd/patch/pkg/assets/bindata.go## build binaries
+build: pkg/assets/bindata.go cmd/patch/pkg/assets/bindata.go ## build binaries
 	$(DOCKER_CMD) go build $(GOGCFLAGS) -ldflags "$(LD_FLAGS)" -o "$(BUILD_DEST)" "$(REPO_PATH)/cmd/manager"
 
 .PHONY: images
@@ -98,4 +98,15 @@ code-gen:
 	"federatorai:v1alpha1"
 
 crd-gen:
-	operator-sdk generate crds
+	export SDK_VERSION="v0.17.0"; \
+	if [ "`./operator-sdk version 2>&1 | cut -d\\" -f 2`" != "$${SDK_VERSION}" ]; then \
+	    curl -L https://github.com/operator-framework/operator-sdk/releases/download/$${SDK_VERSION}/operator-sdk-$${SDK_VERSION}-x86_64-linux-gnu > ./operator-sdk; \
+	    chmod 755 ./operator-sdk; \
+	fi
+	./operator-sdk generate crds
+
+crd-check: crd-gen
+	if [ "" != "`diff -du deploy/crds/federatorai.containers.ai_alamedaservices_crd.yaml deploy/upstream/02-alamedaservice.crd.yaml 2>&1`" ]; then \
+	    echo "Error. Improper CRDs files."; \
+	    exit 1; \
+	fi
