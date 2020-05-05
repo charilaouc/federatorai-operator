@@ -8,7 +8,7 @@ spec:
     brokerAddresses: []
     # - broker1:9092
     # - broker2:9092
-    version: # 0.11.0.0
+    version: # 2.4.0
     sasl:
       enabled: false
       username: ""
