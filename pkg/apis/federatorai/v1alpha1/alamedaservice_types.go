@@ -53,25 +53,27 @@ type AlamedaServiceSpec struct {
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
 	// +kubebuilder:validation:Enum=openshift3.9
-	Platform                 Platform              `json:"platform,omitempty"`
-	EnableExecution          bool                  `json:"enableExecution"`
-	EnableGUI                bool                  `json:"enableGui"`
-	EnableVPA                *bool                 `json:"enableVPA"`
-	EnableGPU                *bool                 `json:"enableGPU"`
-	EnableDispatcher         *bool                 `json:"enableDispatcher,omitempty"`
-	EnablePreloader          bool                  `json:"enablePreloader,omitempty"`
-	SelfDriving              bool                  `json:"selfDriving"`
-	AutoPatchPrometheusRules bool                  `json:"autoPatchPrometheusRules"`
-	Version                  string                `json:"version"`
-	ImageLocation            string                `json:"imageLocation,omitempty"`
-	PrometheusService        string                `json:"prometheusService"`
-	Storages                 []StorageSpec         `json:"storages"`
-	ServiceExposures         []ServiceExposureSpec `json:"serviceExposures,omitempty"`
-	EnableWeavescope         bool                  `json:"enableWeavescope,omitempty"`
-	Keycode                  KeycodeSpec           `json:"keycode"`
-	Kafka                    KafkaSpec             `json:"kafka"`
-	Nginx                    NginxSpec             `json:"nginx"`
-	ClusterAutoScaler        ClusterAutoScalerSpec `json:"clusterAutoScaler,omitempty"`
+	Platform        Platform `json:"platform,omitempty"`
+	EnableExecution bool     `json:"enableExecution"`
+	EnableGUI       bool     `json:"enableGui"`
+	EnableVPA       *bool    `json:"enableVPA"`
+	EnableGPU       *bool    `json:"enableGPU"`
+	// +nullable
+	EnableDispatcher         *bool         `json:"enableDispatcher,omitempty"`
+	EnablePreloader          bool          `json:"enablePreloader,omitempty"`
+	SelfDriving              bool          `json:"selfDriving"`
+	AutoPatchPrometheusRules bool          `json:"autoPatchPrometheusRules"`
+	Version                  string        `json:"version"`
+	ImageLocation            string        `json:"imageLocation,omitempty"`
+	PrometheusService        string        `json:"prometheusService"`
+	Storages                 []StorageSpec `json:"storages"`
+	// +nullable
+	ServiceExposures  []ServiceExposureSpec `json:"serviceExposures,omitempty"`
+	EnableWeavescope  bool                  `json:"enableWeavescope,omitempty"`
+	Keycode           KeycodeSpec           `json:"keycode"`
+	Kafka             KafkaSpec             `json:"kafka"`
+	Nginx             NginxSpec             `json:"nginx"`
+	ClusterAutoScaler ClusterAutoScalerSpec `json:"clusterAutoScaler,omitempty"`
 
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb,omitempty"`
@@ -100,18 +102,22 @@ type AlamedaServiceSpec struct {
 }
 
 type AlamedaComponentSpec struct {
-	Image              string            `json:"image"`
-	Version            string            `json:"version"`
-	ImagePullPolicy    corev1.PullPolicy `json:"imagepullpolicy"`
-	Storages           []StorageSpec     `json:"storages"`
-	BootStrapContainer Imagestruct       `json:"bootstrap"`
-	EnvVars            []corev1.EnvVar   `json:"env"`
+	Image           string            `json:"image"`
+	Version         string            `json:"version"`
+	ImagePullPolicy corev1.PullPolicy `json:"imagepullpolicy"`
+	// +nullable
+	Storages           []StorageSpec `json:"storages"`
+	BootStrapContainer Imagestruct   `json:"bootstrap"`
+	// +nullable
+	EnvVars []corev1.EnvVar `json:"env"`
 }
 
 type FederatoraiAgentGPUSpec struct {
 	AlamedaComponentSpec `json:",inline"`
-	Prometheus           *PrometheusConfig `json:"prometheus"`
-	InfluxDB             *InfluxDBConfig   `json:"influxDB"`
+	// +nullable
+	Prometheus *PrometheusConfig `json:"prometheus"`
+	// +nullable
+	InfluxDB *InfluxDBConfig `json:"influxDB"`
 }
 
 type PrometheusConfig struct {
@@ -147,9 +153,10 @@ var (
 )
 
 type StorageSpec struct {
-	Type        Type                              `json:"type"`
-	Usage       Usage                             `json:"usage"`
-	Size        string                            `json:"size,omitempty"`
+	Type  Type   `json:"type"`
+	Usage Usage  `json:"usage"`
+	Size  string `json:"size,omitempty"`
+	// +nullable
 	Class       *string                           `json:"class,omitempty"`
 	AccessModes corev1.PersistentVolumeAccessMode `json:"accessMode,omitempty"`
 }
@@ -237,7 +244,8 @@ type AlamedaServiceStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
-	CRDVersion    AlamedaServiceStatusCRDVersion  `json:"crdversion"`
+	CRDVersion AlamedaServiceStatusCRDVersion `json:"crdversion"`
+	// +nullable
 	Conditions    []AlamedaServiceStatusCondition `json:"conditions"`
 	KeycodeStatus KeycodeStatus                   `json:"keycodeStatus"`
 }
