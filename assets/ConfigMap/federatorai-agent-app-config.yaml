@@ -27,6 +27,15 @@ data:
         lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_app.toml"
     {{end}}
 
+    {{if .ClusterAutoScaler.EnableExecution}}
+    [input_jobs]
+        [input_jobs.node]
+        name = "node"
+        schedule-spec = "@every 60s"
+        lib-path = "/lib/inputlib/inputlib_app.so"
+        lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_node.toml"
+    {{end}}
+
     [output_jobs]
         [output_jobs.datahub]
         name = "datahub"
@@ -99,7 +108,30 @@ data:
     {{end}}
 
   alameda_node.toml: |
+    [global]
+    interval = 60
+    timerange = 60
+    granularity = 60
+
+    [datasource.prometheus]
+    datatype = "prometheus"
+    url = "{{.Prometheus.Address}}"
+    bearer_token_file = "{{.Prometheus.BearerTokenFile}}"
+    insecure_skip_verify = {{.Prometheus.TLS.InsecureSkipVerify}}
     {{if .ClusterAutoScaler.EnableExecution}}
+    [[datasource.prometheus.measurement]]
+    name = "node_cpu"
+    expr = "1000 * node:node_num_cpu:sum * node:node_cpu_utilisation:avg1m"
+    tags = ["node"]
+    [datasource.prometheus.measurement.element.value]
+    type = "float"
+
+    [[datasource.prometheus.measurement]]
+    name = "node_memory"
+    expr = "node:node_memory_utilisation_2: * node:node_memory_bytes_total:sum"
+    tags = ["node"]
+    [datasource.prometheus.measurement.element.value]
+    type = "float"
     {{end}}
 
   alameda_datahub.toml: |

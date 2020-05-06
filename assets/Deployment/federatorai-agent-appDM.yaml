@@ -30,6 +30,9 @@ spec:
           mountPath: /etc/alameda/federatorai-agent/input/alameda_app.toml
           subPath: alameda_app.toml
         - name: federatorai-agent-app-config
+          mountPath: /etc/alameda/federatorai-agent/input/alameda_node.toml
+          subPath: alameda_node.toml
+        - name: federatorai-agent-app-config
           mountPath: /etc/alameda/federatorai-agent/input/alameda_kafka.toml
           subPath: alameda_kafka.toml
         - name: federatorai-agent-app-config
@@ -70,6 +73,8 @@ spec:
             path: alameda_kafka.toml
           - key: alameda_datahub.toml
             path: alameda_datahub.toml
+          - key: alameda_node.toml
+            path: alameda_node.toml
       - name: federatorai-agent-app-data-storage
       - name: federatorai-agent-app-log-storage
       serviceAccount: federatorai-agent-app
