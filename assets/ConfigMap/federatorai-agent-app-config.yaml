@@ -9,8 +9,8 @@ data:
      set-logcallers = true
      output-level = "info" # debug, info, warn, error, fatal, none
 
-    {{if .Kafka.Enabled}}
     [input_jobs]
+    {{if .Kafka.Enabled}}
         [input_jobs.kafka]
         name = "kafka"
         schedule-spec = "@every 30s"
@@ -19,7 +19,6 @@ data:
     {{end}}
 
     {{if .Nginx.Enabled}}
-    [input_jobs]
         [input_jobs.nginx]
         name = "nginx"
         schedule-spec = "@every 15s"
@@ -28,7 +27,6 @@ data:
     {{end}}
 
     {{if .ClusterAutoScaler.EnableExecution}}
-    [input_jobs]
         [input_jobs.node]
         name = "node"
         schedule-spec = "@every 60s"
