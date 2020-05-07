@@ -34,13 +34,13 @@ data:
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
 
-      [[inputs.datadog]]
-        urls = ["$DATADOG_QUERY_URL"]
-        api_key = "$DATADOG_API_KEY"
-        application_key = "$DATADOG_APPLICATION_KEY"
-        cluster_name = "$CLUSTER_NAME"
-        # watched_source = [{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]},{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]}]
-        watched_source = []
+      #[[inputs.datadog]]
+      #  urls = ["$DATADOG_QUERY_URL"]
+      #  api_key = "$DATADOG_API_KEY"
+      #  application_key = "$DATADOG_APPLICATION_KEY"
+      #  cluster_name = "$CLUSTER_NAME"
+      #  # watched_source = [{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]},{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]}]
+      #  watched_source = []
 
       [[inputs.datadog_application_aware]]
         urls = ["$DATADOG_QUERY_URL"]
