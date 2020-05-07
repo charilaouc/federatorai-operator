@@ -8,7 +8,7 @@ data:
       [global_tags]
 
       [agent]
-        interval = "10m0s"
+        interval = "1m"
         round_interval = false
         metric_batch_size = 1000
         metric_buffer_limit = 10000
@@ -25,6 +25,11 @@ data:
         hostname = ""
         omit_hostname = false
 
+      [[aggregators.basicstats]]
+        period = "1m"
+        granularity = "1m"
+        drop_original = true
+
       [[outputs.datahub]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
@@ -34,16 +39,20 @@ data:
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
         cluster_name = "$CLUSTER_NAME"
-        watched_source = [{namespace="federatorai",application="alameda-weave-scope-cluster-agent",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]},{namespace="alameda",application="redis-slave",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]}]
+        # watched_source = [{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]},{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]}]
+        watched_source = []
+
       [[inputs.datadog_application_aware]]
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
         cluster_name = "$CLUSTER_NAME"
-        watched_kafka_consumer = {application="consumer",namespace="kafka-project",min_replicas=1,max_replicas=15}
-      [[inputs.prometheus_query]]
-        url = "$PROMETHEUS_URL"
-        token_path = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-        insecure_skip_verify = true
-        watched_source = [{name="kafka_topic_partition_current_offset",expr="sum(rate(kafka_topic_partition_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_current_offset",expr="sum(rate(kafka_consumergroup_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_lag",expr="sum(kafka_consumergroup_lag)by(namespace,consumergroup,topic)",tags=["consumergroup","topic","namespace"]}]
+        #watched_kafka_consumer = {application="<monitored_kafka_application>",namespace="<monitored_application_namespace>",min_replicas=<autoscaler_min_replicas>,max_replicas=<autoscaler_max_replicas>}
+        watched_kafka_consumer = {}
+
+      #[[inputs.prometheus_query]]
+      #  url = "$PROMETHEUS_URL"
+      #  token_path = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      #  insecure_skip_verify = true
+      #  watched_source = [{name="kafka_topic_partition_current_offset",expr="sum(rate(kafka_topic_partition_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_current_offset",expr="sum(rate(kafka_consumergroup_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_lag",expr="sum(kafka_consumergroup_lag)by(namespace,consumergroup,topic)",tags=["consumergroup","topic","namespace"]}]
 
