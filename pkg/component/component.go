@@ -57,10 +57,11 @@ type ComponentConfig struct {
 
 	Image ImageConfig
 
-	Prometheus      PrometheusConfig
-	Kafka           KafkaConfig
-	Nginx           NginxConfig
-	FedemeterConfig FedemeterConfig
+	Prometheus        PrometheusConfig
+	Kafka             KafkaConfig
+	Nginx             NginxConfig
+	ClusterAutoScaler ClusterAutoScalerConfig
+	FedemeterConfig   FedemeterConfig
 }
 
 func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha1.AlamedaService, opts ...ComponentConfigOption) *ComponentConfig {
@@ -329,7 +330,7 @@ func (c ComponentConfig) NewAdmissionControllerSecret() (*corev1.Secret, error) 
 
 	secret, err := c.NewSecret("Secret/admission-controller-tls.yaml")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to buiild admission-controller secret")
+		return nil, errors.Wrap(err, "failed to build admission-controller secret")
 	}
 
 	caKey, err := NewPrivateKey()
@@ -374,7 +375,7 @@ func (c ComponentConfig) NewTLSSecret(assetFile, cn string) (*corev1.Secret, err
 
 	secret, err := c.NewSecret(assetFile)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to buiild secret")
+		return nil, errors.Wrap(err, "failed to build secret")
 	}
 
 	caKey, err := NewPrivateKey()
@@ -418,12 +419,12 @@ func (c ComponentConfig) NewTLSSecret(assetFile, cn string) (*corev1.Secret, err
 func (c ComponentConfig) NewfedemeterSecret() (*corev1.Secret, error) {
 	secret, err := c.NewSecret("Secret/fedemeter-tls.yaml")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to buiild fedemeter secret")
+		return nil, errors.Wrap(err, "failed to build fedemeter secret")
 	}
 	host := fmt.Sprintf("fedemeter-api.%s.svc", c.NameSpace)
 	crt, key, err := cert.GenerateSelfSignedCertKey(host, []net.IP{}, []string{})
 	if err != nil {
-		return nil, errors.Errorf("failed to buiild fedemeter secret: %s", err.Error())
+		return nil, errors.Errorf("failed to build fedemeter secret: %s", err.Error())
 	}
 
 	if secret.Data == nil {
@@ -438,13 +439,13 @@ func (c ComponentConfig) NewInfluxDBSecret() (*corev1.Secret, error) {
 
 	secret, err := c.NewSecret("Secret/alameda-influxdb.yaml")
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to buiild influxdb secret")
+		return nil, errors.Wrap(err, "failed to build influxdb secret")
 	}
 
 	host := fmt.Sprintf("admission-influxdb.%s.svc", c.NameSpace)
 	crt, key, err := cert.GenerateSelfSignedCertKey(host, []net.IP{}, []string{})
 	if err != nil {
-		return nil, errors.Errorf("failed to buiild influxdb secret: %s", err.Error())
+		return nil, errors.Errorf("failed to build influxdb secret: %s", err.Error())
 	}
 
 	if secret.Data == nil {

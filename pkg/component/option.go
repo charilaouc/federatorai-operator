@@ -7,7 +7,7 @@ import (
 type ComponentConfigOption func(*ComponentConfig)
 
 func WithNginxConfig(nginxConfig NginxConfig) ComponentConfigOption {
-	return func (cc *ComponentConfig) {
+	return func(cc *ComponentConfig) {
 		cc.Nginx = nginxConfig
 	}
 }
@@ -57,6 +57,12 @@ func WithFedermeterConfig(clusterType string) ComponentConfigOption {
 func WithKafkaConfig(config KafkaConfig) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.Kafka = config
+	}
+}
+
+func WithClusterAutoScalerConfig(config ClusterAutoScalerConfig) ComponentConfigOption {
+	return func(cc *ComponentConfig) {
+		cc.ClusterAutoScaler = config
 	}
 }
 

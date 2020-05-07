@@ -34,7 +34,11 @@ type KafkaConfig struct {
 }
 
 type NginxConfig struct {
-	Enabled     bool
+	Enabled bool
+}
+
+type ClusterAutoScalerConfig struct {
+	EnableExecution bool
 }
 
 func NewDefaultNginxConfig() NginxConfig {

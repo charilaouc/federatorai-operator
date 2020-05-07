@@ -611,6 +611,9 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 	nginxHPA := component.NginxConfig{}
 	nginxHPA.Enabled = asp.Nginx.Enabled
 
+	caConfig := component.ClusterAutoScalerConfig{}
+	caConfig.EnableExecution = *asp.ClusterAutoScaler.EnableExecution
+
 	clusterType := resourceapply.CheckClusterType(r.apiextclient.ApiextensionsV1beta1())
 	componentConfg := component.NewComponentConfig(podTemplateConfig, alamedaService,
 		component.WithNamespace(namespace.Name),
@@ -624,6 +627,7 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 		component.WithFederatoraiAgentGPUConfig(faiAgentGPU),
 		component.WithAIDispatcherConfig(aiDispatcher),
 		component.WithNginxConfig(nginxHPA),
+		component.WithClusterAutoScalerConfig(caConfig),
 	)
 	return componentConfg, nil
 }
@@ -989,6 +993,7 @@ func (r *ReconcileAlamedaService) createPersistentVolumeClaim(instance *federato
 }
 
 func (r *ReconcileAlamedaService) createSecret(instance *federatoraiv1alpha1.AlamedaService, asp *alamedaserviceparamter.AlamedaServiceParamter, resource *alamedaserviceparamter.Resource) error {
+
 	secret, err := componentConfig.NewAdmissionControllerSecret()
 	if err != nil {
 		return errors.Errorf("build AdmissionController secret failed: %s", err.Error())
@@ -999,7 +1004,7 @@ func (r *ReconcileAlamedaService) createSecret(instance *federatoraiv1alpha1.Ala
 	err = r.client.Create(context.TODO(), secret)
 	if err != nil && k8sErrors.IsAlreadyExists(err) {
 	} else if err != nil {
-		return errors.Errorf("get secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
+		return errors.Errorf("create secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
 	}
 	secret, err = componentConfig.NewInfluxDBSecret()
 	if err != nil {
@@ -1011,7 +1016,7 @@ func (r *ReconcileAlamedaService) createSecret(instance *federatoraiv1alpha1.Ala
 	err = r.client.Create(context.TODO(), secret)
 	if err != nil && k8sErrors.IsAlreadyExists(err) {
 	} else if err != nil {
-		return errors.Errorf("get secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
+		return errors.Errorf("create secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
 	}
 	secret, err = componentConfig.NewfedemeterSecret()
 	if err != nil {
@@ -1023,7 +1028,7 @@ func (r *ReconcileAlamedaService) createSecret(instance *federatoraiv1alpha1.Ala
 	err = r.client.Create(context.TODO(), secret)
 	if err != nil && k8sErrors.IsAlreadyExists(err) {
 	} else if err != nil {
-		return errors.Errorf("get secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
+		return errors.Errorf("create secret %s/%s failed: %s", secret.Namespace, secret.Name, err.Error())
 	}
 
 	notifierWebhookServiceAsset := alamedaserviceparamter.GetAlamedaNotifierWebhookService()
