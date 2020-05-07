@@ -51,6 +51,7 @@ const (
 	FederatoraiAgentPreloaderDPN = "federatorai-agent-preloader"
 	FederatoraiFrontendDPN       = "federatorai-dashboard-frontend"
 	FederatoraiBackendDPN        = "federatorai-dashboard-backend"
+	FederatoraiDataAdapterDPN    = "federatorai-data-adapter"
 	//DaemonSet name
 	AlamedaweavescopeAgentDS = "alameda-weave-scope-agent"
 	//container name
@@ -80,6 +81,7 @@ const (
 	FederatoraiAgentPreloaderCTN = "federatorai-agent-preloader"
 	FederatoraiBackendCTN        = "federatorai-dashboard-backend"
 	FederatoraiFrontendCTN       = "federatorai-dashboard-frontend"
+	FederatoraiDataAdapterCTN    = "federatorai-data-adapter"
 
 	//Statefulset name
 	FedemeterInflixDBSSN = "fedemeter-influxdb"

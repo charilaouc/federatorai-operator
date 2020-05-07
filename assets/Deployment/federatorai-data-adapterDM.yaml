@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: federatorai-data-adapter
+  namespace: {{.NameSpace}}
+  labels:
+    app: alameda
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alameda
+    spec:
+      containers:
+        - name: federatorai-data-adapter
+          image: {{.Image.FederatoraiDataAdapter}}
+          imagePullPolicy: IfNotPresent
+          #command: ["tail"]
+          #args: ["-f", "/dev/null"]
+          command: ["/bin/bash"]
+          args: ["-c", "telegraf --config /etc/telegraf/telegraf.conf"]
+          #livenessProbe:
+          #  exec:
+          #    command:
+          #    - /bin/bash
+          #    - -c
+          #    - ps -ef | grep 'dockerEntryPoint' | grep -v "grep"
+          #    #- ps -ef | grep 'tail -f /dev/null' | grep -v "grep"
+          #  initialDelaySeconds: 30
+          #  periodSeconds: 10
+          # Need securityContext privileged = true to access device /dev/mem
+          env:
+          - name: DATAHUB_URL
+            value: "alameda-datahub.{{.NameSpace}}"
+          - name: DATAHUB_PORT
+            value: "50050"
+          - name: DATADOG_QUERY_URL
+            value: "https://api.datadoghq.com/api/v1/query"
+          - name: CLUSTER_NAME
+            value: "my-cluster"
+          - name: DATADOG_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: federatorai-data-adapter-secret
+                key: datadog_api_key
+          - name: DATADOG_APPLICATION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: federatorai-data-adapter-secret
+                key: datadog_application_key
+          volumeMounts:
+          - name: federatorai-data-adapter-config
+            mountPath: /etc/telegraf/telegraf.conf
+            subPath: telegraf.conf
+          - name: federatorai-data-adapter-log
+            mountPath: /var/log
+      volumes:
+      - name: federatorai-data-adapter-config
+        configMap:
+          name: federatorai-data-adapter-config
+      - name: federatorai-data-adapter-log
+      #- name: devmem
+      #  hostPath:
+      #    path: /dev/mem
+      #    type: File
+      serviceAccount: federatorai-data-adapter
+      serviceAccountName: federatorai-data-adapter
+  selector:
+    matchLabels:
+      app: alameda
+

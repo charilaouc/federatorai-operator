@@ -83,6 +83,7 @@ type AlamedaServiceSpec struct {
 	FederatoraiFrontendSectionSet       AlamedaComponentSpec    `json:"federatoraiFrontend"`
 	FederatoraiBackendSectionSet        AlamedaComponentSpec    `json:"federatoraiBackend"`
 	FederatoraiAgentAppSectionSet       AlamedaComponentSpec    `json:"federatoraiAgentApp"`
+	FederatoraiDataAdapterSectionSet    AlamedaComponentSpec    `json:"federatoraiDataAdapter"`
 }
 
 type AlamedaComponentSpec struct {

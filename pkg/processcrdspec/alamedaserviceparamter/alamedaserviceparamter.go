@@ -29,6 +29,7 @@ var (
 		frontendList,
 		backendList,
 		federatoraiAgentAppList,
+		federatoraiDataAdapterList,
 	}
 
 	frontendList = []string{
@@ -202,6 +203,15 @@ var (
 		"ServiceAccount/federatorai-agent-appSA.yaml",
 	}
 
+	federatoraiDataAdapterList = []string{
+		"ClusterRole/federatorai-data-adapterCR.yaml",
+		"ClusterRoleBinding/federatorai-data-adapterCRB.yaml",
+		"ConfigMap/federatorai-data-adapter-config.yaml",
+		"Deployment/federatorai-data-adapterDM.yaml",
+		"ServiceAccount/federatorai-data-adapterSA.yaml",
+		"Secret/federatorai-data-adapter.yaml",
+	}
+
 	selfDrivingList = []string{
 		"AlamedaScaler/alamedaScaler-alameda.yaml",
 	}
@@ -244,6 +254,7 @@ var (
 		"PersistentVolumeClaim/federatorai-frontend-log.yaml",
 		"PersistentVolumeClaim/federatorai-agent-app-log.yaml",
 		"PersistentVolumeClaim/alameda-notifier-log.yaml",
+		"PersistentVolumeClaim/federatorai-data-adapter.yaml",
 	}
 
 	dataPVCList = []string{
@@ -428,6 +439,7 @@ type AlamedaServiceParamter struct {
 	FederatoraiFrontendSectionSet       v1alpha1.AlamedaComponentSpec
 	FederatoraiBackendSectionSet        v1alpha1.AlamedaComponentSpec
 	FederatoraiAgentAppSectionSet       v1alpha1.AlamedaComponentSpec
+	FederatoraiDataAdapterSectionSet    v1alpha1.AlamedaComponentSpec
 	CurrentCRDVersion                   v1alpha1.AlamedaServiceStatusCRDVersion
 	previousCRDVersion                  v1alpha1.AlamedaServiceStatusCRDVersion
 }
@@ -475,6 +487,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		FederatoraiFrontendSectionSet:       instance.Spec.FederatoraiFrontendSectionSet,
 		FederatoraiBackendSectionSet:        instance.Spec.FederatoraiBackendSectionSet,
 		FederatoraiAgentAppSectionSet:       instance.Spec.FederatoraiAgentAppSectionSet,
+		FederatoraiDataAdapterSectionSet:    instance.Spec.FederatoraiDataAdapterSectionSet,
 		CurrentCRDVersion:                   instance.Status.CRDVersion,
 		previousCRDVersion:                  instance.Status.CRDVersion,
 	}
