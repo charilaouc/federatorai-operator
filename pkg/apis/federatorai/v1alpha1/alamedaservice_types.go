@@ -270,7 +270,7 @@ func (as *AlamedaService) SetDefaultValue() {
 	}
 
 	if as.Spec.EnableVPA == nil {
-		enable := true
+		enable := false
 		as.Spec.EnableVPA = &enable
 	}
 
