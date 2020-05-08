@@ -162,10 +162,10 @@ data:
     granularities = ["1m"]
     metricTypes = ["current_offset"]
     predictor = "SARIMAX"
-    [units.valueKeys]
+      [units.valueKeys]
       scalerNamespace = "alameda_scaler_namespace"
       scalerName = "alameda_scaler_name"
-    
+
       [units.metric]
       scope = "metric"
       category = "kafka"
@@ -173,7 +173,7 @@ data:
       aggregation = "avg"
         [units.metric.valueKeys]
         value = "value"
-    
+
       [units.prediction]
       scope = "prediction"
       category = "kafka"
@@ -195,7 +195,7 @@ data:
     granularities = ["1m"]
     metricTypes = ["current_offset"]
     predictor = "SARIMAX"
-    [units.valueKeys]
+      [units.valueKeys]
       scalerNamespace = "alameda_scaler_namespace"
       scalerName = "alameda_scaler_name"
       resourceK8SNamespace = "resource_k8s_namespace"
@@ -208,7 +208,7 @@ data:
       aggregation = "avg"
         [units.metric.valueKeys]
         value = "value"
-    
+
       [units.prediction]
       scope = "prediction"
       category = "kafka"
@@ -229,7 +229,7 @@ data:
     granularities = ["1m"]
     metricTypes = ["number"]
     predictor = "SARIMAX"
-    [units.valueKeys]
+      [units.valueKeys]
       scalerNamespace = "alameda_scaler_namespace"
       scalerName = "alameda_scaler_name"
       resourceK8SNamespace = "resource_k8s_namespace"
@@ -247,6 +247,35 @@ data:
       scope = "prediction"
       category = "nginx"
       type = "nginx"
+        [units.prediction.valueKeys]
+        modelID = "model_id"
+        predictID = "prediction_id"
+        granularity = "granularity"
+        value = "value"
+
+    [[units]]
+    enabled = true
+    scope = "resource"
+    category = "cluster_autoscaler"
+    type = "machinegroup"
+    measurement = "machinegroup"
+    idKeys = ["cluster_name", "namespace", "name"]
+    granularities = ["1m"]
+    metricTypes = ["cpu_usage_seconds_percentage", "memory_usage_bytes"]
+    predictor = "SARIMAX"
+
+      [units.metric]
+      scope = "metric"
+      category = "cluster_status"
+      type = "node"
+      aggregation = "avg"
+        [units.metric.valueKeys]
+        value = "value"
+
+      [units.prediction]
+      scope = "prediction"
+      category = "cluster_autoscaler"
+      type = "machinegroup"
         [units.prediction.valueKeys]
         modelID = "model_id"
         predictID = "prediction_id"
