@@ -263,11 +263,22 @@ data:
     granularities = ["1m"]
     metricTypes = ["cpu_usage_seconds_percentage", "memory_usage_bytes"]
     predictor = "SARIMAX"
+      [units.parameters]
+      machineSetQueryKeys = ["cluster_name", "machinegroup_namespace", "machinegroup_name"]
+      nodeQueryKeys = ["cluster_name", "machineset_namespace", "machineset_name"]
+      clusterStatusCategory = "cluster_status"
+      machineSetType = "machineset"
+      nodeType = "node"
+
+      [units.valueKeys]
+      clusterName = "cluster_name"
+      namespace = "namespace"
+      name = "name"
 
       [units.metric]
       scope = "metric"
-      category = "cluster_status"
-      type = "node"
+      category = "cluster_autoscaler"
+      type = "machinegroup"
       aggregation = "avg"
         [units.metric.valueKeys]
         value = "value"
