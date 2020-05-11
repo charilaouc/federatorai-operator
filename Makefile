@@ -91,20 +91,23 @@ $(GOBINDATA_BIN):
 help:
 	@grep -E '^[a-zA-Z/0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-code-gen:
-	vendor/k8s.io/code-generator/generate-groups.sh \
-	deepcopy github.com/containers-ai/federatorai-operator/pkg/apis \
-	github.com/containers-ai/federatorai-operator/pkg/apis \
-	"federatorai:v1alpha1"
-
-crd-gen:
+.PHONY: osdk-check
+osdk-check:
 	export SDK_VERSION="v0.17.0"; \
 	if [ "`./operator-sdk version 2>&1 | cut -d\\" -f 2`" != "$${SDK_VERSION}" ]; then \
 	    curl -L https://github.com/operator-framework/operator-sdk/releases/download/$${SDK_VERSION}/operator-sdk-$${SDK_VERSION}-x86_64-linux-gnu > ./operator-sdk; \
 	    chmod 755 ./operator-sdk; \
 	fi
+
+.PHONY: code-gen
+code-gen: osdk-check
+	./operator-sdk generate k8s
+
+.PHONY: crd-gen
+crd-gen: osdk-check
 	./operator-sdk generate crds
 
+.PHONY: crd-check
 crd-check: crd-gen
 	if [ "" != "`diff -du deploy/crds/federatorai.containers.ai_alamedaservices_crd.yaml deploy/upstream/02-alamedaservice.crd.yaml 2>&1`" ]; then \
 	    echo "Error. Improper CRDs files."; \
