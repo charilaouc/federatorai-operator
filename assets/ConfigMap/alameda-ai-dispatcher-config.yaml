@@ -34,7 +34,7 @@ data:
       reconnectInterval = 30 #seconds
     
     [serviceSetting]
-    granularities = ["30s", "1m", "1h", "6h", "24h"]
+    granularities = ["30s", "1m", "2m", "1h", "6h", "24h"]
     predictUnits = ["POD", "GPU", "NAMESPACE",
       "APPLICATION", "CLUSTER", "CONTROLLER", "NODE"
     ]
@@ -64,7 +64,14 @@ data:
       predictionSteps = 30
       predictionJobSendIntervalSec = 3600
       modelJobSendIntervalSec = 3600
-    
+
+      [granularities.2m]
+      dataGranularity = "2m"
+      dataGranularitySec = 120
+      predictionSteps = 60
+      predictionJobSendIntervalSec = 120
+      modelJobSendIntervalSec = 120
+
       [granularities.1m]
       dataGranularity = "1m"
       dataGranularitySec = 60
@@ -260,7 +267,7 @@ data:
     type = "machinegroup"
     measurement = "machinegroup"
     idKeys = ["cluster_name", "namespace", "name"]
-    granularities = ["1m"]
+    granularities = ["2m"]
     metricTypes = ["cpu_usage_seconds_percentage", "memory_usage_bytes"]
     predictor = "SARIMAX"
       [units.parameters]

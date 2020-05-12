@@ -76,6 +76,7 @@ var (
 		"ServiceAccount/alameda-aiSA.yaml",
 		"Service/alameda-ai-metricsSV.yaml",
 		"Deployment/alameda-aiDM.yaml",
+		"ConfigMap/alameda-ai-config.yaml",
 	}
 
 	rabbitmqList = []string{

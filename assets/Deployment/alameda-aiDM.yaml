@@ -71,7 +71,13 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 60
           timeoutSeconds: 60
+        volumeMounts: 
+        - name: alameda-ai-config
+          mountPath: /alameda-ai/services/orchestra/workload_prediction/config          
       volumes:
+        - name: alameda-ai-config
+          configMap:
+            name: alameda-ai-config      
         - name: alameda-ai-data-storage
         - name: alameda-ai-log-storage
       serviceAccount: alameda-ai

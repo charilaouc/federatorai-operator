@@ -1,0 +1,383 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alameda-ai-config
+  namespace: {{.NameSpace}}
+data:
+  config.yaml: |-
+    service_setting:
+      predictor: SARIMAX # or LSTM
+      granularity:
+        - 30s   #  modify to '1h' for prediction of 1h-granularity
+        - 1h
+        - 6h
+        - 24h
+
+
+    predict_unit:
+
+      topic:
+        type: topic
+        id: object_meta
+        list_method: get_app_list
+        get_method: query_apps_observed_data
+        write_method: write_apps_predicted_data
+        need_info: True
+
+      consumer_group:
+        type: consumer_group
+        id: object_meta
+        list_method: get_app_list
+        get_method: query_apps_observed_data
+        write_method: write_apps_predicted_data
+        need_info: True
+
+      nginx:
+        type: nginx
+        id: object_meta
+        list_method: get_app_list
+        get_method: query_apps_observed_data
+        write_method: write_apps_predicted_data
+        need_info: True
+
+      machinegroup:
+        type: machinegroup
+        id: object_meta
+        list_method: get_machinegroup_list
+        get_method: query_machinegroups_observed_data
+        write_method: write_machinegroups_predicted_data
+        need_info: True
+
+      POD:
+        type: POD
+        id: object_meta
+        list_method: get_pod_list
+        get_method: query_containers_observed_data
+        write_method: write_containers_predicted_data
+        need_info: True
+
+      NODE:
+        type: NODE
+        id: object_meta
+        list_method: get_node_list
+        get_method: query_nodes_observed_data
+        write_method: write_nodes_predicted_data
+        need_info: True
+
+      GPU:
+        type: GPU
+        id: uuid
+        list_method: get_gpu_list
+        get_method: query_gpus_observed_data
+        write_method: write_gpus_predicted_data
+        need_info: False
+
+      APPLICATION:
+        type: APPLICATION
+        id: object_meta
+        list_method: get_application_list
+        get_method: query_applications_observed_data
+        write_method: write_applications_predicted_data
+        need_info: True
+
+      NAMESPACE:
+        type: NAMESPACE
+        id: object_meta
+        list_method: get_namespace_list
+        get_method: query_namespaces_observed_data
+        write_method: write_namespaces_predicted_data
+        need_info: True
+
+      CLUSTER:
+        type: CLUSTER
+        id: object_meta
+        list_method: get_cluster_list
+        get_method: query_clusters_observed_data
+        write_method: write_clusters_predicted_data
+        need_info: False
+
+      CONTROLLER:
+        type: CONTROLLER
+        id: object_meta
+        list_method: get_controller_list
+        get_method: query_controllers_observed_data
+        write_method: write_controllers_predicted_data
+        need_info: True
+
+    predictor:
+      LSTM:
+        type: LSTM
+        module: .lstm_predictor
+        class: TftsLstmPredictor
+        trained: True # use additional process for model training
+        saved: True   # need to save models
+        batch_size: 32
+        candicate_window_size: [96,52,31]
+        default_window_size: 96
+        num_features: 1
+        candicate_num_units: [256]
+        default_num_units: 256
+        data_ratio_validation: 0.3
+      SARIMAX:
+        type: SARIMAX
+        module: .sarimax_predictor
+        class: SARIMAXPredictor
+        trained: True # model training and prediction are performed by the same process
+        saved: True   # no need for saving models
+        order:
+          p: [0,1,2]
+          q: [0,1,2]
+        seasonal_order:
+          P: [0,1,2]
+          D: [0,1]
+          Q: [0,1]
+        confidence_level: 99 # 90, 95, 98, 99
+      AR_MODEL:
+        type: AR_MODEL
+        module: .ar_predictor
+        class: ARPredictor
+        trained: False # model training and prediction are performed by the same process
+        saved: False   # no need for saving models
+        confidence_level: 99 # 90, 95, 98, 99
+
+
+    granularity:
+      24h:
+        data_granularity: 24h
+        data_granularity_sec: 86400
+        mid: 24h
+        data_amount: 2880h
+        data_amount_sec: 10368000
+        minimal_sample_size: 100
+        training_steps: 2000
+    #    prediction_steps: 120
+
+
+      6h:
+        data_granularity: 6h
+        data_granularity_sec: 21600
+        mid: 6h
+        data_amount: 672h
+        data_amount_sec: 2419200
+        minimal_sample_size: 100
+        training_steps: 2000
+    #    prediction_steps: 120
+
+
+      1h:
+        data_granularity: 1h
+        data_granularity_sec: 3600
+        mid: 1h
+        data_amount: 120h
+        data_amount_sec: 432000
+        minimal_sample_size: 100
+        training_steps: 2000
+    #    prediction_steps: 120
+
+
+      30s:
+        data_granularity: 30s
+        data_granularity_sec: 30 # corresponding to data_granularity
+        mid: 30s                 # the same as data_granularity;
+        data_amount: 1h          # 120 training samples for sarimax; suggest 2h (240 samples) for LSTM
+        data_amount_sec: 3600    # corresponding to data_amount
+        minimal_sample_size: 100 # only for LSTM; needs to be less than the number of training samples
+        training_steps: 2000      # only for LSTM
+        prediction_steps: 120    # number of output predictions
+
+      2m:
+        data_granularity: 2m
+        data_granularity_sec: 120
+        mid: 2m
+        data_amount: 240m
+        data_amount_sec: 14400
+        minimal_sample_size: 80
+        training_steps: 2000
+
+      1m:
+        data_granularity: 1m
+        data_granularity_sec: 60
+        mid: 1m
+        data_amount: 120m
+        data_amount_sec: 7200
+        minimal_sample_size: 80
+        training_steps: 2000
+
+    node_multiple_upper_bound: 1 # for setting prediction upper bound
+
+  schema_config.yaml: |-
+    # api proto column type
+    data_type:
+      DATATYPE_UNDEFINED: 0
+      DATATYPE_BOOL: 1
+      DATATYPE_INT: 2
+      DATATYPE_INT8: 3
+      DATATYPE_INT16: 4
+      DATATYPE_INT32: 5
+      DATATYPE_INT64: 6
+      DATATYPE_UINT: 7
+      DATATYPE_UINT8: 8
+      DATATYPE_UINT16: 9
+      DATATYPE_UINT32: 10
+      DATATYPE_UTIN64: 11
+      DATATYPE_FLOAT32: 12
+      DATATYPE_FLOAT64: 13
+      DATATYPE_STRING: 14
+    # api proto resource boundary
+    resource_boundary:
+      RESOURCE_BOUNDARY_UNDEFINED: 0
+      RESOURCE_RAW: 1
+      RESOURCE_UPPER_BOUND: 2
+      RESOURCE_LOWER_BOUND: 3
+    # api proto resource quota
+    resource_quota:
+      RESOURCE_QUOTA_UNDEFINED: 0
+      RESOURCE_LIMIT: 1
+      RESOURCE_REQUEST: 2
+      RESOURCE_INITIAL_LIMIT: 3
+      RESOURCE_INITIAL_REQUEST: 4
+    # api proto metric type
+    metric_type:
+      METRICS_TYPE_UNDEFINED: 0
+      CPU_USAGE_SECONDS_PERCENTAGE: 1
+      MEMORY_USAGE_BYTES: 2
+      POWER_USAGE_WATTS: 3
+      TEMPERATURE_CELSIUS: 4
+      DUTY_CYCLE: 5
+      CURRENT_OFFSET: 6
+      LAG: 7
+      LATENCY: 8
+      NUMBER: 9
+
+    kafka:  # category
+      topic:  # type
+        columns: ['name', 'namespace', 'cluster_name']  # identify column associate model path, filename(format query data key_id),query where condition and group by columns
+        predict_columns: ['value', 'model_id', 'prediction_id','granularity']  # write common column
+
+      consumer_group:  # type
+        columns: ['name', 'namespace', 'cluster_name', 'topic_name']  # identify column
+        predict_columns: ['value', 'model_id', 'prediction_id','granularity']  # write common column
+
+    nginx:
+      nginx:
+        columns: ['cluster_name', 'resource_k8s_namespace', 'resource_k8s_name', 'resource_k8s_kind']  # identify column associate model path, filename(format query data key_id),query where condition and group by columns
+        ### first 4 columns for predict_columns must be 'value', 'model_id', 'prediction_id', 'granularity'
+        predict_columns: ['value', 'model_id', 'prediction_id', 'granularity' , 'resource_k8s_service_namespace', 'resource_k8s_service_name']  # write common column
+
+    cluster_autoscaler:
+      machinegroup:
+        columns: ['cluster_name', 'namespace', 'name']  # identify column associate model path, filename(format query data key_id),query where condition and group by columns
+        ### first 4 columns for predict_columns must be 'value', 'model_id', 'prediction_id', 'granularity'
+        predict_columns: ['value', 'model_id', 'prediction_id', 'granularity']  # write common column
+
+  config-lstm.yaml: |-
+    service_setting:
+      predictor: LSTM # or LSTM
+      granularity:
+        - 30s   #  modify to '1h' for prediction of 1h-granularity
+        - 1h
+        - 6h
+        - 24h
+
+
+    predict_unit:
+      POD:
+        type: POD
+        id: namespaced_name
+        list_method: get_pod_list
+        get_method: query_containers_observed_data
+        write_method: write_containers_predicted_data
+        need_info: True
+
+      NODE:
+        type: NODE
+        id: name
+        list_method: get_node_list
+        get_method: query_nodes_observed_data
+        write_method: write_nodes_predicted_data
+        need_info: False
+
+      GPU:
+        type: GPU
+        id: uuid
+        list_method: get_gpu_list
+        get_method: query_gpus_observed_data
+        write_method: write_gpus_predicted_data
+        need_info: False
+
+    predictor:
+      LSTM:
+        type: LSTM
+        module: .lstm_predictor
+        class: TftsLstmPredictor
+        trained: True # use additional process for model training
+        saved: True   # need to save models
+        batch_size: 32
+        candicate_window_size: [64,30]
+        default_window_size: 96
+        num_features: 1
+        candicate_num_units: [256]
+        default_num_units: 256
+        data_ratio_validation: 0.2
+      SARIMAX:
+        type: SARIMAX
+        module: .sarimax_predictor
+        class: SARIMAXPredictor
+        trained: True # model training and prediction are performed by the same process
+        saved: True   # no need for saving models
+        order:
+          p: [0,1,2]
+          q: [0,1,2]
+        seasonal_order:
+          P: [0,1,2]
+          D: [0,1]
+          Q: [0,1]
+        confidence_level: 99 # 90, 95, 98, 99
+
+
+    granularity:
+      24h:
+        data_granularity: 24h
+        data_granularity_sec: 86400
+        mid: 24h
+        data_amount: 2880h
+        data_amount_sec: 10368000
+        minimal_sample_size: 100
+        training_steps: 2000
+    #    prediction_steps: 120
+
+
+      6h:
+        data_granularity: 6h
+        data_granularity_sec: 21600
+        mid: 6h
+        data_amount: 672h
+        data_amount_sec: 2419200
+        minimal_sample_size: 100
+        training_steps: 2000
+    #    prediction_steps: 120
+
+
+      1h:
+        data_granularity: 1h
+        data_granularity_sec: 3600
+        mid: 1h
+        data_amount: 120h
+        data_amount_sec: 432000
+        minimal_sample_size: 100
+        training_steps: 350
+    #    prediction_steps: 120
+
+
+      30s:
+        data_granularity: 30s
+        data_granularity_sec: 30 # corresponding to data_granularity
+        mid: 30s                 # the same as data_granularity;
+        data_amount: 1h          # 120 training samples for sarimax; suggest 2h (240 samples) for LSTM
+        data_amount_sec: 3600    # corresponding to data_amount
+        minimal_sample_size: 100 # only for LSTM; needs to be less than the number of training samples
+        training_steps: 350      # only for LSTM
+        prediction_steps: 120    # number of output predictions
+
+
+    node_multiple_upper_bound: 1 # for setting prediction upper bound
