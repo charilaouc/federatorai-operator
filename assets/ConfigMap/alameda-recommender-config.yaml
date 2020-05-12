@@ -6,6 +6,7 @@ metadata:
 data:
   config.toml: |-
     [global]
+    ca_interval = 120
     hpa_interval = 180
     vpa_short_interval = 300
     vpa_long_interval = 3600
@@ -14,6 +15,11 @@ data:
     [datahub]
     address = "alameda-datahub.{{.NameSpace}}.svc"
     port = 50050
+
+    [ca]
+    prediction_granularity_seconds = 120
+    prediction_shift_start_seconds = 0
+    prediction_shift_total_seconds = 3600
 
     [fedemeter]
     enabled = false
