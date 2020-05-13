@@ -34,21 +34,76 @@ data:
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
 
+      [[outputs.datadog]]
+        api_key = "$DATADOG_API_KEY"
+        application_key = "$DATADOG_APPLICATION_KEY"
+        User-Agent = "Federator.ai/4.2"
+        dashboard_dir = "/etc/telegraf/dashboards/datadog"
+        enable_kafka_dashboard = false
+        integration_metrics = ["federatorai.recommendation","federatorai.prediction"]
+
       #[[inputs.datadog]]
       #  urls = ["$DATADOG_QUERY_URL"]
       #  api_key = "$DATADOG_API_KEY"
       #  application_key = "$DATADOG_APPLICATION_KEY"
       #  cluster_name = "$CLUSTER_NAME"
-      #  # watched_source = [{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]},{namespace="<monitored_application_namespace>",application="<monitored_application>",watched_metrics=[{name="kubernetes.cpu.usage.total",metric_type="CPU_USAGE_SECONDS_PERCENTAGE"},{name="kubernetes.memory.usage",metric_type="MEMORY_USAGE_BYTES"}]}]
-      #  watched_source = []
+      #  # Watched source
+      #  # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
+      #  [[inputs.datadog.watched_source]]
+      #    namespace = "<monitored_application_namespace>"
+      #    application = "<monitored_application>"
+      #    [[inputs.datadog.watched_source.watched_metrics]]
+      #      name="kubernetes.cpu.usage.total"
+      #      metric_type="CPU_USAGE_SECONDS_PERCENTAGE"
+      #    [[inputs.datadog.watched_source.watched_metrics]]
+      #      name="kubernetes.memory.usage"
+      #      metric_type="MEMORY_USAGE_BYTES"
+
+      #  [[inputs.datadog.watched_source]]
+      #    namespace = "<monitored_application_namespace>"
+      #    application = "<monitored_application>"
+      #    [[inputs.datadog.watched_source.watched_metrics]]
+      #      name="kubernetes.cpu.usage.total"
+      #      metric_type="CPU_USAGE_SECONDS_PERCENTAGE"
+      #    [[inputs.datadog.watched_source.watched_metrics]]
+      #      name="kubernetes.memory.usage"
+      #      metric_type="MEMORY_USAGE_BYTES"
+
+
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        cluster_name = "$CLUSTER_NAME"
+
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "consumer"
+          namespace = "kafka-project"
+          measurement = "kafka_consumer_group"
+          scope = "recommendation"
+
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "consumer"
+          namespace = "kafka-project"
+          measurement = "kafka_consumer_group_current_offset"
+          scope = "prediction"
+
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "consumer"
+          namespace = "kafka-project"
+          measurement = "kafka_topic_partition_current_offset"
+          scope = "prediction"
 
       [[inputs.datadog_application_aware]]
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
         cluster_name = "$CLUSTER_NAME"
-        #watched_kafka_consumer = {application="<monitored_kafka_application>",namespace="<monitored_application_namespace>",min_replicas=<autoscaler_min_replicas>,max_replicas=<autoscaler_max_replicas>}
-        watched_kafka_consumer = {}
+
+        [inputs.datadog_application_aware.watched_kafka_consumer]
+          application = ""
+          namespace = ""
+          min_replicas = 0
+          max_replicas = 0
 
       #[[inputs.prometheus_query]]
       #  url = "$PROMETHEUS_URL"
