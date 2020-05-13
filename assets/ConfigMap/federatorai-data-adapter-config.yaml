@@ -76,20 +76,20 @@ data:
         cluster_name = "$CLUSTER_NAME"
 
         [[inputs.alameda_datahub_query.watched_source]]
-          name = "consumer"
-          namespace = "kafka-project"
+          name = "<kafka_consumer_group_name>"
+          namespace = "<kafka_consumer_group_namespace>"
           measurement = "kafka_consumer_group"
           scope = "recommendation"
 
         [[inputs.alameda_datahub_query.watched_source]]
-          name = "consumer"
-          namespace = "kafka-project"
+          name = "<kafka_consumer_group_name>"
+          namespace = "<kafka_consumer_grou_namespace>"
           measurement = "kafka_consumer_group_current_offset"
           scope = "prediction"
 
         [[inputs.alameda_datahub_query.watched_source]]
-          name = "consumer"
-          namespace = "kafka-project"
+          name = "<kafka_topic_name>"
+          namespace = "<kafka_topic_namespace>"
           measurement = "kafka_topic_partition_current_offset"
           scope = "prediction"
 
