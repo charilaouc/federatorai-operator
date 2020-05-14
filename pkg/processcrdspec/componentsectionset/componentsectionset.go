@@ -128,8 +128,8 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 	case util.FederatoraiDataAdapterDPN:
 		envVars = asp.FederatoraiDataAdapterSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.FederatoraiDataAdapterCTN, asp.FederatoraiDataAdapterSectionSet.ImagePullPolicy)
-		util.SetStorageToVolumeSource(dep, asp.FederatoraiDataAdapterSectionSet.Storages, "federatorai-data-adapter.pvc", util.AlamedaGroup)
-		util.SetStorageToMountPath(dep, asp.FederatoraiDataAdapterSectionSet.Storages, util.FederatoraiDataAdapterCTN, "federatorai-data-adapter-storage", util.AlamedaGroup)
+		util.SetStorageToVolumeSource(dep, asp.FederatoraiDataAdapterSectionSet.Storages, "federatorai-data-adapter-type.pvc", util.AlamedaGroup)
+		util.SetStorageToMountPath(dep, asp.FederatoraiDataAdapterSectionSet.Storages, util.FederatoraiDataAdapterCTN, "federatorai-data-adapter-type-storage", util.AlamedaGroup)
 	}
 
 	for i, container := range dep.Spec.Template.Spec.Containers {
