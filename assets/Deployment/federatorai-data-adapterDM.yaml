@@ -38,7 +38,8 @@ spec:
           - name: DATADOG_QUERY_URL
             value: "https://api.datadoghq.com/api/v1/query"
           - name: CLUSTER_NAME
-            value: "my-cluster"
+            # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+            value: ""
           - name: DATADOG_API_KEY
             valueFrom:
               secretKeyRef:

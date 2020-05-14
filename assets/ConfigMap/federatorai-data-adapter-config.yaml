@@ -34,18 +34,11 @@ data:
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
 
-      [[outputs.datadog]]
-        api_key = "$DATADOG_API_KEY"
-        application_key = "$DATADOG_APPLICATION_KEY"
-        User-Agent = "Federator.ai/4.2"
-        dashboard_dir = "/etc/telegraf/dashboards/datadog"
-        enable_kafka_dashboard = false
-        integration_metrics = ["federatorai.recommendation","federatorai.prediction"]
-
       #[[inputs.datadog]]
       #  urls = ["$DATADOG_QUERY_URL"]
       #  api_key = "$DATADOG_API_KEY"
       #  application_key = "$DATADOG_APPLICATION_KEY"
+      #  # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
       #  cluster_name = "$CLUSTER_NAME"
       #  # Watched source
       #  # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
@@ -69,10 +62,29 @@ data:
       #      name="kubernetes.memory.usage"
       #      metric_type="MEMORY_USAGE_BYTES"
 
+      [[inputs.datadog_application_aware]]
+        urls = ["$DATADOG_QUERY_URL"]
+        api_key = "$DATADOG_API_KEY"
+        application_key = "$DATADOG_APPLICATION_KEY"
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        cluster_name = "$CLUSTER_NAME"
+
+        [inputs.datadog_application_aware.watched_kafka_consumer]
+          application = ""
+          namespace = ""
+          min_replicas = 0
+          max_replicas = 0
+
+      #[[inputs.prometheus_query]]
+      #  url = "$PROMETHEUS_URL"
+      #  token_path = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      #  insecure_skip_verify = true
+      #  watched_source = [{name="kafka_topic_partition_current_offset",expr="sum(rate(kafka_topic_partition_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_current_offset",expr="sum(rate(kafka_consumergroup_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_lag",expr="sum(kafka_consumergroup_lag)by(namespace,consumergroup,topic)",tags=["consumergroup","topic","namespace"]}]
 
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
 
         [[inputs.alameda_datahub_query.watched_source]]
@@ -93,21 +105,10 @@ data:
           measurement = "kafka_topic_partition_current_offset"
           scope = "prediction"
 
-      [[inputs.datadog_application_aware]]
-        urls = ["$DATADOG_QUERY_URL"]
+      [[outputs.datadog]]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
-        cluster_name = "$CLUSTER_NAME"
-
-        [inputs.datadog_application_aware.watched_kafka_consumer]
-          application = ""
-          namespace = ""
-          min_replicas = 0
-          max_replicas = 0
-
-      #[[inputs.prometheus_query]]
-      #  url = "$PROMETHEUS_URL"
-      #  token_path = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-      #  insecure_skip_verify = true
-      #  watched_source = [{name="kafka_topic_partition_current_offset",expr="sum(rate(kafka_topic_partition_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_current_offset",expr="sum(rate(kafka_consumergroup_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_lag",expr="sum(kafka_consumergroup_lag)by(namespace,consumergroup,topic)",tags=["consumergroup","topic","namespace"]}]
-
+        User-Agent = "Federator.ai/4.2"
+        integration_metrics = ["federatorai.recommendation","federatorai.prediction"]
+        dashboard_dir = "/etc/telegraf/dashboards/datadog"
+        enable_kafka_dashboard = true
