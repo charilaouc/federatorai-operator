@@ -50,4 +50,7 @@ rules:
   resources:
   - machinesets
   verbs:
+  - get
+  - list
   - update
+  - patch
