@@ -185,12 +185,12 @@ data:
         training_steps: 2000      # only for LSTM
         prediction_steps: 120    # number of output predictions
 
-      2m:
-        data_granularity: 2m
-        data_granularity_sec: 120
-        mid: 2m
-        data_amount: 240m
-        data_amount_sec: 14400
+      3m:
+        data_granularity: 3m
+        data_granularity_sec: 180
+        mid: 3m
+        data_amount: 360m
+        data_amount_sec: 21600
         minimal_sample_size: 80
         training_steps: 2000
 
