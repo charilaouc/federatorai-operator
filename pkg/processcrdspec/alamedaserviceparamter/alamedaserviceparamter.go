@@ -589,7 +589,7 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentAppSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
 
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages, "PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages, "PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
@@ -610,7 +610,7 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentAppSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
 	return &Resource{
 		PersistentVolumeClaimList: pvc,
 	}
