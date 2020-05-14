@@ -45,3 +45,9 @@ rules:
   - configmaps
   verbs:
   - get
+- apiGroups:
+  - machine.openshift.io
+  resources:
+  - machinesets
+  verbs:
+  - update
