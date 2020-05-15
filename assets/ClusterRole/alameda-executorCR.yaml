@@ -54,7 +54,7 @@ rules:
   - update
   - patch
 - apiGroups:
-  - autoscaling.openshift
+  - autoscaling.openshift.io
   resources:
   - machineautoscalers
   verbs:
