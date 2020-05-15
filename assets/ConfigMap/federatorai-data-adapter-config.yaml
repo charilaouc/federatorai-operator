@@ -84,6 +84,7 @@ data:
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
+        ##The recommendation query range, unit: minutes
         recommendation_interval = 5
         # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
