@@ -3,7 +3,6 @@ kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
     secret.name: alameda-notifier-webhook-server-cert
-  creationTimestamp: null
   name: alameda-notifier-validating-webhook-configuration
 webhooks:
 - clientConfig:

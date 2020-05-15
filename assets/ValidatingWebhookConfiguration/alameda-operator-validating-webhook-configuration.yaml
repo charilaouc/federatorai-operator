@@ -3,7 +3,6 @@ kind: ValidatingWebhookConfiguration
 metadata:
   annotations:
     secret.name: alameda-operator-webhook-server-cert
-  creationTimestamp: null
   name: alameda-operator-validating-webhook-configuration
 webhooks:
 # - clientConfig:

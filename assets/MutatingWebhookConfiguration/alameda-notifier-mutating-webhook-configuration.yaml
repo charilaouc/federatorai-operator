@@ -3,7 +3,6 @@ kind: MutatingWebhookConfiguration
 metadata:
   annotations:
     secret.name: alameda-notifier-webhook-server-cert
-  creationTimestamp: null
   name: alameda-notifier-mutating-webhook-configuration
 webhooks:
 - clientConfig:
