@@ -54,13 +54,14 @@ spec:
           - name: federatorai-data-adapter-config
             mountPath: /etc/telegraf/telegraf.conf
             subPath: telegraf.conf
-          - name: federatorai-data-adapter-log
+          - name: federatorai-data-adapter-log-storage
             mountPath: /var/log
       volumes:
       - name: federatorai-data-adapter-config
         configMap:
           name: federatorai-data-adapter-config
-      - name: federatorai-data-adapter-log
+      - name: federatorai-data-adapter-data-storage
+      - name: federatorai-data-adapter-log-storage
       #- name: devmem
       #  hostPath:
       #    path: /dev/mem

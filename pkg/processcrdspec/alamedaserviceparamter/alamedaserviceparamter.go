@@ -254,7 +254,7 @@ var (
 		"PersistentVolumeClaim/federatorai-frontend-log.yaml",
 		"PersistentVolumeClaim/federatorai-agent-app-log.yaml",
 		"PersistentVolumeClaim/alameda-notifier-log.yaml",
-		"PersistentVolumeClaim/federatorai-data-adapter.yaml",
+		"PersistentVolumeClaim/federatorai-data-adapter-log.yaml",
 	}
 
 	dataPVCList = []string{
@@ -278,6 +278,7 @@ var (
 		"PersistentVolumeClaim/federatorai-frontend-data.yaml",
 		"PersistentVolumeClaim/federatorai-agent-app-data.yaml",
 		"PersistentVolumeClaim/alameda-notifier-data.yaml",
+		"PersistentVolumeClaim/federatorai-data-adapter-data.yaml",
 	}
 )
 
