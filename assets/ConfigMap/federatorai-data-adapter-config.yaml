@@ -111,6 +111,20 @@ data:
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
         User-Agent = "Federator.ai/4.2"
-        integration_metrics = ["federatorai.recommendation","federatorai.prediction"]
         dashboard_dir = "/etc/telegraf/dashboards/datadog"
         enable_kafka_dashboard = true
+        [[outputs.datadog.integration_metrics]]
+          name="federatorai.recommendation"
+          aggregation_type="raw"
+
+        [[outputs.datadog.integration_metrics]]
+          name="federatorai.prediction"
+          aggregation_type="raw"
+
+        [[outputs.datadog.integration_metrics]]
+          name="kafka_topic_partition_current_offset"
+          aggregation_type="rate"
+
+        [[outputs.datadog.integration_metrics]]
+          name="kafka_consumer_group_current_offset"
+          aggregation_type="rate"
