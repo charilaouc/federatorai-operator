@@ -88,6 +88,8 @@ spec:
               value: quay.io/prophetstor/federatorai-dashboard-frontend:latest
             - name: RELATED_IMAGE_FEDERATORAI_DASHBOARD_BACKEND
               value: quay.io/prophetstor/federatorai-dashboard-backend:latest
+            - name: RELATED_IMAGE_FEDERATORAI_DATA_ADAPTER
+              value: quay.io/prophetstor/federatorai-data-adapter:latest
             - name: RELATED_IMAGE_FEDERATORAI_RESTAPI
               value: quay.io/prophetstor/federatorai-rest-ubi:latest
             - name: RELATED_IMAGE_GRAFANA
