@@ -448,6 +448,11 @@ done
 # for tag
 sed -i "s/:latest$/:${tag_number}/g" 03*.yaml
 
+# Specified alternative container image location
+if [ "${RELATED_IMAGE_URL_PREFIX}" != "" ]; then
+    sed -i -e "s%quay.io/prophetstor%${RELATED_IMAGE_URL_PREFIX}%g" 03*.yaml
+fi
+
 # No need for recent build
 # if [ "$need_upgrade" = "y" ];then
 #     # for upgrade - stop operator before applying new alamedaservice
