@@ -248,6 +248,16 @@ data:
       LAG: 7
       LATENCY: 8
       NUMBER: 9
+    # api proto scope
+    scope:
+      UNDEFINED: 0
+      APPLICATION: 1
+      EXECUTION: 2
+      METRIC: 3
+      PLANNING: 4
+      PREDICTION: 5
+      RECOMMENDATION: 6
+      RESOURCE: 7
 
     kafka:  # category
       topic:  # type

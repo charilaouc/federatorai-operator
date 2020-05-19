@@ -147,11 +147,12 @@ data:
     [scope]
     undefined = 0
     application = 1
-    metric = 2
-    planning = 3
-    prediction = 4
-    recommendation = 5
-    resource = 6
+    execution = 2
+    metric = 3
+    planning = 4
+    prediction = 5
+    recommendation = 6
+    resource = 7
     
     # api proto aggregation function
     [aggregation]
