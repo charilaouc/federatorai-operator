@@ -1,6 +1,11 @@
 package log
 
 import (
+	"net/url"
+	"os"
+	"path/filepath"
+	"runtime"
+
 	"github.com/go-logr/logr"
 	"github.com/go-logr/zapr"
 	"github.com/pkg/errors"
@@ -9,7 +14,6 @@ import (
 )
 
 func NewZaprLogger(cfg Config) (logr.Logger, error) {
-
 	zapLogger, err := newZapLogger(cfg)
 	if err != nil {
 		return nil, errors.Wrap(err, "new logger failed")
@@ -25,6 +29,23 @@ func NewZapLogger(cfg Config) (*zap.Logger, error) {
 }
 
 func newZapLogger(cfg Config) (*zap.Logger, error) {
+	cfgOutputPaths := []string{}
+	if runtime.GOOS == "windows" {
+		zap.RegisterSink("winfile", func(u *url.URL) (zap.Sink, error) {
+			return os.OpenFile(u.Path[1:], os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+		})
+		for _, outputPath := range cfg.OutputPaths {
+			cfgOutputPaths = append(cfgOutputPaths, func(cfgRootDir string) string {
+				if cfgRootDir == "stdout" {
+					return filepath.ToSlash(filepath.Join(cfgRootDir, ""))
+				}
+
+				return "winfile:///" + filepath.ToSlash(filepath.Join(cfgRootDir, ""))
+			}(outputPath))
+		}
+	} else {
+		cfgOutputPaths = cfg.OutputPaths
+	}
 
 	var zapLogLevel zapcore.Level
 	zapLogLevel.UnmarshalText([]byte(cfg.OutputLevel))
@@ -32,7 +53,7 @@ func newZapLogger(cfg Config) (*zap.Logger, error) {
 
 	zapCfg := zap.Config{
 		Level:         zapAtomicLevel,
-		OutputPaths:   cfg.OutputPaths,
+		OutputPaths:   cfgOutputPaths,
 		Encoding:      "console",
 		DisableCaller: true,
 		EncoderConfig: zapcore.EncoderConfig{

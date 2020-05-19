@@ -124,6 +124,7 @@ func initLogger() {
 	if len(logPaths) == 0 {
 		fedOperatorConfig.Log.AppendOutput(consts.DefaultLogOutputPath)
 	} else {
+		fedOperatorConfig.Log.OutputPaths = []string{}
 		for _, logPath := range logPaths {
 			fedOperatorConfig.Log.AppendOutput(logPath)
 		}
@@ -138,6 +139,7 @@ func initLogger() {
 	if len(grpcLogPaths) == 0 {
 		fedOperatorConfig.GRPC.Log.AppendOutput(consts.DefaultLogOutputPath)
 	} else {
+		fedOperatorConfig.GRPC.Log.OutputPaths = []string{}
 		for _, grpcLogPath := range grpcLogPaths {
 			fedOperatorConfig.GRPC.Log.AppendOutput(grpcLogPath)
 		}

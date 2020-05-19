@@ -2,9 +2,11 @@ package influxdb
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"time"
 
+	federatoraioperatorlog "github.com/containers-ai/federatorai-operator/pkg/log"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
@@ -35,7 +37,8 @@ var (
 			if err != nil {
 				return errors.Wrap(err, "parse flag failed")
 			}
-
+			flag.Parse()
+			initLogger()
 			err = initK8SClient()
 			if err != nil {
 				return errors.Wrap(err, "init k8s client failed")
@@ -43,7 +46,7 @@ var (
 			return upgradeFromKiloToLima()
 		},
 	}
-
+	logOutputPath       = "/var/log/alameda/federatorai-operator-upgrade.log"
 	k8sClient           client.Client
 	kiloDatabasesToDrop = []string{"alameda_cluster_status", "alameda_planning", "alameda_prediction"}
 	// limaNewMeasurements is a map from database name to list of measurements that are created since Lima
@@ -61,6 +64,7 @@ var (
 
 func init() {
 	UpgradeInfluxDBSchemaCMD.Flags().StringVar(&timeout, "timeout", "300s", "Timeout limit to execute update process.")
+	UpgradeInfluxDBSchemaCMD.PersistentFlags().StringVar(&logOutputPath, "log-output", logOutputPath, "File path to federatorai-operator upgrade log output")
 }
 
 func parseFlag() error {
@@ -348,4 +352,14 @@ func scaleAndWaitWorkloadControllers(ctx context.Context, controllers []workload
 	}
 
 	return wg.Wait()
+}
+
+func initLogger() {
+	cfg := federatoraioperatorlog.NewDefaultConfig()
+	cfg.OutputPaths = []string{logOutputPath}
+	logger, err := federatoraioperatorlog.NewZaprLogger(cfg)
+	if err != nil {
+		panic(err)
+	}
+	log.SetLogger(logger)
 }
