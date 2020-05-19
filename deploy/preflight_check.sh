@@ -97,7 +97,7 @@ get_prometheus_info()
     operator_image=`kubectl get deployment -n $prometheus_namespace -o yaml 2>/dev/null|grep 'image:'|grep 'prometheus-operator'`
     echo "promtheus operator image = $operator_image" >> $preflight_check_result_file
     echo "======= prometheus server info =======" >> $preflight_check_result_file
-    server_version=`kubectl exec -it $prometheus_pod_name -n $prometheus_namespace 2>/dev/null -- sh -c "prometheus --version"`
+    server_version="`kubectl exec -it $prometheus_pod_name -n $prometheus_namespace 2>/dev/null -- sh -c "prometheus --version"`"
     echo "$server_version" >> $preflight_check_result_file
 }
 
