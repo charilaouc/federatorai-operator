@@ -29,8 +29,7 @@ PRIVATE_REPOSITORY_IMAGE_URL_PREFIX="$2"
 ## Global vairables
 ORIGIN_URL_PREFIX="quay.io/prophetstor"
 
-IMAGE_LIST="alameda-admission-ubi alameda-ai-dispatcher alameda-ai alameda-analyzer-ubi alameda-datahub-ubi alameda-evictioner-ubi alameda-executor-ubi alameda-grafana alameda-influxdb alameda-notifier-ubi alameda-operator-ubi alameda-rabbitmq alameda-recommender-ubi fedemeter-api-ubi fedemeter-influxdb federatorai-agent-gpu federatorai-agent-preloader federatorai-agent-ubi federatorai-operator-ubi federatorai-rest-ubi"
-
+IMAGE_LIST="alameda-admission-ubi alameda-ai-dispatcher alameda-ai alameda-analyzer-ubi alameda-datahub-ubi alameda-evictioner-ubi alameda-executor-ubi alameda-grafana alameda-influxdb alameda-notifier-ubi alameda-operator-ubi alameda-rabbitmq alameda-recommender-ubi fedemeter-api-ubi fedemeter-influxdb federatorai-agent-app federatorai-agent-gpu federatorai-agent-preloader federatorai-agent-ubi federatorai-dashboard-backend federatorai-dashboard-frontend federatorai-operator-ubi federatorai-rest-ubi"
 for image in ${IMAGE_LIST}; do
     echo "Preparing image ${PRIVATE_REPOSITORY_IMAGE_URL_PREFIX}/${image}:${build_name}"
     echo "     from image ${ORIGIN_URL_PREFIX}/${image}:${build_name}"
