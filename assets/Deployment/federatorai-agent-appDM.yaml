@@ -35,6 +35,9 @@ spec:
         - name: federatorai-agent-app-config
           mountPath: /etc/alameda/federatorai-agent/input/alameda_kafka.toml
           subPath: alameda_kafka.toml
+        - mountPath: /etc/alameda/federatorai-agent/input/kubernetes.toml
+          name: federatorai-agent-app-config
+          subPath: kubernetes.toml
         - name: federatorai-agent-app-config
           mountPath: /etc/alameda/federatorai-agent/output/alameda_datahub.toml
           subPath: alameda_datahub.toml

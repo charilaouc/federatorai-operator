@@ -24,6 +24,12 @@ data:
         schedule-spec = "@every 15s"
         lib-path = "/lib/inputlib/inputlib_app.so"
         lib-configuration = "/etc/alameda/federatorai-agent/input/alameda_app.toml"
+
+        [input_jobs.kubernetes]
+        name = "kubernetes"
+        schedule-spec = "@every 60s"
+        lib-path = "/lib/inputlib/inputlib_kubernetes.so"
+        lib-configuration = "/etc/alameda/federatorai-agent/input/kubernetes.toml"
     {{end}}
 
     {{if .ClusterAutoScaler.EnableExecution}}
@@ -40,6 +46,23 @@ data:
         schedule-spec = "@every 15s"
         lib-path = "/lib/outputlib/outputlib_datahub.so"
         lib-configuration = "/etc/alameda/federatorai-agent/output/alameda_datahub.toml"
+
+  kubernetes.toml: |
+    [datahub]
+    address = "alameda-datahub.{{.NameSpace}}:50050"
+    ignore_empty_cluster = true
+
+    [route]
+    container_name = "router"
+
+    [datasource.kubernetes]
+    datatype = "kubernetes"
+
+    [[datasource.kubernetes.measurement]]
+    name = "haproxy_server_http_average_response_latency_milliseconds"
+    tags = ["exported_service", "exported_namespace"]
+    [datasource.kubernetes.measurement.element.value]
+    type = "float"
 
   alameda_app.toml: |
     [global]
