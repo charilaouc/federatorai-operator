@@ -83,14 +83,6 @@ data:
     tags = ["exported_service", "exported_namespace"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
-
-    # sum (haproxy_server_http_average_response_latency_milliseconds) by (exported_service, exported_namespace)
-    [[datasource.prometheus.measurement]]
-    name = "haproxy_server_http_average_response_latency_milliseconds"
-    expr = "sum (haproxy_server_http_average_response_latency_milliseconds) by (exported_service, exported_namespace)"
-    tags = ["exported_service", "exported_namespace"]
-    [datasource.prometheus.measurement.element.value]
-    type = "float"
     {{end}}
 
   alameda_kafka.toml: |
