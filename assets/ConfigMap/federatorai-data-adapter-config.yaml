@@ -123,8 +123,8 @@ data:
 
         [[outputs.datadog.integration_metrics]]
           name="kafka_topic_partition_current_offset"
-          aggregation_type="rate"
+          aggregation_type="diff"
 
         [[outputs.datadog.integration_metrics]]
           name="kafka_consumer_group_current_offset"
-          aggregation_type="rate"
+          aggregation_type="diff"
