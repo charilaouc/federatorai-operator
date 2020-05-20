@@ -8,6 +8,10 @@ metadata:
   name: alamedascalers.autoscaling.containers.ai
 spec:
   additionalPrinterColumns:
+  - JSONPath: .spec.type
+    description: The type of scaling
+    name: Scaling Type
+    type: string
   - JSONPath: .spec.scalingTool.type
     description: The type of scaling tool
     name: Scaling Tool
@@ -147,6 +151,9 @@ spec:
               properties:
                 exporterNamespace:
                   type: string
+                httpResponseTime:
+                  format: int64
+                  type: integer
                 maxReplicas:
                   format: int32
                   type: integer
@@ -262,10 +269,6 @@ spec:
                   type: object
                 machineGroupScaler:
                   type: string
-                machineScalers:
-                  items:
-                    type: string
-                  type: array
                 type:
                   enum:
                   - ""
