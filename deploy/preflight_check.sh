@@ -97,7 +97,7 @@ get_prometheus_info()
     operator_image=`kubectl get deployment -n $prometheus_namespace -o yaml 2>/dev/null|grep 'image:'|grep 'prometheus-operator'`
     echo "promtheus operator image = $operator_image" >> $preflight_check_result_file
     echo "======= prometheus server info =======" >> $preflight_check_result_file
-    server_version="`kubectl exec -it $prometheus_pod_name -n $prometheus_namespace 2>/dev/null -- sh -c "prometheus --version"`"
+    server_version="`kubectl exec -t $prometheus_pod_name -n $prometheus_namespace 2>&1 -- sh -c 'prometheus --version'`"
     echo "$server_version" >> $preflight_check_result_file
 }
 
@@ -117,8 +117,22 @@ get_node_info()
     done <<< "$(kubectl get nodes|grep -v ROLES)"
 }
 
+login_check()
+{
+    result="`echo ""|kubectl cluster-info 2>/dev/null`"
+    if [ "$?" != "0" ];then
+        echo -e "\n$(tput setaf 1)Error! Please login into OpenShift/K8S cluster first.$(tput sgr 0)"
+        exit
+    fi
+    
+    echo "======= cluster-info =======" >> $preflight_check_result_file
+    echo "$result" >> $preflight_check_result_file
+}
+
 preflight_check_result_file="/tmp/preflight_result.output"
 echo "" > $preflight_check_result_file
+
+login_check
 echo -e "\n$(tput setaf 2)Collecting info ...$(tput sgr 0)"
 check_version
 get_prometheus_info
