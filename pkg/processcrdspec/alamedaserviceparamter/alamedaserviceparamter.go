@@ -358,6 +358,12 @@ func GetFederatoraiAgentGPU() Resource {
 	return r
 }
 
+// GetFederatoraiAgentApp returns resource that needs to be installed for federatorai-agent-app
+func GetFederatoraiAgentApp() Resource {
+	r, _ := getResourceFromList(federatoraiAgentAppList)
+	return r
+}
+
 // GetSelfDrivingRsource returns resource that needs to be installed for Alameda self driving
 func GetSelfDrivingRsource() *Resource {
 	r, _ := getResourceFromList(selfDrivingList)
@@ -408,6 +414,7 @@ type AlamedaServiceParamter struct {
 	EnableVPA                           bool
 	EnableGPU                           bool
 	EnableDispatcher                    bool
+	EnableAgentApp                      bool
 	EnablePreloader                     bool
 	EnableWeavescope                    bool
 	AutoPatchPrometheusRules            bool
@@ -456,6 +463,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		EnableVPA:                           *instance.Spec.EnableVPA,
 		EnableGPU:                           *instance.Spec.EnableGPU,
 		EnableDispatcher:                    *instance.Spec.EnableDispatcher,
+		EnableAgentApp:                      instance.Spec.EnableAgentApp,
 		EnablePreloader:                     instance.Spec.EnablePreloader,
 		AutoPatchPrometheusRules:            instance.Spec.AutoPatchPrometheusRules,
 		EnableWeavescope:                    instance.Spec.EnableWeavescope,
@@ -529,6 +537,10 @@ func (asp *AlamedaServiceParamter) GetInstallResource() *Resource {
 	if asp.EnableDispatcher {
 		r := GetDispatcherResource()
 		resource.add(*r)
+	}
+	if asp.EnableAgentApp {
+		r := GetFederatoraiAgentApp()
+		resource.add(r)
 	}
 	if asp.EnablePreloader {
 		r := GetPreloaderResource()

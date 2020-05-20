@@ -398,6 +398,15 @@ func (r *ReconcileAlamedaService) Reconcile(request reconcile.Request) (reconcil
 		*/
 	}
 
+	if !asp.EnableAgentApp {
+		resource := r.removeUnsupportedResource(alamedaserviceparamter.GetFederatoraiAgentApp())
+		if err := r.uninstallResource(resource); err != nil {
+			log.V(-1).Info("Uninstall federatorai-agent-app resources failed, retry reconciling AlamedaService",
+				"AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
+			return reconcile.Result{Requeue: true, RequeueAfter: 1 * time.Second}, nil
+		}
+	}
+
 	//Uninstall Execution Component
 	if !asp.EnableExecution {
 		log.Info("EnableExecution has been changed to false")
@@ -447,6 +456,7 @@ func (r *ReconcileAlamedaService) Reconcile(request reconcile.Request) (reconcil
 			return reconcile.Result{Requeue: true, RequeueAfter: 1 * time.Second}, nil
 		}
 	}
+
 	//Uninstall vpa components
 	if !asp.EnableGPU {
 		resource := r.removeUnsupportedResource(alamedaserviceparamter.GetFederatoraiAgentGPU())

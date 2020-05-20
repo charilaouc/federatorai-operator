@@ -48,6 +48,7 @@ type AlamedaServiceSpec struct {
 	EnableGPU                *bool                 `json:"enableGPU"`
 	EnableDispatcher         *bool                 `json:"enableDispatcher"`
 	EnablePreloader          bool                  `json:"enablePreloader"`
+	EnableAgentApp           bool                  `json:"enableAgentApp"`
 	SelfDriving              bool                  `json:"selfDriving"`
 	AutoPatchPrometheusRules bool                  `json:"autoPatchPrometheusRules"`
 	Version                  string                `json:"version"`
