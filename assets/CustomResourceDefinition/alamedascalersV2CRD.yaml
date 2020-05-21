@@ -151,9 +151,6 @@ spec:
               properties:
                 exporterNamespace:
                   type: string
-                httpResponseTime:
-                  format: int64
-                  type: integer
                 maxReplicas:
                   format: int32
                   type: integer
@@ -214,6 +211,9 @@ spec:
                   type: object
                 service:
                   type: string
+                targetResponseTime:
+                  format: int64
+                  type: integer
               type: object
             policy:
               enum:
