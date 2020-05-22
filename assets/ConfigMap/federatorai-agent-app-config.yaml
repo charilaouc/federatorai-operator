@@ -27,7 +27,7 @@ data:
 
         [input_jobs.kubernetes]
         name = "kubernetes"
-        schedule-spec = "@every 60s"
+        schedule-spec = "@every 15s"
         lib-path = "/lib/inputlib/inputlib_kubernetes.so"
         lib-configuration = "/etc/alameda/federatorai-agent/input/kubernetes.toml"
     {{end}}
