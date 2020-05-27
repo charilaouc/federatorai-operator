@@ -29,6 +29,7 @@ data:
         period = "1m"
         granularity = "1m"
         drop_original = true
+        namedrop = ["federatorai.*"]
 
       [[outputs.datahub]]
         url = "$DATAHUB_URL"
