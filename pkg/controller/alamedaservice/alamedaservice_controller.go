@@ -1104,7 +1104,7 @@ func (r *ReconcileAlamedaService) syncConfigMap(instance *federatoraiv1alpha1.Al
 						}
 					}
 				}
-				log.Info("Successfully Update Resource CinfigMap", "resourceCM.Name", foundCM.Name)
+				log.Info("Successfully Update Resource ConfigMap", "resourceCM.Name", foundCM.Name)
 			}
 		}
 	}
