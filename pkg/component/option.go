@@ -24,13 +24,15 @@ func WithImageConfig(ic ImageConfig) ComponentConfigOption {
 	}
 }
 
-func WithPodSecurityPolicyGroup(podSecurityPolicyGroup string) ComponentConfigOption {
+func WithPodSecurityPolicyGroup(
+	podSecurityPolicyGroup string) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.PodSecurityPolicyGroup = podSecurityPolicyGroup
 	}
 }
 
-func WithPodSecurityPolicyVersion(podSecurityPolicyVersion string) ComponentConfigOption {
+func WithPodSecurityPolicyVersion(
+	podSecurityPolicyVersion string) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.PodSecurityPolicyVersion = podSecurityPolicyVersion
 	}
@@ -45,11 +47,15 @@ func WithPrometheusConfig(config PrometheusConfig) ComponentConfigOption {
 func WithFedermeterConfig(clusterType string) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		if clusterType == "NKS" {
-			cc.FedemeterConfig.FedemeterWorkerNodeLowerLimit = util.NKS_FEDEMETER_WORKER_NODE_LOWER_LIMIT
-			cc.FedemeterConfig.FedemeterFilterTable = util.NKS_FEDEMETER_FILTER_TABLE
+			cc.FedemeterConfig.FedemeterWorkerNodeLowerLimit =
+				util.NKS_FEDEMETER_WORKER_NODE_LOWER_LIMIT
+			cc.FedemeterConfig.FedemeterFilterTable =
+				util.NKS_FEDEMETER_FILTER_TABLE
 		} else {
-			cc.FedemeterConfig.FedemeterWorkerNodeLowerLimit = util.Openshift_FEDEMETER_WORKER_NODE_LOWER_LIMIT
-			cc.FedemeterConfig.FedemeterFilterTable = util.Openshift_FEDEMETER_FILTER_TABLE
+			cc.FedemeterConfig.FedemeterWorkerNodeLowerLimit =
+				util.Openshift_FEDEMETER_WORKER_NODE_LOWER_LIMIT
+			cc.FedemeterConfig.FedemeterFilterTable =
+				util.Openshift_FEDEMETER_FILTER_TABLE
 		}
 	}
 }
@@ -60,7 +66,8 @@ func WithKafkaConfig(config KafkaConfig) ComponentConfigOption {
 	}
 }
 
-func WithClusterAutoScalerConfig(config ClusterAutoScalerConfig) ComponentConfigOption {
+func WithClusterAutoScalerConfig(
+	config ClusterAutoScalerConfig) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.ClusterAutoScaler = config
 	}
@@ -72,7 +79,8 @@ func WithExecutionConfig(config ExecutionConfig) ComponentConfigOption {
 	}
 }
 
-func WithFederatoraiAgentGPUConfig(config FederatoraiAgentGPUConfig) ComponentConfigOption {
+func WithFederatoraiAgentGPUConfig(
+	config FederatoraiAgentGPUConfig) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.FederatoraiAgentGPU = config
 	}
@@ -81,5 +89,11 @@ func WithFederatoraiAgentGPUConfig(config FederatoraiAgentGPUConfig) ComponentCo
 func WithAIDispatcherConfig(config AIDispatcherConfig) ComponentConfigOption {
 	return func(cc *ComponentConfig) {
 		cc.AIDispatcher = config
+	}
+}
+
+func WithNodeSelector(nodeSelector map[string]string) ComponentConfigOption {
+	return func(cc *ComponentConfig) {
+		cc.NodeSelector = nodeSelector
 	}
 }

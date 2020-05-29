@@ -49,6 +49,7 @@ type ComponentConfig struct {
 	PodSecurityPolicyGroup   string
 	PodSecurityPolicyVersion string
 
+	NodeSelector      map[string]string
 	PodTemplateConfig PodTemplateConfig
 
 	FederatoraiAgentGPU FederatoraiAgentGPUConfig
@@ -64,7 +65,10 @@ type ComponentConfig struct {
 	FedemeterConfig   FedemeterConfig
 }
 
-func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha1.AlamedaService, opts ...ComponentConfigOption) *ComponentConfig {
+func NewComponentConfig(
+	ptc PodTemplateConfig,
+	alamedaService federatoraiv1alpha1.AlamedaService,
+	opts ...ComponentConfigOption) *ComponentConfig {
 
 	var (
 		defaultNamespace                = ""
@@ -84,6 +88,7 @@ func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha
 		Image:                    NewDefautlImageConfig(),
 		Prometheus:               defaultPrometheusConfig,
 		FedemeterConfig:          NewDefaultFedemeterConfig(),
+		NodeSelector:             map[string]string{},
 	}
 
 	for _, opt := range opts {

@@ -49,3 +49,9 @@ spec:
             value: "adminpass"
           - name: TRACE_ENABLED
             value: "false"
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}

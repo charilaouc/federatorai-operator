@@ -59,14 +59,15 @@ type AlamedaServiceSpec struct {
 	EnableVPA       *bool    `json:"enableVPA"`
 	EnableGPU       *bool    `json:"enableGPU"`
 	// +nullable
-	EnableDispatcher         *bool         `json:"enableDispatcher,omitempty"`
-	EnablePreloader          bool          `json:"enablePreloader,omitempty"`
-	SelfDriving              bool          `json:"selfDriving"`
-	AutoPatchPrometheusRules bool          `json:"autoPatchPrometheusRules"`
-	Version                  string        `json:"version"`
-	ImageLocation            string        `json:"imageLocation,omitempty"`
-	PrometheusService        string        `json:"prometheusService"`
-	Storages                 []StorageSpec `json:"storages"`
+	EnableDispatcher         *bool             `json:"enableDispatcher,omitempty"`
+	EnablePreloader          bool              `json:"enablePreloader,omitempty"`
+	SelfDriving              bool              `json:"selfDriving"`
+	NodeSelector             map[string]string `json:"nodeSelector,omitempty"`
+	PrometheusService        string            `json:"prometheusService"`
+	AutoPatchPrometheusRules bool              `json:"autoPatchPrometheusRules"`
+	Version                  string            `json:"version"`
+	ImageLocation            string            `json:"imageLocation,omitempty"`
+	Storages                 []StorageSpec     `json:"storages"`
 	// +nullable
 	ServiceExposures  []ServiceExposureSpec `json:"serviceExposures,omitempty"`
 	EnableWeavescope  bool                  `json:"enableWeavescope,omitempty"`

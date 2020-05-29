@@ -64,6 +64,12 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 60
           timeoutSeconds: 60
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
       - name:  alameda-datahub-data-storage
       - name:  alameda-datahub-log-storage

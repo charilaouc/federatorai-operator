@@ -400,10 +400,11 @@ type AlamedaServiceParamter struct {
 	EnableDispatcher                    bool
 	EnablePreloader                     bool
 	EnableWeavescope                    bool
+	NodeSelector                        map[string]string
+	PrometheusService                   string
 	AutoPatchPrometheusRules            bool
 	ImageLocation                       string
 	Version                             string
-	PrometheusService                   string
 	Kafka                               v1alpha1.KafkaSpec
 	Nginx                               v1alpha1.NginxSpec
 	ClusterAutoScaler                   v1alpha1.ClusterAutoScalerSpec
@@ -436,7 +437,8 @@ type AlamedaServiceParamter struct {
 	previousCRDVersion                  v1alpha1.AlamedaServiceStatusCRDVersion
 }
 
-func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServiceParamter {
+func NewAlamedaServiceParamter(
+	instance *v1alpha1.AlamedaService) *AlamedaServiceParamter {
 	instance.SetDefaultValue()
 	asp := &AlamedaServiceParamter{
 		NameSpace:                           instance.Namespace,
@@ -448,11 +450,12 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		EnableGPU:                           *instance.Spec.EnableGPU,
 		EnableDispatcher:                    *instance.Spec.EnableDispatcher,
 		EnablePreloader:                     instance.Spec.EnablePreloader,
+		NodeSelector:                        instance.Spec.NodeSelector,
+		PrometheusService:                   instance.Spec.PrometheusService,
 		AutoPatchPrometheusRules:            instance.Spec.AutoPatchPrometheusRules,
 		EnableWeavescope:                    instance.Spec.EnableWeavescope,
 		ImageLocation:                       instance.Spec.ImageLocation,
 		Version:                             instance.Spec.Version,
-		PrometheusService:                   instance.Spec.PrometheusService,
 		Nginx:                               instance.Spec.Nginx,
 		Kafka:                               instance.Spec.Kafka,
 		ClusterAutoScaler:                   instance.Spec.ClusterAutoScaler,
@@ -570,47 +573,107 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 		pvc = append(pvc, dataPVCList...)
 	}
 
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages, "PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages, "PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages, "PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages, "PersistentVolumeClaim/alameda-operator-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages, "PersistentVolumeClaim/alameda-datahub-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages, "PersistentVolumeClaim/alameda-evictioner-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages, "PersistentVolumeClaim/admission-controller-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages, "PersistentVolumeClaim/alameda-recommender-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages, "PersistentVolumeClaim/alameda-executor-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages, "PersistentVolumeClaim/alameda-dispatcher-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages, "PersistentVolumeClaim/alameda-analyzer-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages, "PersistentVolumeClaim/fedemeter-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages, "PersistentVolumeClaim/alameda-notifier-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-gpu-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages, "PersistentVolumeClaim/federatorai-rest-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentAppSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.InfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.GrafanaSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaAISectionSet.Storages,
+		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaOperatorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-operator-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaDatahubSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-datahub-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaEvictionerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-evictioner-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AdmissionControllerSectionSet.Storages,
+		"PersistentVolumeClaim/admission-controller-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaRecommenderSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-recommender-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaExecutorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-executor-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaDispatcherSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-dispatcher-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaAnalyzerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-analyzer-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaFedemeterSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaNotifierSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-notifier-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiAgentSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiAgentGPUSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-gpu-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiRestSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-rest-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-preloader-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiFrontendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-frontend-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-backend-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.FederatoraiAgentAppSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
 
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages, "PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages, "PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages, "PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages, "PersistentVolumeClaim/alameda-operator-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages, "PersistentVolumeClaim/alameda-datahub-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages, "PersistentVolumeClaim/alameda-evictioner-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages, "PersistentVolumeClaim/admission-controller-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages, "PersistentVolumeClaim/alameda-recommender-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages, "PersistentVolumeClaim/alameda-executor-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages, "PersistentVolumeClaim/alameda-dispatcher-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages, "PersistentVolumeClaim/alameda-analyzer-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages, "PersistentVolumeClaim/fedemeter-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages, "PersistentVolumeClaim/alameda-notifier-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-gpu-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages, "PersistentVolumeClaim/federatorai-rest-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentAppSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
+		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-operator-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-datahub-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-evictioner-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages,
+		"PersistentVolumeClaim/admission-controller-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-recommender-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-executor-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-dispatcher-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-analyzer-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-notifier-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-gpu-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-rest-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-preloader-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-frontend-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-backend-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentAppSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
 	return &Resource{
 		PersistentVolumeClaimList: pvc,
 	}
@@ -652,50 +715,90 @@ func (asp *AlamedaServiceParamter) getInstallPersistentVolumeClaimSource() []str
 		pvc = append(pvc, logPVCList...)
 	}
 
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages, "PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages, "PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages, "PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages, "PersistentVolumeClaim/alameda-operator-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages, "PersistentVolumeClaim/alameda-datahub-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages, "PersistentVolumeClaim/alameda-evictioner-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages, "PersistentVolumeClaim/admission-controller-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages, "PersistentVolumeClaim/alameda-recommender-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages, "PersistentVolumeClaim/alameda-executor-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages, "PersistentVolumeClaim/alameda-dispatcher-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages, "PersistentVolumeClaim/alameda-analyzer-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages, "PersistentVolumeClaim/fedemeter-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages, "PersistentVolumeClaim/alameda-notifier-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-gpu-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages, "PersistentVolumeClaim/federatorai-rest-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
+		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-operator-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-datahub-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-evictioner-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages,
+		"PersistentVolumeClaim/admission-controller-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-recommender-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-executor-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-dispatcher-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-analyzer-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-notifier-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-gpu-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-rest-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-preloader-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-frontend-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-backend-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-app-log.yaml", v1alpha1.Log)
 	if gloabalDataFlag {
 		pvc = append(pvc, dataPVCList...)
 	}
 
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages, "PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages, "PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages, "PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages, "PersistentVolumeClaim/alameda-operator-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages, "PersistentVolumeClaim/alameda-datahub-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages, "PersistentVolumeClaim/alameda-evictioner-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages, "PersistentVolumeClaim/admission-controller-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages, "PersistentVolumeClaim/alameda-recommender-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages, "PersistentVolumeClaim/alameda-executor-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages, "PersistentVolumeClaim/alameda-dispatcher-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages, "PersistentVolumeClaim/alameda-analyzer-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages, "PersistentVolumeClaim/fedemeter-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages, "PersistentVolumeClaim/alameda-notifier-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-gpu-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages, "PersistentVolumeClaim/federatorai-rest-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-preloader-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages, "PersistentVolumeClaim/federatorai-frontend-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-backend-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages, "PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
+		"PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
+		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-operator-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDatahubSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-datahub-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaEvictionerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-evictioner-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AdmissionControllerSectionSet.Storages,
+		"PersistentVolumeClaim/admission-controller-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaRecommenderSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-recommender-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaExecutorSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-executor-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaDispatcherSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-dispatcher-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAnalyzerSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-analyzer-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaNotifierSectionSet.Storages,
+		"PersistentVolumeClaim/alameda-notifier-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentGPUSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-gpu-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiRestSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-rest-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiAgentPreloaderSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-preloader-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiFrontendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-frontend-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-backend-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.FederatoraiBackendSectionSet.Storages,
+		"PersistentVolumeClaim/federatorai-agent-app-data.yaml", v1alpha1.Data)
 	return pvc
 
 }
@@ -709,7 +812,8 @@ func (asp *AlamedaServiceParamter) changeScalerCRDVersion() {
 	if asp.AlamedaOperatorSectionSet.Version != "" {
 		alamedaOperatorVersion = asp.AlamedaOperatorSectionSet.Version
 	}
-	if util.StringInSlice(alamedaOperatorVersion, util.V1scalerOperatorVersionList) { //check current operatorVersion used scaler version is scaler V1
+	if util.StringInSlice(alamedaOperatorVersion, util.V1scalerOperatorVersionList) {
+		//check current operatorVersion used scaler version is scaler V1
 		asp.CurrentCRDVersion.ScalerVersion = util.AlamedaScalerVersion[0]
 		asp.CurrentCRDVersion.CRDName = util.AlamedaScalerName
 	} else {
@@ -730,13 +834,17 @@ func (asp *AlamedaServiceParamter) hasToInstallAlamedaAcalerV2() bool {
 	if asp.AlamedaOperatorSectionSet.Version != "" {
 		alamedaOperatorVersion = asp.AlamedaOperatorSectionSet.Version
 	}
-	if util.StringInSlice(alamedaOperatorVersion, util.V1scalerOperatorVersionList) { //check current operatorVersion used scaler version is scaler V1
+	if util.StringInSlice(
+		alamedaOperatorVersion, util.V1scalerOperatorVersionList) {
+		//check current operatorVersion used scaler version is scaler V1
 		return false
 	}
 	return true
 }
 
-func sectionUninstallPersistentVolumeClaimSource(pvc []string, storagestruct []v1alpha1.StorageSpec, resourceName string, resourceType v1alpha1.Usage) []string {
+func sectionUninstallPersistentVolumeClaimSource(
+	pvc []string, storagestruct []v1alpha1.StorageSpec,
+	resourceName string, resourceType v1alpha1.Usage) []string {
 	for _, value := range storagestruct {
 		if value.Type != v1alpha1.PVC {
 			if value.Usage == resourceType || value.Usage == v1alpha1.Empty {
@@ -755,7 +863,9 @@ func sectionUninstallPersistentVolumeClaimSource(pvc []string, storagestruct []v
 	return pvc
 }
 
-func sectioninstallPersistentVolumeClaimSource(pvc []string, storagestruct []v1alpha1.StorageSpec, resourceName string, resourceType v1alpha1.Usage) []string {
+func sectioninstallPersistentVolumeClaimSource(
+	pvc []string, storagestruct []v1alpha1.StorageSpec,
+	resourceName string, resourceType v1alpha1.Usage) []string {
 	for _, value := range storagestruct {
 		if value.Type == v1alpha1.PVC {
 			if value.Usage == resourceType || value.Usage == v1alpha1.Empty {
@@ -879,53 +989,75 @@ func (r *Resource) Delete(in Resource) {
 }
 
 func (r *Resource) add(in Resource) {
-	r.ClusterRoleBindingList = append(r.ClusterRoleBindingList, in.ClusterRoleBindingList...)
+	r.ClusterRoleBindingList = append(
+		r.ClusterRoleBindingList, in.ClusterRoleBindingList...)
 	r.ClusterRoleList = append(r.ClusterRoleList, in.ClusterRoleList...)
 	r.ServiceAccountList = append(r.ServiceAccountList, in.ServiceAccountList...)
-	r.CustomResourceDefinitionList = append(r.CustomResourceDefinitionList, in.CustomResourceDefinitionList...)
+	r.CustomResourceDefinitionList = append(
+		r.CustomResourceDefinitionList, in.CustomResourceDefinitionList...)
 	r.ConfigMapList = append(r.ConfigMapList, in.ConfigMapList...)
 	r.ServiceList = append(r.ServiceList, in.ServiceList...)
 	r.DeploymentList = append(r.DeploymentList, in.DeploymentList...)
 	r.SecretList = append(r.SecretList, in.SecretList...)
-	r.PersistentVolumeClaimList = append(r.PersistentVolumeClaimList, in.PersistentVolumeClaimList...)
+	r.PersistentVolumeClaimList = append(
+		r.PersistentVolumeClaimList, in.PersistentVolumeClaimList...)
 	r.AlamedaScalerList = append(r.AlamedaScalerList, in.AlamedaScalerList...)
 	r.RouteList = append(r.RouteList, in.RouteList...)
 	r.StatefulSetList = append(r.StatefulSetList, in.StatefulSetList...)
 	r.IngressList = append(r.IngressList, in.IngressList...)
-	r.PodSecurityPolicyList = append(r.PodSecurityPolicyList, in.PodSecurityPolicyList...)
+	r.PodSecurityPolicyList = append(
+		r.PodSecurityPolicyList, in.PodSecurityPolicyList...)
 	r.DaemonSetList = append(r.DaemonSetList, in.DaemonSetList...)
-	r.SecurityContextConstraintsList = append(r.SecurityContextConstraintsList, in.SecurityContextConstraintsList...)
+	r.SecurityContextConstraintsList = append(
+		r.SecurityContextConstraintsList, in.SecurityContextConstraintsList...)
 	r.RoleBindingList = append(r.RoleBindingList, in.RoleBindingList...)
 	r.RoleList = append(r.RoleList, in.RoleList...)
-	r.MutatingWebhookConfigurationList = append(r.MutatingWebhookConfigurationList, in.MutatingWebhookConfigurationList...)
-	r.ValidatingWebhookConfigurationList = append(r.ValidatingWebhookConfigurationList, in.ValidatingWebhookConfigurationList...)
-	r.AlamedaNotificationChannelList = append(r.AlamedaNotificationChannelList, in.AlamedaNotificationChannelList...)
-	r.AlamedaNotificationTopic = append(r.AlamedaNotificationTopic, in.AlamedaNotificationTopic...)
+	r.MutatingWebhookConfigurationList = append(
+		r.MutatingWebhookConfigurationList, in.MutatingWebhookConfigurationList...)
+	r.ValidatingWebhookConfigurationList = append(
+		r.ValidatingWebhookConfigurationList, in.ValidatingWebhookConfigurationList...)
+	r.AlamedaNotificationChannelList = append(
+		r.AlamedaNotificationChannelList, in.AlamedaNotificationChannelList...)
+	r.AlamedaNotificationTopic = append(
+		r.AlamedaNotificationTopic, in.AlamedaNotificationTopic...)
 }
 
 func (r *Resource) delete(in Resource) {
-	r.ClusterRoleBindingList = util.StringSliceDelete(r.ClusterRoleBindingList, in.ClusterRoleBindingList)
-	r.ClusterRoleList = util.StringSliceDelete(r.ClusterRoleList, in.ClusterRoleList)
-	r.ServiceAccountList = util.StringSliceDelete(r.ServiceAccountList, in.ServiceAccountList)
-	r.CustomResourceDefinitionList = util.StringSliceDelete(r.CustomResourceDefinitionList, in.CustomResourceDefinitionList)
+	r.ClusterRoleBindingList = util.StringSliceDelete(
+		r.ClusterRoleBindingList, in.ClusterRoleBindingList)
+	r.ClusterRoleList = util.StringSliceDelete(
+		r.ClusterRoleList, in.ClusterRoleList)
+	r.ServiceAccountList = util.StringSliceDelete(
+		r.ServiceAccountList, in.ServiceAccountList)
+	r.CustomResourceDefinitionList = util.StringSliceDelete(
+		r.CustomResourceDefinitionList, in.CustomResourceDefinitionList)
 	r.ConfigMapList = util.StringSliceDelete(r.ConfigMapList, in.ConfigMapList)
 	r.ServiceList = util.StringSliceDelete(r.ServiceList, in.ServiceList)
 	r.DeploymentList = util.StringSliceDelete(r.DeploymentList, in.DeploymentList)
 	r.SecretList = util.StringSliceDelete(r.SecretList, in.SecretList)
-	r.PersistentVolumeClaimList = util.StringSliceDelete(r.PersistentVolumeClaimList, in.PersistentVolumeClaimList)
-	r.AlamedaScalerList = util.StringSliceDelete(r.AlamedaScalerList, in.AlamedaScalerList)
+	r.PersistentVolumeClaimList = util.StringSliceDelete(
+		r.PersistentVolumeClaimList, in.PersistentVolumeClaimList)
+	r.AlamedaScalerList = util.StringSliceDelete(
+		r.AlamedaScalerList, in.AlamedaScalerList)
 	r.RouteList = util.StringSliceDelete(r.RouteList, in.RouteList)
-	r.StatefulSetList = util.StringSliceDelete(r.StatefulSetList, in.StatefulSetList)
+	r.StatefulSetList = util.StringSliceDelete(
+		r.StatefulSetList, in.StatefulSetList)
 	r.IngressList = util.StringSliceDelete(r.IngressList, in.IngressList)
-	r.PodSecurityPolicyList = util.StringSliceDelete(r.PodSecurityPolicyList, in.PodSecurityPolicyList)
+	r.PodSecurityPolicyList = util.StringSliceDelete(
+		r.PodSecurityPolicyList, in.PodSecurityPolicyList)
 	r.DaemonSetList = util.StringSliceDelete(r.DaemonSetList, in.DaemonSetList)
-	r.SecurityContextConstraintsList = util.StringSliceDelete(r.SecurityContextConstraintsList, in.SecurityContextConstraintsList)
+	r.SecurityContextConstraintsList = util.StringSliceDelete(
+		r.SecurityContextConstraintsList, in.SecurityContextConstraintsList)
 	r.RoleBindingList = util.StringSliceDelete(r.RoleBindingList, in.RoleBindingList)
 	r.RoleList = util.StringSliceDelete(r.RoleList, in.RoleList)
-	r.MutatingWebhookConfigurationList = util.StringSliceDelete(r.MutatingWebhookConfigurationList, in.MutatingWebhookConfigurationList)
-	r.ValidatingWebhookConfigurationList = util.StringSliceDelete(r.ValidatingWebhookConfigurationList, in.ValidatingWebhookConfigurationList)
-	r.AlamedaNotificationChannelList = util.StringSliceDelete(r.AlamedaNotificationChannelList, in.AlamedaNotificationChannelList)
-	r.AlamedaNotificationTopic = util.StringSliceDelete(r.AlamedaNotificationTopic, in.AlamedaNotificationTopic)
+	r.MutatingWebhookConfigurationList = util.StringSliceDelete(
+		r.MutatingWebhookConfigurationList, in.MutatingWebhookConfigurationList)
+	r.ValidatingWebhookConfigurationList = util.StringSliceDelete(
+		r.ValidatingWebhookConfigurationList, in.ValidatingWebhookConfigurationList)
+	r.AlamedaNotificationChannelList = util.StringSliceDelete(
+		r.AlamedaNotificationChannelList, in.AlamedaNotificationChannelList)
+	r.AlamedaNotificationTopic = util.StringSliceDelete(
+		r.AlamedaNotificationTopic, in.AlamedaNotificationTopic)
 }
 
 func getResourceFromList(resourceList []string) (Resource, error) {
@@ -963,7 +1095,8 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 			case "ServiceAccount":
 				serviceAccountList = append(serviceAccountList, assetFile)
 			case "CustomResourceDefinition":
-				customResourceDefinitionList = append(customResourceDefinitionList, assetFile)
+				customResourceDefinitionList =
+					append(customResourceDefinitionList, assetFile)
 			case "ConfigMap":
 				configMapList = append(configMapList, assetFile)
 			case "Service":
@@ -973,9 +1106,11 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 			case "Secret":
 				secretList = append(secretList, assetFile)
 			case "PersistentVolumeClaim":
-				persistentVolumeClaimList = append(persistentVolumeClaimList, assetFile)
+				persistentVolumeClaimList =
+					append(persistentVolumeClaimList, assetFile)
 			case "AlamedaScaler":
-				alamedaScalerList = append(alamedaScalerList, assetFile)
+				alamedaScalerList =
+					append(alamedaScalerList, assetFile)
 			case "Route":
 				routeList = append(routeList, assetFile)
 			case "StatefulSet":
@@ -987,19 +1122,24 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 			case "DaemonSet":
 				daemonSetList = append(daemonSetList, assetFile)
 			case "SecurityContextConstraint":
-				securityContextConstraintsList = append(securityContextConstraintsList, assetFile)
+				securityContextConstraintsList =
+					append(securityContextConstraintsList, assetFile)
 			case "RoleBinding":
 				roleBindingList = append(roleBindingList, assetFile)
 			case "Role":
 				roleList = append(roleList, assetFile)
 			case "MutatingWebhookConfiguration":
-				mutatingWebhookConfigurationList = append(mutatingWebhookConfigurationList, assetFile)
+				mutatingWebhookConfigurationList =
+					append(mutatingWebhookConfigurationList, assetFile)
 			case "ValidatingWebhookConfiguration":
-				validatingWebhookConfigurationList = append(validatingWebhookConfigurationList, assetFile)
+				validatingWebhookConfigurationList =
+					append(validatingWebhookConfigurationList, assetFile)
 			case "AlamedaNotificationChannel":
-				alamedaNotificationChannelList = append(alamedaNotificationChannelList, assetFile)
+				alamedaNotificationChannelList =
+					append(alamedaNotificationChannelList, assetFile)
 			case "AlamedaNotificationTopic":
-				alamedaNotificationTopicList = append(alamedaNotificationTopicList, assetFile)
+				alamedaNotificationTopicList =
+					append(alamedaNotificationTopicList, assetFile)
 			default:
 				return Resource{}, errors.Errorf("unknown kind \"%s\"", kind)
 			}

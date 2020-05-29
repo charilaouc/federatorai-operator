@@ -73,7 +73,13 @@ spec:
           timeoutSeconds: 60
         volumeMounts: 
         - name: alameda-ai-config
-          mountPath: /alameda-ai/services/orchestra/workload_prediction/config          
+          mountPath: /alameda-ai/services/orchestra/workload_prediction/config
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: alameda-ai-config
           configMap:

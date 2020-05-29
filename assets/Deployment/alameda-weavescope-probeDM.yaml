@@ -43,3 +43,9 @@ spec:
               cpu: 100m
               memory: 100Mi
       serviceAccountName: alameda-weave-scope
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}

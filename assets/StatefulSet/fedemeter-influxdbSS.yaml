@@ -29,3 +29,9 @@ spec:
         #  limits:
         #    cpu: "1000m"
 #    memory: "1000Mi"
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}

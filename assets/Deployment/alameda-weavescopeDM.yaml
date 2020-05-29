@@ -38,3 +38,9 @@ spec:
             requests:
               cpu: 200m
               memory: 200Mi
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}

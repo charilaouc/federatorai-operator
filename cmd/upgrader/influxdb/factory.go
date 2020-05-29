@@ -15,9 +15,12 @@ type resourceFactory struct {
 	c   *component.ComponentConfig
 }
 
-func newResourceFactoryByAlamedaService(alamedaService federatoraiv1alpha1.AlamedaService) (resourceFactory, error) {
+func newResourceFactoryByAlamedaService(
+	alamedaService federatoraiv1alpha1.AlamedaService) (resourceFactory, error) {
 
-	c := component.NewComponentConfig(component.PodTemplateConfig{}, alamedaService, component.WithNamespace(alamedaService.GetNamespace()))
+	c := component.NewComponentConfig(
+		component.PodTemplateConfig{},
+		alamedaService, component.WithNamespace(alamedaService.GetNamespace()))
 
 	asp := alamedaserviceparamter.NewAlamedaServiceParamter(&alamedaService)
 
@@ -34,11 +37,13 @@ func (f resourceFactory) getAlamedaInfluxdbService() corev1.Service {
 }
 
 func (f resourceFactory) getAlamedaInfluxdbConfig() influxdb.Config {
-	influxdbDeploymentAssets := alamedaserviceparamter.GetAlamedaInfluxdbStatefulSet()
+	influxdbDeploymentAssets :=
+		alamedaserviceparamter.GetAlamedaInfluxdbStatefulSet()
 	influxdbDeployment := f.c.NewStatefulSet(influxdbDeploymentAssets)
 	influxdbServiceAssets := alamedaserviceparamter.GetAlamedaInfluxdbService()
 	influxdbService := f.c.NewService(influxdbServiceAssets)
-	influxdbConfig := getInfluxdbConfigFromStatefulSetAndService(*influxdbDeployment, *influxdbService)
+	influxdbConfig := getInfluxdbConfigFromStatefulSetAndService(
+		*influxdbDeployment, *influxdbService)
 	return influxdbConfig
 }
 
@@ -47,22 +52,25 @@ func (f resourceFactory) listWorkloadControllersWithoutAlamedaInfluxdb() []workl
 	resource := f.asp.GetInstallResource()
 	resource.Delete(alamedaserviceparamter.GetAlamedaInfluxdbResource())
 
-	workloadControllers := make([]workloadController, 0, len(resource.DeploymentList)+len(resource.StatefulSetList))
+	workloadControllers := make([]workloadController, 0,
+		len(resource.DeploymentList)+len(resource.StatefulSetList))
 	for _, deployment := range resource.DeploymentList {
 		d := f.c.NewDeployment(deployment)
-		workloadControllers = append(workloadControllers, workloadController{
-			Kind:      workloadControllerDeployment,
-			Namespace: d.GetNamespace(),
-			Name:      d.GetName(),
-		})
+		workloadControllers = append(
+			workloadControllers, workloadController{
+				Kind:      workloadControllerDeployment,
+				Namespace: d.GetNamespace(),
+				Name:      d.GetName(),
+			})
 	}
 	for _, statefulSet := range resource.StatefulSetList {
 		s := f.c.NewStatefulSet(statefulSet)
-		workloadControllers = append(workloadControllers, workloadController{
-			Kind:      workloadControllerStatefulSet,
-			Namespace: s.GetNamespace(),
-			Name:      s.GetName(),
-		})
+		workloadControllers = append(workloadControllers,
+			workloadController{
+				Kind:      workloadControllerStatefulSet,
+				Namespace: s.GetNamespace(),
+				Name:      s.GetName(),
+			})
 	}
 
 	return workloadControllers

@@ -50,6 +50,12 @@ spec:
         volumeMounts:
           - mountPath: /etc/grafana/provisioning/datasources
             name: prometheus-datasource
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: prometheus-datasource
           emptyDir: {}

@@ -72,6 +72,12 @@ spec:
             value: "120"
           - name: FEDERATORAI_ANALYSIS_OUTLIER_DETECT_GPU
             value: "true"
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: alameda-analyzer-data-storage
         - name: alameda-analyzer-log-storage

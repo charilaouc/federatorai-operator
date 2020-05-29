@@ -57,6 +57,12 @@ spec:
           - name: alameda-ai-dispatcher-config
             mountPath: /etc/alameda/ai-dispatcher/ai-dispatcher.toml
             subPath: ai-dispatcher.toml
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: alameda-ai-dispatcher-config
           configMap:

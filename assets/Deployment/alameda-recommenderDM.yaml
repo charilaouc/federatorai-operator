@@ -48,6 +48,12 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 60
           timeoutSeconds: 60
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: alameda-recommender-data-storage
         - name: alameda-recommender-log-storage

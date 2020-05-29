@@ -57,6 +57,12 @@ spec:
           readOnly: true
       terminationGracePeriodSeconds: 10
       serviceAccount: alameda-notifier
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
       - name: cert
         secret:

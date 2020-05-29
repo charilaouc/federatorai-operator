@@ -54,6 +54,12 @@ spec:
         - mountPath: /var/lib/influxdb
           name: influxdb-data-storage
           subPath: influxdb
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
       - name: influxdb-data-storage
       - name: influxdb-log-storage

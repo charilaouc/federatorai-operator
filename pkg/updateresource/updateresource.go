@@ -206,6 +206,11 @@ func misMatchTemplatePodSpec(modify *bool, clusterDep, sourceDep *corev1.PodSpec
 		log.V(-1).Info("change ServiceAccountName")
 		clusterDep.ServiceAccountName = sourceDep.ServiceAccountName
 	}
+	if !equality.Semantic.DeepEqual(clusterDep.NodeSelector, sourceDep.NodeSelector) {
+		*modify = true
+		log.V(-1).Info("change TemplateObjectNodeSelector")
+		clusterDep.NodeSelector = sourceDep.NodeSelector
+	}
 	misMatchContainers(modify, clusterDep.InitContainers, sourceDep.InitContainers)
 	misMatchContainers(modify, clusterDep.Containers, sourceDep.Containers)
 	for sourceIndex, sourceVolumeValue := range sourceDep.Volumes {

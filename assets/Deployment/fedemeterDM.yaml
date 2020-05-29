@@ -26,6 +26,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: fedemeter-config
+        {{if .NodeSelector}}
+        nodeSelector:
+          {{range $key, $value := .NodeSelector}}
+            {{$key}}: {{$value}}
+          {{end}}
+        {{end}}
         volumes:
         - name: fedemeter-data-storage
         - name: fedemeter-log-storage

@@ -56,6 +56,12 @@ spec:
           volumeMounts:
           - mountPath: /federatorai-portal/server/config
             name: federatorai-dashboard-backend-config
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
       - configMap:
           defaultMode: 420

@@ -52,6 +52,12 @@ spec:
           - name: federatorai-agent-gpu-config
             mountPath: /etc/alameda/federatorai-agent/input/influx_prometheus.toml
             subPath: influx_prometheus.toml
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
         - name: federatorai-agent-gpu-config
           configMap:

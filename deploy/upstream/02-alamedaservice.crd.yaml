@@ -3815,6 +3815,10 @@ spec:
               required:
               - enabled
               type: object
+            nodeSelector:
+              additionalProperties:
+                type: string
+              type: object
             platform:
               description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
                 Important: Run "operator-sdk generate k8s" to regenerate code after

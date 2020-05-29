@@ -29,6 +29,12 @@ spec:
           - name: federatorai-agent-preloader-config
             mountPath: /etc/alameda/federatorai-agent/input/alameda_preloader.toml
             subPath: alameda_preloader.toml
+      {{if .NodeSelector}}
+      nodeSelector:
+        {{range $key, $value := .NodeSelector}}
+          {{$key}}: {{$value}}
+        {{end}}
+      {{end}}
       volumes:
       - name: federatorai-agent-preloader-data-storage
       - name: federatorai-agent-preloader-log-storage
