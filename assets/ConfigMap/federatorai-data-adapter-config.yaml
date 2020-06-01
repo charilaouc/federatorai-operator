@@ -82,6 +82,29 @@ data:
       #  insecure_skip_verify = true
       #  watched_source = [{name="kafka_topic_partition_current_offset",expr="sum(rate(kafka_topic_partition_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_current_offset",expr="sum(rate(kafka_consumergroup_current_offset[1m]))by(consumergroup,topic,namespace)",tags=["consumergroup","topic","namespace"]},{name="kafka_consumer_group_lag",expr="sum(kafka_consumergroup_lag)by(namespace,consumergroup,topic)",tags=["consumergroup","topic","namespace"]}]
 
+      [[outputs.datadog]]
+        api_key = "$DATADOG_API_KEY"
+        application_key = "$DATADOG_APPLICATION_KEY"
+        User-Agent = "Federator.ai/4.2"
+        dashboard_dir = "/etc/telegraf/dashboards/datadog"
+        enable_kafka_dashboard = true
+        [[outputs.datadog.integration_metrics]]
+          name="federatorai.recommendation"
+          aggregation_type="raw"
+
+        [[outputs.datadog.integration_metrics]]
+          name="federatorai.prediction"
+          aggregation_type="raw"
+
+        [[outputs.datadog.integration_metrics]]
+          name="kafka_topic_partition_current_offset"
+          aggregation_type="diff"
+
+        [[outputs.datadog.integration_metrics]]
+          name="kafka_consumer_group_current_offset"
+          aggregation_type="diff"
+
+      # anchor
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
@@ -107,25 +130,3 @@ data:
           namespace = "<kafka_topic_namespace>"
           measurement = "kafka_topic_partition_current_offset"
           scope = "prediction"
-
-      [[outputs.datadog]]
-        api_key = "$DATADOG_API_KEY"
-        application_key = "$DATADOG_APPLICATION_KEY"
-        User-Agent = "Federator.ai/4.2"
-        dashboard_dir = "/etc/telegraf/dashboards/datadog"
-        enable_kafka_dashboard = true
-        [[outputs.datadog.integration_metrics]]
-          name="federatorai.recommendation"
-          aggregation_type="raw"
-
-        [[outputs.datadog.integration_metrics]]
-          name="federatorai.prediction"
-          aggregation_type="raw"
-
-        [[outputs.datadog.integration_metrics]]
-          name="kafka_topic_partition_current_offset"
-          aggregation_type="diff"
-
-        [[outputs.datadog.integration_metrics]]
-          name="kafka_consumer_group_current_offset"
-          aggregation_type="diff"
