@@ -1,12 +1,14 @@
 {
   "dataAdapterSecret": {
-    "apiKey": "",
-    "applicationKey": ""
+    "datadogAPIKey": "",
+    "datadogApplicationKey": ""
   },
   "dataAdapterConfigmap": [
     {
       "kafkaConsumerDeploymentName": "",
       "kafkaConsumerDeploymentNamespace": "",
+      "kafkaConsumerMinimumReplica": "",
+      "kafkaConsumerMaximumReplica": "",
       "kafkaConsumerGroupName": "",
       "kafkaConsumerGroupNamespace": "",
       "kafkaTopicName": "",

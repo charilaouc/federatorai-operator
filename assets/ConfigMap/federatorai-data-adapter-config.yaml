@@ -63,19 +63,6 @@ data:
       #      name="kubernetes.memory.usage"
       #      metric_type="MEMORY_USAGE_BYTES"
 
-      [[inputs.datadog_application_aware]]
-        urls = ["$DATADOG_QUERY_URL"]
-        api_key = "$DATADOG_API_KEY"
-        application_key = "$DATADOG_APPLICATION_KEY"
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "$CLUSTER_NAME"
-
-        [inputs.datadog_application_aware.watched_kafka_consumer]
-          application = ""
-          namespace = ""
-          min_replicas = 0
-          max_replicas = 0
-
       #[[inputs.prometheus_query]]
       #  url = "$PROMETHEUS_URL"
       #  token_path = "/var/run/secrets/kubernetes.io/serviceaccount/token"
@@ -105,6 +92,19 @@ data:
           aggregation_type="diff"
 
       # anchor
+      [[inputs.datadog_application_aware]]
+        urls = ["$DATADOG_QUERY_URL"]
+        api_key = "$DATADOG_API_KEY"
+        application_key = "$DATADOG_APPLICATION_KEY"
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        cluster_name = "$CLUSTER_NAME"
+
+        [inputs.datadog_application_aware.watched_kafka_consumer]
+          application = ""
+          namespace = ""
+          min_replicas = 0
+          max_replicas = 0
+
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
