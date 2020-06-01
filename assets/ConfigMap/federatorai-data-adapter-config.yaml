@@ -80,7 +80,7 @@ data:
           aggregation_type="raw"
 
         [[outputs.datadog.integration_metrics]]
-          name="federatorai.prediction"
+          name="federatorai.prediction.kafka"
           aggregation_type="raw"
 
         [[outputs.datadog.integration_metrics]]
