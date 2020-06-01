@@ -25,7 +25,41 @@ patch_data_adapter_secret()
 {
     ask_datadog_credential
 }
-    
+
+get_datadog_key()
+{
+
+}
+
+get_kafka_info()
+{
+
+}
+
+prepare_env()
+{
+    if [ ! -f "$json_file" ]; then
+        if [ ! -f "$json_file_template" ]; then
+            if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/federatorai-operator/master/deploy/${json_file_template} -O; then
+                echo -e "\n$(tput setaf 1)Abort, download $json_file_template file failed!!!$(tput sgr 0)"
+                exit 2
+            fi
+        fi
+        cp $json_file_template $json_file
+    fi
+
+    configstr=$(jq -c '.' $json_file)
+    which jq > /dev/null 2>&1
+    if [ "$?" != "0" ];then
+        if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/federatorai-operator/master/deploy/jq -O; then
+            echo -e "\n$(tput setaf 1)Abort, download jq binary failed!!!$(tput sgr 0)"
+            exit 2
+        fi
+        chmod +x jq
+        mv jq /usr/bin/
+    fi
+}
+
 if [ "$#" -eq "0" ]; then
     show_usage
     exit 1
@@ -69,6 +103,15 @@ if [ "$install_namespace" = "" ];then
     echo -e "\n$(tput setaf 1)Error! Please install Federatorai before running this script.$(tput sgr 0)"
     exit 3
 fi
+
+json_file="adapter.json"
+json_file_template="adapter.json.template"
+
+prepare_env
+
+get_datadog_key
+
+get_kafka_info
 
 patch_data_adapter_secret
 #### get datadog api key
