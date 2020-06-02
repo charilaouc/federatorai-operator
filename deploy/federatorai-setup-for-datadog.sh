@@ -15,6 +15,39 @@ __EOF__
     exit 1
 }
 
+patch_alamedaservice()
+{
+    alamedaservice_yaml_name="alamedaservice_patch.yaml"
+    echo -e "\n$(tput setaf 3)Patching alamedaservice ...$(tput sgr 0)"
+
+    cluster_uid=`kubectl get cm cluster-info -n default -o jsonpath='{.metadata.uid}'`
+    if [ "$cluster_uid" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Failed to get cluster uid.$(tput sgr 0)"
+        exit 8
+    fi
+
+    kubectl get alamedaservice $alamedaservice_name -n $install_namespace -o jsonpath='{.spec.federatoraiDataAdapter}'|grep -q "CLUSTER_NAME"
+    if [ "$?" != "0" ]; then
+
+        cat > $file_folder/${alamedaservice_yaml_name} << __EOF__
+spec:
+  federatoraiDataAdapter:
+    env:
+      - name: CLUSTER_NAME
+        value: ${cluster_uid}
+__EOF__
+
+        kubectl patch alamedaservice $alamedaservice_name -n $install_namespace --type merge --patch "$(cat $file_folder/${alamedaservice_yaml_name})"
+        if [ "$?" != "0" ];then
+            echo -e "\n$(tput setaf 1)Error! Failed to patch alamedaservice $alamedaservice_name.$(tput sgr 0)"
+            exit 8
+        fi
+        wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 5
+
+    fi
+    echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
+}
+
 patch_data_adapter_secret()
 {
     echo -e "\n$(tput setaf 3)Patching Federator.ai data adapter secret...$(tput sgr 0)"
@@ -123,6 +156,63 @@ __EOF__
         exit 1
     fi
     echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
+}
+
+wait_until_pods_ready()
+{
+  period="$1"
+  interval="$2"
+  namespace="$3"
+  target_pod_number="$4"
+
+  wait_pod_creating=1
+  for ((i=0; i<$period; i+=$interval)); do
+
+    if [[ "$wait_pod_creating" = "1" ]]; then
+        # check if pods created
+        if [[ "`kubectl get po -n $namespace 2>/dev/null|wc -l`" -ge "$target_pod_number" ]]; then
+            wait_pod_creating=0
+            echo -e "\nChecking pods..."
+        else
+            echo "Waiting for pods in namespace $namespace to be created..."
+        fi
+    else
+        # check if pods running
+        if pods_ready $namespace; then
+            echo -e "\nAll $namespace pods are ready."
+            return 0
+        fi
+        echo "Waiting for pods in namespace $namespace to be ready..."
+    fi
+
+    sleep "$interval"
+
+  done
+
+  echo -e "\n$(tput setaf 1)Warning!! Waited for $period seconds, but all pods are not ready yet. Please check $namespace namespace$(tput sgr 0)"
+  leave_prog
+  exit 4
+}
+
+pods_ready()
+{
+  [[ "$#" == 0 ]] && return 0
+
+  namespace="$1"
+
+  kubectl get pod -n $namespace \
+    -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.conditions[?(@.type=="Ready")].status}{"\t"}{.status.phase}{"\t"}{.status.reason}{"\n"}{end}' \
+      | while read name status phase reason _junk; do
+          if [ "$status" != "True" ]; then
+            msg="Waiting pod $name in namespace $namespace to be ready."
+            [ "$phase" != "" ] && msg="$msg phase: [$phase]"
+            [ "$reason" != "" ] && msg="$msg reason: [$reason]"
+            echo "$msg"
+            return 1
+          fi
+        done || return 1
+
+  return 0
 }
 
 get_datadog_key()
@@ -285,6 +375,8 @@ while getopts "hk:" o; do
     esac
 done
 
+[ "$max_wait_pods_ready_time" = "" ] && max_wait_pods_ready_time=1500  # maximum wait time for pods become ready
+
 file_folder="./config_result"
 current_location=`pwd`
 mkdir -p $file_folder
@@ -309,6 +401,12 @@ if [ "$install_namespace" = "" ];then
     exit 3
 fi
 
+alamedaservice_name="`kubectl get alamedaservice -n $install_namespace -o jsonpath='{range .items[*]}{.metadata.name}'`"
+if [ "$alamedaservice_name" = "" ]; then
+    echo -e "\n$(tput setaf 1)Error! Failed to get alamedaservice name.$(tput sgr 0)"
+    exit 8
+fi
+
 json_file="adapter.json"
 json_file_template="adapter.json.tmp"
 
@@ -317,6 +415,8 @@ prepare_env
 get_datadog_key
 
 get_kafka_info
+
+patch_alamedaservice
 
 patch_data_adapter_secret
 
