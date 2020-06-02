@@ -48,9 +48,15 @@ var (
 
 func MisMatchResourceConfigMap(clusterCM, sourceCM *corev1.ConfigMap) bool {
 	modify := false
+	if clusterCM.GetName() == "federatorai-data-adapter-config" {
+		log.V(-1).Info("ignore mismatch check for configmap %s",
+			clusterCM.GetName())
+		return modify
+	}
 	if !equality.Semantic.DeepEqual(clusterCM.Data, sourceCM.Data) {
 		modify = true
-		log.V(-1).Info("change Data")
+		log.V(-1).Info("detect configmap %s changed, restore default settings",
+			clusterCM.GetName())
 		clusterCM.Data = sourceCM.Data
 	}
 	return modify
