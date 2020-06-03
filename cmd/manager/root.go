@@ -371,10 +371,9 @@ func waitCRDReady(clientConfig *rest.Config) error {
 			return false, nil
 		}
 
-		apiList, err := apiExtensionsClientset.DiscoveryClient.ServerResources()
+		_, apiList, err := apiExtensionsClientset.DiscoveryClient.ServerGroupsAndResources()
 		if err != nil {
-			log.V(-1).Info("Get k8s ServerResources failed, will retry", "msg", err.Error())
-			return false, nil
+			log.V(-1).Info("Get k8s ServerGroupsAndResources failed, will retry", "msg", err.Error())
 		}
 
 		for _, apiResourceList := range apiList {
