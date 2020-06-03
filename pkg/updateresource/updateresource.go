@@ -67,7 +67,8 @@ func MisMatchResourceService(clusterSv, sourceSv *corev1.Service) bool {
 			sourceSv.Spec.Ports[index].Protocol = okdServiceDefaultProtocol
 		}
 		if resourceEmpty(value.TargetPort.IntVal) {
-			sourceSv.Spec.Ports[index].TargetPort.IntVal = okdServiceDefaultTargetPort(sourceSv.Spec.Ports[index].Port)
+			sourceSv.Spec.Ports[index].TargetPort.IntVal = okdServiceDefaultTargetPort(
+				sourceSv.Spec.Ports[index].Port)
 		}
 	}
 	if sourceSv.Spec.Type == "" {
@@ -137,7 +138,8 @@ func UpdateIssuer(from, to certmanagerv1alpha1.Issuer) certmanagerv1alpha1.Issue
 }
 
 // UpdateCertificate returns certificate that necessary fields have been updated
-func UpdateCertificate(from, to certmanagerv1alpha1.Certificate) certmanagerv1alpha1.Certificate {
+func UpdateCertificate(
+	from, to certmanagerv1alpha1.Certificate) certmanagerv1alpha1.Certificate {
 
 	newCertificate := to.DeepCopy()
 
@@ -158,7 +160,8 @@ func misMatchDaemonSetTemplate(modify *bool, clusterDS, sourceDS *corev1.PodTemp
 	misMatchTemplatePodSpec(modify, &clusterDS.Spec, &sourceDS.Spec)
 }
 
-func misMatchSelectorAndReplicas(modify *bool, clusterDep, sourceDep *appsv1.DeploymentSpec) {
+func misMatchSelectorAndReplicas(
+	modify *bool, clusterDep, sourceDep *appsv1.DeploymentSpec) {
 	if !equality.Semantic.DeepEqual(clusterDep.Selector, sourceDep.Selector) {
 		*modify = true
 		log.V(-1).Info("change Selector")
@@ -171,7 +174,8 @@ func misMatchSelectorAndReplicas(modify *bool, clusterDep, sourceDep *appsv1.Dep
 	}
 }
 
-func misMatchStatefulSetSelectorAndReplicas(modify *bool, clusterSts, sourceSts *appsv1.StatefulSetSpec) {
+func misMatchStatefulSetSelectorAndReplicas(
+	modify *bool, clusterSts, sourceSts *appsv1.StatefulSetSpec) {
 	if !equality.Semantic.DeepEqual(clusterSts.Selector, sourceSts.Selector) {
 		*modify = true
 		log.V(-1).Info("change Selector")
@@ -219,31 +223,42 @@ func misMatchTemplatePodSpec(modify *bool, clusterDep, sourceDep *corev1.PodSpec
 			if clusterVolumeValue.Name == sourceVolumeValue.Name {
 				isSourceVolumeExistInClusterDep = true
 				if sourceDep.Volumes[sourceIndex].VolumeSource.Secret != nil {
-					if resourceEmpty(sourceDep.Volumes[sourceIndex].VolumeSource.Secret.DefaultMode) {
-						sourceDep.Volumes[sourceIndex].VolumeSource.Secret.DefaultMode = okdDeploymentDefaultDefaultMode
+					if resourceEmpty(
+						sourceDep.Volumes[sourceIndex].VolumeSource.Secret.DefaultMode) {
+						sourceDep.Volumes[sourceIndex].VolumeSource.Secret.DefaultMode =
+							okdDeploymentDefaultDefaultMode
 					}
 				}
 				if sourceDep.Volumes[sourceIndex].VolumeSource.ConfigMap != nil {
-					if resourceEmpty(sourceDep.Volumes[sourceIndex].VolumeSource.ConfigMap.DefaultMode) {
-						sourceDep.Volumes[sourceIndex].VolumeSource.ConfigMap.DefaultMode = okdDeploymentDefaultDefaultMode
+					if resourceEmpty(
+						sourceDep.Volumes[sourceIndex].VolumeSource.ConfigMap.DefaultMode) {
+						sourceDep.Volumes[sourceIndex].VolumeSource.ConfigMap.DefaultMode =
+							okdDeploymentDefaultDefaultMode
 					}
 				}
 				if sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI != nil {
-					if resourceEmpty(sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.DefaultMode) {
-						sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.DefaultMode = okdDeploymentDefaultDefaultMode
+					if resourceEmpty(
+						sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.DefaultMode) {
+						sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.DefaultMode =
+							okdDeploymentDefaultDefaultMode
 					}
-					for itemsIndex, _ := range sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items {
+					for itemsIndex := range sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items {
 						if sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items[itemsIndex].FieldRef != nil {
-							if resourceEmpty(sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items[itemsIndex].FieldRef.APIVersion) {
-								sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items[itemsIndex].FieldRef.APIVersion = okdDeploymentDefaultEnvFieldRefAPIVersion
+							if resourceEmpty(
+								sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items[itemsIndex].FieldRef.APIVersion) {
+								sourceDep.Volumes[sourceIndex].VolumeSource.DownwardAPI.Items[itemsIndex].FieldRef.APIVersion =
+									okdDeploymentDefaultEnvFieldRefAPIVersion
 							}
 						}
 					}
 				}
-				if !equality.Semantic.DeepEqual(clusterDep.Volumes[clusterIndex].VolumeSource, sourceDep.Volumes[sourceIndex].VolumeSource) {
+				if !equality.Semantic.DeepEqual(
+					clusterDep.Volumes[clusterIndex].VolumeSource,
+					sourceDep.Volumes[sourceIndex].VolumeSource) {
 					*modify = true
 					log.V(-1).Info("change VolumeSource")
-					clusterDep.Volumes[clusterIndex].VolumeSource = sourceDep.Volumes[sourceIndex].VolumeSource
+					clusterDep.Volumes[clusterIndex].VolumeSource =
+						sourceDep.Volumes[sourceIndex].VolumeSource
 				}
 				break
 			}
@@ -265,28 +280,33 @@ func misMatchContainers(modify *bool, clusterContainers, sourceContainers []core
 				if clusterContainer.ImagePullPolicy != sourceContainer.ImagePullPolicy {
 					*modify = true
 					log.V(-1).Info("change ImagePullPolicy")
-					clusterContainers[clusterIndex].ImagePullPolicy = sourceContainer.ImagePullPolicy
+					clusterContainers[clusterIndex].ImagePullPolicy =
+						sourceContainer.ImagePullPolicy
 				}
 				if !equality.Semantic.DeepEqual(clusterContainer.Ports, sourceContainer.Ports) {
 					*modify = true
 					log.V(-1).Info("change Ports")
 					clusterContainers[clusterIndex].Ports = sourceContainer.Ports
 				}
-				if !equality.Semantic.DeepEqual(clusterContainer.Resources, sourceContainer.Resources) {
+				if !equality.Semantic.DeepEqual(
+					clusterContainer.Resources, sourceContainer.Resources) {
 					*modify = true
 					log.V(-1).Info("change Resources")
 					clusterContainers[clusterIndex].Resources = sourceContainer.Resources
 				}
-				if !equality.Semantic.DeepEqual(clusterContainer.VolumeMounts, sourceContainer.VolumeMounts) {
+				if !equality.Semantic.DeepEqual(
+					clusterContainer.VolumeMounts, sourceContainer.VolumeMounts) {
 					*modify = true
 					log.V(-1).Info("change VolumeMounts")
 					clusterContainers[clusterIndex].VolumeMounts = sourceContainer.VolumeMounts
 				}
-				if !equality.Semantic.DeepEqual(clusterContainer.ReadinessProbe, sourceContainer.ReadinessProbe) {
+				if !equality.Semantic.DeepEqual(
+					clusterContainer.ReadinessProbe, sourceContainer.ReadinessProbe) {
 					*modify = true
 					clusterContainers[clusterIndex].ReadinessProbe = sourceContainer.ReadinessProbe
 				}
-				if !equality.Semantic.DeepEqual(clusterContainer.LivenessProbe, sourceContainer.LivenessProbe) {
+				if !equality.Semantic.DeepEqual(
+					clusterContainer.LivenessProbe, sourceContainer.LivenessProbe) {
 					*modify = true
 					clusterContainers[clusterIndex].LivenessProbe = sourceContainer.LivenessProbe
 				}
@@ -294,12 +314,14 @@ func misMatchContainers(modify *bool, clusterContainers, sourceContainers []core
 					if value.ValueFrom != nil {
 						if value.ValueFrom.FieldRef != nil {
 							if resourceEmpty(value.ValueFrom.FieldRef.APIVersion) {
-								sourceContainers[sourceIndex].Env[index].ValueFrom.FieldRef.APIVersion = okdDeploymentDefaultEnvFieldRefAPIVersion
+								sourceContainers[sourceIndex].Env[index].ValueFrom.FieldRef.APIVersion =
+									okdDeploymentDefaultEnvFieldRefAPIVersion
 							}
 						}
 					}
 				}
-				if !equality.Semantic.DeepEqual(clusterContainer.Env, sourceContainer.Env) {
+				if !equality.Semantic.DeepEqual(
+					clusterContainer.Env, sourceContainer.Env) {
 					*modify = true
 					log.V(-1).Info("change Env")
 					clusterContainers[clusterIndex].Env = sourceContainer.Env
