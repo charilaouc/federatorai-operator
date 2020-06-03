@@ -422,6 +422,6 @@ patch_data_adapter_secret
 
 patch_data_adapter_configmap
 
-echo -e "$(tput setaf 6)\nSetup Federator.ai for datadog successfully$(tput sgr 0)"
+echo -e "$(tput setaf 6)\nSetup Federator.ai for Datadog successfully$(tput sgr 0)"
 
 exit 0
