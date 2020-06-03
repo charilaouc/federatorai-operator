@@ -313,6 +313,21 @@ get_alamedaservice_full_version()
     fi
 }
 
+restart_data_adapter_pod()
+{
+    adapter_pod_name=`kubectl get pods -n $install_namespace -o name |grep "federatorai-data-adapter-"|cut -d '/' -f2`
+    if [ "$adapter_pod_name" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error, failed to get Federator.ai data adapter pod name!$(tput sgr 0)"
+        exit 2
+    fi
+    kubectl delete pod $adapter_pod_name -n $install_namespace
+    if [ "$?" != "0" ]; then
+        echo -e "\n$(tput setaf 1)Error! Failed to delete Federator.ai data adapter pod $adapter_pod_name$(tput sgr 0)"
+        exit 8
+    fi
+    wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 5
+}
+
 prepare_env()
 {
     get_alamedaservice_full_version
@@ -421,6 +436,8 @@ patch_alamedaservice
 patch_data_adapter_secret
 
 patch_data_adapter_configmap
+
+restart_data_adapter_pod
 
 echo -e "$(tput setaf 6)\nSetup Federator.ai for Datadog successfully$(tput sgr 0)"
 
