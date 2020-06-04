@@ -119,6 +119,8 @@ patch_data_adapter_configmap()
           namespace = "${kafkaConsumerDeploymentNamespace}"
           min_replicas = ${kafkaConsumerMinimumReplica}
           max_replicas = ${kafkaConsumerMaximumReplica}
+          topics = ["${kafkaTopicName}"]
+          consumer_groups = ["${kafkaConsumerGroupName}"]
 
       [[inputs.alameda_datahub_query]]
         url = "\$DATAHUB_URL"
