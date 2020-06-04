@@ -75,12 +75,10 @@ data:
         User-Agent = "Federator.ai/4.2"
         dashboard_dir = "/etc/telegraf/dashboards/datadog"
         enable_kafka_dashboard = true
-        [[outputs.datadog.integration_metrics]]
-          name="federatorai.recommendation"
-          aggregation_type="raw"
 
+        # This pattern support federatorai.integration.status, federatorai.recommendation and federator.predictoin.*
         [[outputs.datadog.integration_metrics]]
-          name="federatorai.prediction.kafka"
+          name="federatorai.*"
           aggregation_type="raw"
 
         [[outputs.datadog.integration_metrics]]
