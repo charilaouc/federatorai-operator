@@ -104,6 +104,8 @@ data:
           namespace = ""
           min_replicas = 0
           max_replicas = 0
+          topics = ["<kafka_topic_name>"]
+          consumer_groups = ["<kafka_consumer_group_name>"]
 
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
