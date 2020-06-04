@@ -16,6 +16,12 @@ func GlobalSectionSetParamterToStatefulset(ss *appsv1.StatefulSet, asp *alamedas
 	switch ss.Name {
 	case util.FedemeterInflixDBSSN:
 	}
+	for containerIndex := range ss.Spec.Template.Spec.Containers {
+		ss.Spec.Template.Spec.Containers[containerIndex].Resources = asp.Resources
+	}
+	for containerIndex := range ss.Spec.Template.Spec.InitContainers {
+		ss.Spec.Template.Spec.InitContainers[containerIndex].Resources = asp.Resources
+	}
 }
 
 func GlobalSectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaserviceparamter.AlamedaServiceParamter) {
@@ -108,12 +114,24 @@ func GlobalSectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedase
 
 	envVars := getEnvVarsToUpdateByDeployment(dep.Name, asp)
 	updateenvvar.UpdateEnvVarsToDeployment(dep, envVars)
+	for containerIndex := range dep.Spec.Template.Spec.Containers {
+		dep.Spec.Template.Spec.Containers[containerIndex].Resources = asp.Resources
+	}
+	for containerIndex := range dep.Spec.Template.Spec.InitContainers {
+		dep.Spec.Template.Spec.InitContainers[containerIndex].Resources = asp.Resources
+	}
 }
 
 func GlobalSectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
 	switch ds.Name {
 	case util.AlamedaweavescopeAgentDS:
 		util.SetDaemonSetImagePullPolicy(ds, util.AlamedaweavescopeAgentCTN, asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
+	}
+	for containerIndex := range ds.Spec.Template.Spec.Containers {
+		ds.Spec.Template.Spec.Containers[containerIndex].Resources = asp.Resources
+	}
+	for containerIndex := range ds.Spec.Template.Spec.InitContainers {
+		ds.Spec.Template.Spec.InitContainers[containerIndex].Resources = asp.Resources
 	}
 }
 

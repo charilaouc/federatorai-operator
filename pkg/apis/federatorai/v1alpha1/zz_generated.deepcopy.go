@@ -27,6 +27,7 @@ func (in *AlamedaComponentSpec) DeepCopyInto(out *AlamedaComponentSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.Resources.DeepCopyInto(&out.Resources)
 	return
 }
 
@@ -116,6 +117,7 @@ func (in *AlamedaServiceSpec) DeepCopyInto(out *AlamedaServiceSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.Resources.DeepCopyInto(&out.Resources)
 	if in.ServiceExposures != nil {
 		in, out := &in.ServiceExposures, &out.ServiceExposures
 		*out = make([]ServiceExposureSpec, len(*in))

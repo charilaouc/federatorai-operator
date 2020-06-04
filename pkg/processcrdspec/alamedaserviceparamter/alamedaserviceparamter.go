@@ -3,10 +3,10 @@ package alamedaserviceparamter
 import (
 	"strings"
 
-	"github.com/pkg/errors"
-
 	"github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/util"
+	"github.com/pkg/errors"
+	corev1 "k8s.io/api/core/v1"
 )
 
 var (
@@ -350,6 +350,7 @@ type AlamedaServiceParamter struct {
 	Version                             string
 	PrometheusService                   string
 	Storages                            []v1alpha1.StorageSpec
+	Resources                           corev1.ResourceRequirements
 	ServiceExposures                    []v1alpha1.ServiceExposureSpec
 	InfluxdbSectionSet                  v1alpha1.AlamedaComponentSpec
 	GrafanaSectionSet                   v1alpha1.AlamedaComponentSpec
@@ -391,6 +392,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		Version:                             instance.Spec.Version,
 		PrometheusService:                   instance.Spec.PrometheusService,
 		Storages:                            instance.Spec.Storages,
+		Resources:                           instance.Spec.Resources,
 		ServiceExposures:                    instance.Spec.ServiceExposures,
 		InfluxdbSectionSet:                  instance.Spec.InfluxdbSectionSet,
 		GrafanaSectionSet:                   instance.Spec.GrafanaSectionSet,
