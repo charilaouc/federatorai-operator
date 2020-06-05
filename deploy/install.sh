@@ -691,7 +691,6 @@ __EOF__
 
     # Enable resource requirement configuration
     if [ "${ENABLE_RESOURCE_REQUIRMENT}" = "y" ]; then
-        sed -e "/image: /a\          resources:\n            limits:\n              cpu: 4000m\n              memory: 8000Mi\n            requests:\n              cpu: 100m\n              memory: 100Mi" /tmp/install-op/03-federatorai-operator.deployment.yaml
         cat >> ${alamedaservice_example} << __EOF__
   resources:
     limits:
