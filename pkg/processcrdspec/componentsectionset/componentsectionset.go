@@ -138,15 +138,9 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 	for i, container := range dep.Spec.Template.Spec.Containers {
 		newEnv := replaceOrAppendEnvVar(container.Env, envVars)
 		dep.Spec.Template.Spec.Containers[i].Env = newEnv
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			dep.Spec.Template.Spec.Containers[i].Resources = resources
-		}
 	}
-	for i := range dep.Spec.Template.Spec.InitContainers {
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			dep.Spec.Template.Spec.InitContainers[i].Resources = resources
-		}
-	}
+	util.SetResourcesForContainers(dep, resources, false)
+	util.SetResourcesForContainers(dep, resources, true)
 }
 
 func SectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
@@ -162,16 +156,10 @@ func SectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaservicepara
 	for i, container := range ds.Spec.Template.Spec.Containers {
 		newEnv := replaceOrAppendEnvVar(container.Env, envVars)
 		ds.Spec.Template.Spec.Containers[i].Env = newEnv
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			ds.Spec.Template.Spec.Containers[i].Resources = resources
-		}
 	}
 
-	for i := range ds.Spec.Template.Spec.InitContainers {
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			ds.Spec.Template.Spec.InitContainers[i].Resources = resources
-		}
-	}
+	util.SetResourcesForContainers(ds, resources, false)
+	util.SetResourcesForContainers(ds, resources, true)
 }
 
 func SectionSetParamterToStatefulSet(ss *appsv1.StatefulSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
@@ -187,15 +175,9 @@ func SectionSetParamterToStatefulSet(ss *appsv1.StatefulSet, asp *alamedaservice
 	for i, container := range ss.Spec.Template.Spec.Containers {
 		newEnv := replaceOrAppendEnvVar(container.Env, envVars)
 		ss.Spec.Template.Spec.Containers[i].Env = newEnv
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			ss.Spec.Template.Spec.Containers[i].Resources = resources
-		}
 	}
-	for i := range ss.Spec.Template.Spec.InitContainers {
-		if len(resources.Requests) > 0 || len(resources.Limits) > 0 {
-			ss.Spec.Template.Spec.InitContainers[i].Resources = resources
-		}
-	}
+	util.SetResourcesForContainers(ss, resources, false)
+	util.SetResourcesForContainers(ss, resources, true)
 }
 
 func SectionSetParamterToPersistentVolumeClaim(pvc *corev1.PersistentVolumeClaim, asp *alamedaserviceparamter.AlamedaServiceParamter) {
