@@ -44,17 +44,17 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 		envVars = asp.AlamedaRecommenderSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedarecommenderCTN, asp.AlamedaRecommenderSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaRecommenderSectionSet.Storages, "alameda-recommender-type.pvc", util.AlamedaGroup)
-		util.SetStorageToMountPath(dep, asp.AlamedaRecommenderSectionSet.Storages, util.AlamedarecommenderCTN, "alameda-recommender-type.pvc", util.AlamedaGroup)
+		util.SetStorageToMountPath(dep, asp.AlamedaRecommenderSectionSet.Storages, util.AlamedarecommenderCTN, "alameda-recommender-type-storage", util.AlamedaGroup)
 	case util.AlamedaexecutorDPN:
 		envVars = asp.AlamedaExecutorSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedaexecutorCTN, asp.AlamedaExecutorSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaExecutorSectionSet.Storages, "alameda-executor-type.pvc", util.AlamedaGroup)
-		util.SetStorageToMountPath(dep, asp.AlamedaExecutorSectionSet.Storages, util.AlamedaexecutorCTN, "alameda-executor-type.pvc", util.AlamedaGroup)
+		util.SetStorageToMountPath(dep, asp.AlamedaExecutorSectionSet.Storages, util.AlamedaexecutorCTN, "alameda-executor-type-storage", util.AlamedaGroup)
 	case util.AlamedadispatcherDPN:
 		envVars = asp.AlamedaDispatcherSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedadispatcherCTN, asp.AlamedaDispatcherSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaDispatcherSectionSet.Storages, "alameda-dispatcher-type.pvc", util.AlamedaGroup)
-		util.SetStorageToMountPath(dep, asp.AlamedaDispatcherSectionSet.Storages, util.AlamedadispatcherCTN, "alameda-dispatcher-type.pvc", util.AlamedaGroup)
+		util.SetStorageToMountPath(dep, asp.AlamedaDispatcherSectionSet.Storages, util.AlamedadispatcherCTN, "alameda-dispatcher-type-storage", util.AlamedaGroup)
 	case util.AlamedaRabbitMQDPN:
 		envVars = asp.AlamedaRabbitMQSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedaRabbitMQCTN, asp.AlamedaRabbitMQSectionSet.ImagePullPolicy)
@@ -62,12 +62,12 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 		envVars = asp.AlamedaAnalyzerSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedaanalyzerCTN, asp.AlamedaAnalyzerSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaAnalyzerSectionSet.Storages, "alameda-analyzer-type.pvc", util.AlamedaGroup)
-		util.SetStorageToMountPath(dep, asp.AlamedaAnalyzerSectionSet.Storages, util.AlamedaanalyzerCTN, "alameda-analyzer-type.pvc", util.AlamedaGroup)
+		util.SetStorageToMountPath(dep, asp.AlamedaAnalyzerSectionSet.Storages, util.AlamedaanalyzerCTN, "alameda-analyzer-type-storage", util.AlamedaGroup)
 	case util.FedemeterDPN:
 		envVars = asp.AlamedaFedemeterSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.FedemeterCTN, asp.AlamedaFedemeterSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaFedemeterSectionSet.Storages, "fedemeter-type.pvc", util.FedemeterGroup)
-		util.SetStorageToMountPath(dep, asp.AlamedaFedemeterSectionSet.Storages, util.FedemeterCTN, "fedemeter-type.pvc", util.FedemeterGroup)
+		util.SetStorageToMountPath(dep, asp.AlamedaFedemeterSectionSet.Storages, util.FedemeterCTN, "fedemeter-type-storage", util.FedemeterGroup)
 	case util.InfluxdbDPN:
 		envVars = asp.InfluxdbSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.InfluxdbCTN, asp.InfluxdbSectionSet.ImagePullPolicy)
