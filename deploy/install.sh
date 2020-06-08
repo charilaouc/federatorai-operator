@@ -463,7 +463,7 @@ fi
 sed -i "s/name: federatorai/name: ${install_namespace}/g" 00*.yaml
 sed -i "s/namespace: federatorai/namespace: ${install_namespace}/g" 01*.yaml 03*.yaml 05*.yaml 06*.yaml 07*.yaml
 
-if [ "${ENABLE_RESOURCE_REQUIRMENT}" = "y" ]; then
+if [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ]; then
     sed -i -e "/image: /a\          resources:\n            limits:\n              cpu: 4000m\n              memory: 8000Mi\n            requests:\n              cpu: 100m\n              memory: 100Mi" `ls 03*.yaml`
 fi
 
