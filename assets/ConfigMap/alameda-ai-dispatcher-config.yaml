@@ -266,7 +266,7 @@ data:
     scope = "resource"
     category = "cluster_autoscaler"
     type = "machinegroup"
-    measurement = "machinegroup"
+    measurement = "cluster_autoscaler_machinegroup"
     idKeys = ["cluster_name", "namespace", "name"]
     granularities = ["3m"]
     metricTypes = ["cpu_usage_seconds_percentage", "memory_usage_bytes"]
