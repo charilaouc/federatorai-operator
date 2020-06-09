@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/containers-ai/federatorai-operator/pkg/consts"
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 
@@ -58,11 +59,12 @@ type ComponentConfig struct {
 
 	Image ImageConfig
 
-	Prometheus        PrometheusConfig
-	Kafka             KafkaConfig
-	Nginx             NginxConfig
-	ClusterAutoScaler ClusterAutoScalerConfig
-	FedemeterConfig   FedemeterConfig
+	Prometheus         PrometheusConfig
+	Kafka              KafkaConfig
+	Nginx              NginxConfig
+	ClusterAutoScaler  ClusterAutoScalerConfig
+	FedemeterConfig    FedemeterConfig
+	VolumeNameSuffixes VolumeNameSuffixes
 }
 
 func NewComponentConfig(
@@ -75,6 +77,10 @@ func NewComponentConfig(
 		defaultPodSecurityPolicyGroup   = policyv1beta1.SchemeGroupVersion.Group
 		defaultPodSecurityPolicyVersion = policyv1beta1.SchemeGroupVersion.Version
 		defaultPrometheusConfig         = PrometheusConfig{}
+		defaultVolumeNameSuffixes       = VolumeNameSuffixes{
+			Data: consts.DataSuffix,
+			Log:  consts.LogSuffix,
+		}
 	)
 
 	c := ComponentConfig{
@@ -89,6 +95,7 @@ func NewComponentConfig(
 		Prometheus:               defaultPrometheusConfig,
 		FedemeterConfig:          NewDefaultFedemeterConfig(),
 		NodeSelector:             map[string]string{},
+		VolumeNameSuffixes:       defaultVolumeNameSuffixes,
 	}
 
 	for _, opt := range opts {

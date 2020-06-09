@@ -63,7 +63,7 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name:  alameda-evictioner-data-storage
-      - name:  alameda-evictioner-log-storage
+      - name:  alameda-evictioner{{.VolumeNameSuffixes.Data}}
+      - name:  alameda-evictioner{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-evictioner
       serviceAccountName: alameda-evictioner

@@ -41,6 +41,11 @@ type ClusterAutoScalerConfig struct {
 	EnableExecution bool
 }
 
+type VolumeNameSuffixes struct {
+	Data string
+	Log  string
+}
+
 func NewDefaultNginxConfig() NginxConfig {
 	return NginxConfig{Enabled: false}
 }

@@ -13,7 +13,12 @@ import (
 func GlobalSectionSetParamterToStatefulset(
 	ss *appsv1.StatefulSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
 	switch ss.Name {
-	case util.FedemeterInflixDBSSN:
+	case util.FedemeterInfluxDBSSN:
+	case util.InfluxdbDPN:
+		util.SetStorageToVolumeSource(ss, asp.Storages,
+			"my-alameda.influxdb-type.pvc", util.InfluxDBGroup)
+		util.SetStorageToMountPath(ss, asp.Storages, util.InfluxdbCTN,
+			"influxdb-type-storage", util.InfluxDBGroup)
 	}
 }
 
@@ -72,11 +77,6 @@ func GlobalSectionSetParamterToDeployment(
 			"fedemeter-type.pvc", util.FedemeterGroup)
 		util.SetStorageToMountPath(dep, asp.Storages, util.FedemeterCTN,
 			"fedemeter-type-storage", util.FedemeterGroup)
-	case util.InfluxdbDPN:
-		util.SetStorageToVolumeSource(dep, asp.Storages,
-			"my-alameda.influxdb-type.pvc", util.InfluxDBGroup)
-		util.SetStorageToMountPath(dep, asp.Storages, util.InfluxdbCTN,
-			"influxdb-type-storage", util.InfluxDBGroup)
 	case util.GrafanaDPN:
 		util.SetStorageToVolumeSource(dep, asp.Storages,
 			"my-alameda.grafana-type.pvc", util.GrafanaGroup)
@@ -132,7 +132,7 @@ func GlobalSectionSetParamterToDaemonSet(
 	ds *appsv1.DaemonSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
 	switch ds.Name {
 	case util.AlamedaweavescopeAgentDS:
-		util.SetDaemonSetImagePullPolicy(
+		util.SetImagePullPolicy(
 			ds, util.AlamedaweavescopeAgentCTN,
 			asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
 	}

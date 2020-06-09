@@ -84,7 +84,7 @@ spec:
         - name: alameda-ai-config
           configMap:
             name: alameda-ai-config      
-        - name: alameda-ai-data-storage
-        - name: alameda-ai-log-storage
+        - name: alameda-ai{{.VolumeNameSuffixes.Data}}
+        - name: alameda-ai{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-ai
       serviceAccountName: alameda-ai

@@ -36,8 +36,8 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name: federatorai-agent-preloader-data-storage
-      - name: federatorai-agent-preloader-log-storage
+      - name: federatorai-agent-preloader{{.VolumeNameSuffixes.Data}}
+      - name: federatorai-agent-preloader{{.VolumeNameSuffixes.Log}}
       - name: federatorai-agent-preloader-config
         configMap:
           name: federatorai-agent-preloader-config

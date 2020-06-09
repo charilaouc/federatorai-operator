@@ -71,7 +71,7 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name:  alameda-datahub-data-storage
-      - name:  alameda-datahub-log-storage
+      - name:  alameda-datahub{{.VolumeNameSuffixes.Data}}
+      - name:  alameda-datahub{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-datahub
       serviceAccountName: alameda-datahub

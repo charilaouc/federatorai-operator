@@ -59,8 +59,8 @@ spec:
       volumes:
         - name: prometheus-datasource
           emptyDir: {}
-        - name: grafana-data-storage
-        - name: grafana-log-storage
+        - name: grafana{{.VolumeNameSuffixes.Data}}
+        - name: grafana{{.VolumeNameSuffixes.Log}}
         - configMap:
             items:
             - key: gettoken.sh

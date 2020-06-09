@@ -69,7 +69,7 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name:  federatorai-rest-data-storage
-      - name:  federatorai-rest-log-storage
+      - name:  federatorai-rest{{.VolumeNameSuffixes.Data}}
+      - name:  federatorai-rest{{.VolumeNameSuffixes.Log}}
       serviceAccount: federatorai-rest
       serviceAccountName: federatorai-rest

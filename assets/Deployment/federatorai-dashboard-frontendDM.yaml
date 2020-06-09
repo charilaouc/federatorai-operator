@@ -19,8 +19,8 @@ spec:
         component: federatorai-dashboard-frontend
     spec:
       volumes:
-      - name: federatorai-dashboard-frontend-data-storage
-      - name: federatorai-dashboard-frontend-log-storage
+      - name: federatorai-dashboard-frontend{{.VolumeNameSuffixes.Data}}
+      - name: federatorai-dashboard-frontend{{.VolumeNameSuffixes.Log}}
       containers:
         - name: federatorai-dashboard-frontend
           ports:
@@ -58,5 +58,5 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name:  federatorai-frontend-data-storage
-      - name:  federatorai-frontend-log-storage
+      - name:  federatorai-frontend{{.VolumeNameSuffixes.Data}}
+      - name:  federatorai-frontend{{.VolumeNameSuffixes.Log}}

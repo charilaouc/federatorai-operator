@@ -87,8 +87,8 @@ spec:
         {{end}}
       {{end}}
       volumes:
-      - name:  admission-controller-data-storage
-      - name:  admission-controller-log-storage
+      - name:  admission-controller{{.VolumeNameSuffixes.Data}}
+      - name:  admission-controller{{.VolumeNameSuffixes.Log}}
       - name: tls-certs
         secret:
           secretName: admission-controller-tls

@@ -84,7 +84,7 @@ spec:
             path: alameda_datahub.toml
           - key: alameda_node.toml
             path: alameda_node.toml
-      - name: federatorai-agent-app-data-storage
-      - name: federatorai-agent-app-log-storage
+      - name: federatorai-agent-app{{.VolumeNameSuffixes.Data}}
+      - name: federatorai-agent-app{{.VolumeNameSuffixes.Log}}
       serviceAccount: federatorai-agent-app
       serviceAccountName: federatorai-agent-app

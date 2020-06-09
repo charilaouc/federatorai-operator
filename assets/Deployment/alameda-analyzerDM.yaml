@@ -79,5 +79,5 @@ spec:
         {{end}}
       {{end}}
       volumes:
-        - name: alameda-analyzer-data-storage
-        - name: alameda-analyzer-log-storage
+        - name: alameda-analyzer{{.VolumeNameSuffixes.Data}}
+        - name: alameda-analyzer{{.VolumeNameSuffixes.Log}}

@@ -62,5 +62,5 @@ spec:
         - name: federatorai-agent-gpu-config
           configMap:
             name: federatorai-agent-gpu-config
-        - name: federatorai-agent-gpu-data-storage
-        - name: federatorai-agent-gpu-log-storage
+        - name: federatorai-agent-gpu{{.VolumeNameSuffixes.Data}}
+        - name: federatorai-agent-gpu{{.VolumeNameSuffixes.Log}}

@@ -19,8 +19,8 @@ spec:
         component: federatorai-dashboard-backend
     spec:
       volumes:
-      - name: federatorai-dashboard-backend-data-storage
-      - name: federatorai-dashboard-backend-log-storage
+      - name: federatorai-dashboard-backend{{.VolumeNameSuffixes.Data}}
+      - name: federatorai-dashboard-backend{{.VolumeNameSuffixes.Log}}
       containers:
         - name: federatorai-dashboard-backend
           ports:
@@ -67,7 +67,7 @@ spec:
           defaultMode: 420
           name: federatorai-dashboard-backend-config
         name: federatorai-dashboard-backend-config
-      - name:  federatorai-backend-data-storage
-      - name:  federatorai-backend-log-storage
+      - name:  federatorai-backend{{.VolumeNameSuffixes.Data}}
+      - name:  federatorai-backend{{.VolumeNameSuffixes.Log}}
       serviceAccount: federatorai-dashboard-backend
       serviceAccountName: federatorai-dashboard-backend

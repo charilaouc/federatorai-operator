@@ -6,4 +6,7 @@ const (
 	EnvReplacerOldNew    = ".;_;-;_"
 	DefaultConfigPath    = "/etc/federatorai/operator/operator.toml"
 	DefaultLogOutputPath = "/var/log/alameda/federatorai-operator.log"
+
+	LogSuffix  = "-log-storage"
+	DataSuffix = "-data-storage"
 )
