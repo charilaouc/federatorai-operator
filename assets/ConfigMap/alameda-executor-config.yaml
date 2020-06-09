@@ -8,11 +8,6 @@ data:
     [datahub]
     address = "alameda-datahub.{{.NameSpace}}.svc"
     port = 50050
-      [datahub.schemas]
-        [datahub.schemas.recommendations]
-          [datahub.schemas.recommendations.kafkaConsumerGroup]
-          category = "kafka"
-          type = "consumer_group"
 
     [executor]
     check-cycle = 3 # second
