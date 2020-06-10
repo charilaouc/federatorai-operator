@@ -551,9 +551,6 @@ done
 wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 1
 echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully$(tput sgr 0)"
 
-# Run check_prometheus_metrics only if not specified need_prometheus_rule_patch
-[ "${need_prometheus_rule_patch}" = "" ] && check_prometheus_metrics
-
 alamedaservice_example="alamedaservice_sample.yaml"
 cr_files=( "alamedascaler.yaml" "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
 
@@ -578,6 +575,9 @@ sed -i "s/version: latest/version: ${tag_number}/g" ${alamedaservice_example}
 echo "========================================"
 
 if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
+
+    # Check prometheus support in first non silent installation mode
+    check_prometheus_metrics
 
     while [[ "$information_correct" != "y" ]] && [[ "$information_correct" != "Y" ]]
     do
