@@ -156,14 +156,54 @@ check_alameda_datahub_tag()
     exit 7
 }
 
+prometheus_abnormal_handle()
+{
+    default="y"
+    echo ""
+    echo "$(tput setaf 127)We found that the Prometheus in system doesn't meet Federator.ai requirement.$(tput sgr 0)"
+    echo "$(tput setaf 127)Do you want to continue Federator.ai installation?$(tput sgr 0)"
+    echo "$(tput setaf 3) y) Only Datadog integration function works.$(tput sgr 0)"
+    echo "$(tput setaf 3) n) Abort installation.$(tput sgr 0)"
+    read -r -p "$(tput setaf 127)[default: y]: $(tput sgr 0)" continue_even_abnormal </dev/tty
+    continue_even_abnormal=${continue_even_abnormal:-$default}
+
+    if [ "$continue_even_abnormal" = "n" ]; then
+        echo -e "\n$(tput setaf 1)Uninstalling Federator.ai operator...$(tput sgr 0)"
+        for yaml_fn in `ls [0-9]*.yaml | sort -nr`; do
+            echo "Deleting ${yaml_fn}..."
+            kubectl delete -f ${yaml_fn}
+        done
+        leave_prog
+        exit 8
+    else
+        set_prometheus_rule_to="n"
+    fi
+}
+
 check_prometheus_metrics()
 {
+    echo "Checking Prometheus..."
     current_operator_pod_name="`kubectl get pods -n $install_namespace |grep "federatorai-operator-"|awk '{print $1}'|head -1`"
     kubectl exec $current_operator_pod_name -n $install_namespace -- /usr/bin/federatorai-operator prom_check > /dev/null 2>&1
-    if [ "$?" != "0" ];then
-        need_prometheus_rule_patch="y"
-    else
-        need_prometheus_rule_patch="n"
+    return_state="$?"
+    echo "Return state = $return_state"
+    if [ "$return_state" = "0" ];then
+        # State = OK
+        set_prometheus_rule_to="y"
+    elif [ "$return_state" = "1" ];then
+        # State = Patchable
+        default="y"
+        read -r -p "$(tput setaf 127)Do you want to patch the Prometheus rule to meet the Federator.ai requirement? [default: y]: $(tput sgr 0)" patch_answer </dev/tty
+        patch_answer=${patch_answer:-$default}
+        if [ "$patch_answer" = "n" ]; then
+            # Need to double confirm
+            prometheus_abnormal_handle
+        else
+            set_prometheus_rule_to="y"
+        fi
+    elif [ "$return_state" = "2" ];then
+        # State = Abnormal
+        prometheus_abnormal_handle
     fi
 }
 
@@ -514,23 +554,6 @@ echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully
 # Run check_prometheus_metrics only if not specified need_prometheus_rule_patch
 [ "${need_prometheus_rule_patch}" = "" ] && check_prometheus_metrics
 
-if [ "${patch_prometheus_rule}" = "" -a "${need_prometheus_rule_patch}" = "y" ]; then
-    default="y"
-    echo "$(tput setaf 127)Do you want to patch the prometheus rule to meet the Federator.ai requirement?$(tput sgr 0)"
-    read -r -p "$(tput setaf 127)Choose 'n' will abort the installation process. [default: y]: $(tput sgr 0): " patch_prometheus_rule </dev/tty
-    patch_prometheus_rule=${patch_prometheus_rule:-$default}
-fi
-
-if [ "$need_prometheus_rule_patch" = "y" ] && [ "$patch_prometheus_rule" = "n" ]; then
-    echo -e "\n$(tput setaf 1)Uninstalling Federator.ai operator...$(tput sgr 0)"
-    for yaml_fn in `ls [0-9]*.yaml | sort -nr`; do
-        echo "Deletiabort the installationng ${yaml_fn}..."
-        kubectl delete -f ${yaml_fn}
-    done
-    leave_prog
-    exit 8
-fi
-
 alamedaservice_example="alamedaservice_sample.yaml"
 cr_files=( "alamedascaler.yaml" "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
 
@@ -571,12 +594,13 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
         read -r -p "$(tput setaf 127)Do you want to enable execution? [default: y]: $(tput sgr 0): " enable_execution </dev/tty
         enable_execution=${enable_execution:-$default}
 
-        get_recommended_prometheus_url
-        default="$prometheus_url"
-
-        echo "$(tput setaf 127)Enter the Prometheus service address"
-        read -r -p "[default: ${default}]: $(tput sgr 0)" prometheus_address </dev/tty
-        prometheus_address=${prometheus_address:-$default}
+        if [ "$set_prometheus_rule_to" = "y" ]; then
+            get_recommended_prometheus_url
+            default="$prometheus_url"
+            echo "$(tput setaf 127)Enter the Prometheus service address"
+            read -r -p "[default: ${default}]: $(tput sgr 0)" prometheus_address </dev/tty
+            prometheus_address=${prometheus_address:-$default}
+        fi
 
         while [[ "$storage_type" != "ephemeral" ]] && [[ "$storage_type" != "persistent" ]]
         do
@@ -614,7 +638,9 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
         else
             echo "enable_execution = false"
         fi
-        echo "prometheus_address = $prometheus_address"
+        if [ "$set_prometheus_rule_to" = "y" ]; then
+            echo "prometheus_address = $prometheus_address"
+        fi
         echo "storage_type = $storage_type"
         if [[ "$storage_type" == "persistent" ]]; then
             echo "log storage size = $log_size GB"
@@ -647,7 +673,13 @@ if [ "$need_upgrade" != "y" ]; then
         sed -i "s/\benableExecution:.*/enableExecution: false/g" ${alamedaservice_example}
     fi
 
-    sed -i "s|\bprometheusService:.*|prometheusService: ${prometheus_address}|g" ${alamedaservice_example}
+    if [ "$set_prometheus_rule_to" = "y" ]; then
+        sed -i "s|\bprometheusService:.*|prometheusService: ${prometheus_address}|g" ${alamedaservice_example}
+        sed -i "s|\bautoPatchPrometheusRules:.*|autoPatchPrometheusRules: true|g" ${alamedaservice_example}
+    else
+        sed -i "s|\bautoPatchPrometheusRules:.*|autoPatchPrometheusRules: false|g" ${alamedaservice_example}
+    fi
+
     if [[ "$storage_type" == "persistent" ]]; then
         sed -i '/- usage:/,+10d' ${alamedaservice_example}
         cat >> ${alamedaservice_example} << __EOF__
