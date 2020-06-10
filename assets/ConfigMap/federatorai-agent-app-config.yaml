@@ -145,6 +145,13 @@ data:
     tags = ["node"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
+
+    [[datasource.prometheus.measurement]]
+    name = "node_cpu_cores"
+    expr = "machine_cpu_cores"
+    tags = ["node", "namespace"]
+    [datasource.prometheus.measurement.element.value]
+    type = "float"
     {{end}}
 
   alameda_datahub.toml: |
