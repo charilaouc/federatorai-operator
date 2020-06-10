@@ -20,6 +20,10 @@ var (
 				logger.Info("some rules are missing and need to patch")
 				os.Exit(1)
 			}
+			if err != nil {
+				logger.Error(err, "prometheus rule check error")
+				os.Exit(2)
+			}
 			/*
 				ok, err = RelabelingCheck(k8sCli)
 				if err == nil && !ok {
