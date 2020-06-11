@@ -35,19 +35,16 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:6cfb97deb6733c4c686045a9a3c690a76a764c30c1fe08597219f70c13531574"
+  digest = "1:26e900b77a2fc73f43a06bbd9b80116180deff36abc1e16063220f661ae4492f"
   name = "github.com/containers-ai/alameda"
   packages = [
-    "operator/api",
     "operator/api/v1alpha1",
-    "operator/api/validate",
-    "operator/pkg/utils",
     "pkg/consts",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "370fbf66e80cf812af0a208f158b2879195153f5"
+  revision = "3b20a1e9670a51e23097eaaae03dd24406858be1"
 
 [[projects]]
   branch = "master"
@@ -406,8 +403,6 @@
   digest = "1:608f4cddd743c352714ad1503efc106ca2c691ec3ab59dfa9218bebaa489235a"
   name = "github.com/openshift/api"
   packages = [
-    "apps",
-    "apps/v1",
     "route",
     "route/v1",
     "security",
@@ -1137,8 +1132,6 @@
   digest = "1:fdf6c6bbb39a27ec36f40aefa6dd3be37475210bbac2a808ddd7cc84715664f8"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
-    ".",
-    "pkg/builder",
     "pkg/cache",
     "pkg/cache/internal",
     "pkg/client",
@@ -1146,7 +1139,6 @@
     "pkg/client/config",
     "pkg/controller",
     "pkg/controller/controllerutil",
-    "pkg/conversion",
     "pkg/event",
     "pkg/handler",
     "pkg/healthz",
@@ -1172,7 +1164,6 @@
     "pkg/source/internal",
     "pkg/webhook",
     "pkg/webhook/admission",
-    "pkg/webhook/conversion",
     "pkg/webhook/internal/certwatcher",
     "pkg/webhook/internal/metrics",
   ]

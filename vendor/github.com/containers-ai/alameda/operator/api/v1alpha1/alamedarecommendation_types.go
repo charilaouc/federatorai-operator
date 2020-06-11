@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Alameda Authors.
+Copyright 2020 The Alameda Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/containers-ai/alameda/operator/pkg/utils"
+	"fmt"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -35,11 +36,8 @@ type AlamedaRecommendationStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 
-// AlamedaRecommendation is the Schema for the alamedarecommendations API
-// +k8s:openapi-gen=true
 type AlamedaRecommendation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -48,11 +46,11 @@ type AlamedaRecommendation struct {
 	Status AlamedaRecommendationStatus `json:"status,omitempty"`
 }
 
-func (ar *AlamedaRecommendation) GetNamespacedName() NamespacedName {
-	return utils.GetNamespacedNameKey(ar.Namespace, ar.Name)
+func (ar *AlamedaRecommendation) GetNamespacedName() string {
+	return fmt.Sprintf("%s/%s", ar.Namespace, ar.Name)
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 
 // AlamedaRecommendationList contains a list of AlamedaRecommendation
 type AlamedaRecommendationList struct {

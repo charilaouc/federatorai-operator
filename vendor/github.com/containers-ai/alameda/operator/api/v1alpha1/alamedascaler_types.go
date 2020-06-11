@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Alameda Authors.
+Copyright 2020 The Alameda Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,24 +19,27 @@ package v1alpha1
 import (
 	"fmt"
 
-	apivalidate "github.com/containers-ai/alameda/operator/api/validate"
-	"github.com/containers-ai/alameda/operator/pkg/utils"
+	// apivalidate "github.com/containers-ai/alameda/operator/api/validate"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	ctrl "sigs.k8s.io/controller-runtime"
+	// ctrl "sigs.k8s.io/controller-runtime"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+// +kubebuilder:validation:Enum=true;false
 type enableExecution = bool
 
 const (
 	defaultEnableExecution = false
 )
 
+// +kubebuilder:validation:Enum=stable;compact
 type alamedaPolicy = string
-type NamespacedName = string
+
+//type NamespacedName = string
 
 const (
 	RecommendationPolicySTABLE  alamedaPolicy = "stable"
@@ -55,22 +58,36 @@ type AlamedaPod struct {
 	Containers []AlamedaContainer `json:"containers" protobuf:"bytes,4,opt,name=containers"`
 }
 
-func (p *AlamedaPod) GetNamespacedName() NamespacedName {
-	return utils.GetNamespacedNameKey(p.Namespace, p.Name)
+func (p *AlamedaPod) GetNamespacedName() string {
+	return fmt.Sprintf("%s/%s", p.Namespace, p.Name)
 }
 
 type AlamedaResource struct {
-	Namespace    string                        `json:"namespace" protobuf:"bytes,1,opt,name=namespace"`
-	Name         string                        `json:"name" protobuf:"bytes,2,opt,name=name"`
-	UID          string                        `json:"uid" protobuf:"bytes,3,opt,name=uid"`
-	Pods         map[NamespacedName]AlamedaPod `json:"pods" protobuf:"bytes,4,opt,name=pods"`
-	SpecReplicas *int32                        `json:"specReplicas" protobuf:"varint,5,opt,name=spec_replicas"`
+	Namespace    string                `json:"namespace" protobuf:"bytes,1,opt,name=namespace"`
+	Name         string                `json:"name" protobuf:"bytes,2,opt,name=name"`
+	UID          string                `json:"uid" protobuf:"bytes,3,opt,name=uid"`
+	Pods         map[string]AlamedaPod `json:"pods,omitempty" protobuf:"bytes,4,opt,name=pods"`
+	SpecReplicas *int32                `json:"specReplicas" protobuf:"varint,5,opt,name=spec_replicas"`
+	Effective    bool                  `json:"effective" protobuf:"varint,6,opt,name=effective"`
+	Message      string                `json:"message" protobuf:"varint,5,opt,name=message"`
+}
+
+func (a AlamedaResource) GetNamespacedName() string {
+	return fmt.Sprintf("%s/%s", a.Namespace, a.Name)
 }
 
 type AlamedaController struct {
-	Deployments       map[NamespacedName]AlamedaResource `json:"deployments,omitempty" protobuf:"bytes,1,opt,name=deployments"`
-	DeploymentConfigs map[NamespacedName]AlamedaResource `json:"deploymentConfigs,omitempty" protobuf:"bytes,2,opt,name=deployment_configs"`
-	StatefulSets      map[NamespacedName]AlamedaResource `json:"statefulSets,omitempty" protobuf:"bytes,3,opt,name=stateful_sets"`
+	Deployments       map[string]AlamedaResource `json:"deployments,omitempty" protobuf:"bytes,1,opt,name=deployments"`
+	DeploymentConfigs map[string]AlamedaResource `json:"deploymentConfigs,omitempty" protobuf:"bytes,2,opt,name=deployment_configs"`
+	StatefulSets      map[string]AlamedaResource `json:"statefulSets,omitempty" protobuf:"bytes,3,opt,name=stateful_sets"`
+}
+
+func NewAlamedaController() AlamedaController {
+	return AlamedaController{
+		Deployments:       make(map[string]AlamedaResource),
+		DeploymentConfigs: make(map[string]AlamedaResource),
+		StatefulSets:      make(map[string]AlamedaResource),
+	}
 }
 
 type AlamedaControllerType int
@@ -136,45 +153,137 @@ func NewDefaultExecutionStrategy() ExecutionStrategy {
 	}
 }
 
-type ScalingToolType = string
+//type ScalingToolType = string
 
 const (
-	ScalingToolTypeVPA     ScalingToolType = "vpa"
-	ScalingToolTypeHPA     ScalingToolType = "hpa"
-	ScalingToolTypeDefault ScalingToolType = "N/A"
+	ScalingToolTypeVPA     = "vpa"
+	ScalingToolTypeHPA     = "hpa"
+	ScalingToolTypeCA      = "ca"
+	ScalingToolTypeDefault = "N/A"
 )
 
 type ScalingToolSpec struct {
-	// +kubebuilder:validation:Enum=,vpa,hpa,N/A
-	Type              string             `json:"type,omitempty" protobuf:"bytes,1,name=type"`
-	ExecutionStrategy *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,2,name=execution_strategy"`
+	// +kubebuilder:validation:Enum="";vpa;hpa;ca;N/A
+	Type               string             `json:"type,omitempty" protobuf:"bytes,1,name=type"`
+	ExecutionStrategy  *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,2,name=execution_strategy"`
+	CASafeToEvict      bool               `json:"caSafeToEvict,omitempty" protobuf:"bytes,4,name=caSafeToEvict"`
+	MachineGroupScaler string             `json:"machineGroupScaler,omitempty" protobuf:"bytes,5,name=machineGroupScaler"`
+}
+
+//type AlamedaScalerType = string
+
+const (
+	AlamedaScalerTypeNotDefine = ""
+	AlamedaScalerTypeDefault   = "default"
+	AlamedaScalerTypeKafka     = "kafka"
+	AlamedaScalerTypeNginx     = "nginx"
+)
+
+type KafkaSpec struct {
+	// +kubebuilder:validation:MinLength=1
+	ExporterNamespace string `json:"exporterNamespace,omitempty" protobuf:"bytes,1,opt,name=exporter_namespace"`
+	// +kubebuilder:validation:MinItems=1
+	Topics []string `json:"topics,omitempty" protobuf:"bytes,2,opt,name=topics"`
+	// +kubebuilder:validation:MinItems=1
+	ConsumerGroups []KafkaConsumerGroupSpec `json:"consumerGroups,omitempty" protobuf:"bytes,3,opt,name=consumer_groups"`
+}
+
+type NginxSpec struct {
+	Name                    string                `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	Selector                *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,2,opt,name=selector"`
+	ExporterNamespace       string                `json:"exporterNamespace,omitempty" protobuf:"bytes,3,opt,name=exporter_namespace"`
+	ReplicaMarginPercentage *int32                `json:"replicaMarginPercentage,omitempty" protobuf:"bytes,4,opt,name=replica_margin_percentage"`
+	MinReplicas             *int32                `json:"minReplicas,omitempty" protobuf:"bytes,5,opt,name=min_replicas"`
+	MaxReplicas             *int32                `json:"maxReplicas,omitempty" protobuf:"bytes,6,opt,name=max_replicas"`
+	Service                 string                `json:"service,omitempty" protobuf:"bytes,7,opt,name=service"`
+	TargetResponseTime      *int64                `json:"targetResponseTime,omitempty" protobuf:"bytes,8,opt,name=target_response_time"`
+}
+
+type KafkaConsumerGroupSpec struct {
+	// +kubebuilder:validation:MinLength=1
+	Name        string                         `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	Resource    KafkaConsumerGroupResourceSpec `json:"resource,omitempty" protobuf:"bytes,2,opt,name=resource"`
+	MajorTopic  string                         `json:"majorTopic" protobuf:"bytes,3,opt,name=major_topic"`
+	MinReplicas *int32                         `json:"minReplicas,omitempty" protobuf:"bytes,4,opt,name=min_replicas"`
+	MaxReplicas *int32                         `json:"maxReplicas,omitempty" protobuf:"bytes,5,opt,name=max_replicas"`
+}
+
+type KafkaConsumerGroupResourceSpec struct {
+	Kubernetes *KubernetesResourceSpec `json:"kubernetes,omitempty" protobuf:"bytes,1,opt,name=kubernetes"`
+	Custom     string                  `json:"custom,omitempty" protobuf:"bytes,2,opt,name=custom"`
+}
+
+type NginxResourceSpec struct {
+	Kubernetes *KubernetesResourceSpec `json:"kubernetes,omitempty" protobuf:"bytes,1,opt,name=kubernetes"`
+}
+
+type KubernetesResourceSpec struct {
+	Selector *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,1,opt,name=selector"`
 }
 
 // AlamedaScalerSpec defines the desired state of AlamedaScaler
 // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 type AlamedaScalerSpec struct {
-	// Important: Run "make" to regenerate code after modifying this file
-	Selector        *metav1.LabelSelector `json:"selector" protobuf:"bytes,1,name=selector"`
+	Selector        *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,1,name=selector"`
 	EnableExecution *enableExecution      `json:"enableExecution,omitempty" protobuf:"bytes,2,name=enable_execution"`
-	// +kubebuilder:validation:Enum=stable,compact
+	// +kubebuilder:validation:Enum=stable;compact
 	Policy                alamedaPolicy   `json:"policy,omitempty" protobuf:"bytes,3,opt,name=policy"`
 	CustomResourceVersion string          `json:"customResourceVersion,omitempty" protobuf:"bytes,4,opt,name=custom_resource_version"`
 	ScalingTool           ScalingToolSpec `json:"scalingTool,omitempty" protobuf:"bytes,5,opt,name=scaling_tool"`
+	Type                  string          `json:"type,omitempty" protobuf:"bytes,6,opt,name=type"`
+	Kafka                 *KafkaSpec      `json:"kafka,omitempty" protobuf:"bytes,7,opt,name=kafka"`
+	Nginx                 *NginxSpec      `json:"nginx,omitempty" protobuf:"bytes,8,opt,name=nginx"`
+}
+
+type KafkaStatus struct {
+	Effective         bool                       `json:"effective" protobuf:"bytes,1,opt,name=effective"`
+	Message           string                     `json:"message" protobuf:"bytes,2,opt,name=message"`
+	ExporterNamespace string                     `json:"namespace,omitempty" protobuf:"bytes,3,opt,name=namespace"`
+	Topics            []string                   `json:"topics,omitempty" protobuf:"bytes,4,opt,name=topics"`
+	ConsumerGroups    []KafkaConsumerGroupStatus `json:"consumerGroups,omitempty" protobuf:"bytes,5,opt,name=consumer_groups"`
+}
+
+type NginxStatus struct {
+	Message           string            `json:"message" protobuf:"bytes,1,opt,name=message"`
+	AlamedaController AlamedaController `json:"alamedaController,omitempty" protobuf:"bytes,2,opt,name=alameda_controller"`
+}
+
+type KafkaConsumerGroupStatus struct {
+	Name        string                             `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	Topic       string                             `json:"topic,omitempty" protobuf:"bytes,2,opt,name=topic"`
+	Resource    KafkaConsumerGroupResourceMetadata `json:"resource,omitempty" protobuf:"bytes,3,opt,name=resource"`
+	MinReplicas int32                              `json:"minReplicas,omitempty" protobuf:"bytes,4,opt,name=min_replicas"`
+	MaxReplicas int32                              `json:"maxReplicas,omitempty" protobuf:"bytes,5,opt,name=max_replicas"`
+}
+
+type KafkaConsumerGroupResourceMetadata struct {
+	CustomName string                    `json:"customName,omitempty" protobuf:"bytes,1,opt,name=custom_name"`
+	Kubernetes *KubernetesObjectMetadata `json:"kubernetes,omitempty" protobuf:"bytes,2,opt,name=kubernetes"`
+}
+
+type KubernetesObjectMetadata struct {
+	Namespace string `json:"namespace,omitempty" protobuf:"bytes,1,opt,name=namespace"`
+	Name      string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
+	Kind      string `json:"kind,omitempty" protobuf:"bytes,3,opt,name=kind"`
 }
 
 // AlamedaScalerStatus defines the observed state of AlamedaScaler
 type AlamedaScalerStatus struct {
 	AlamedaController AlamedaController `json:"alamedaController,omitempty" protobuf:"bytes,4,opt,name=alameda_controller"`
+	Kafka             *KafkaStatus      `json:"kafka,omitempty" protobuf:"bytes,5,opt,name=kafka"`
+	Nginx             *NginxStatus      `json:"nginx,omitempty" protobuf:"bytes,6,opt,name=nginx"`
 }
 
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // AlamedaScaler is the Schema for the alamedascalers API
-// +k8s:openapi-gen=true
+// +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:name="Scaling Type",type=string,JSONPath=`.spec.type`,description="The type of scaling"
+// +kubebuilder:printcolumn:name="Scaling Tool",type=string,JSONPath=`.spec.scalingTool.type`,description="The type of scaling tool"
+// +kubebuilder:printcolumn:name="Execution",type=boolean,JSONPath=`.spec.enableExecution`,description="The enable of execution"
+// +kubebuilder:printcolumn:name="Selector",type=string,JSONPath=`.spec.selector.matchLabels`,description="The match labels of selector"
+// +kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`,description="The time of creation"
 type AlamedaScaler struct {
-	Mgr      ctrl.Manager                      `json:"-"`
-	Validate apivalidate.AlamedaScalerValidate `json:"-"`
+	// Mgr      ctrl.Manager                      `json:"-"`
+	// Validate apivalidate.AlamedaScalerValidate `json:"-"`
 
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -196,9 +305,48 @@ func (as *AlamedaScaler) SetStatusAlamedaController(ac AlamedaController) {
 	as.Status.AlamedaController = ac
 }
 
+func (as *AlamedaScaler) SetStatusKafka(k *KafkaStatus) {
+	as.Status.Kafka = k
+}
+
+func (as *AlamedaScaler) SetType(t string) {
+	as.Spec.Type = t
+}
+
 func (as *AlamedaScaler) GenCustomResourceVersion() string {
 	v := as.ResourceVersion
 	return v
+}
+
+func (as *AlamedaScaler) GetType() string {
+	return as.Spec.Type
+}
+
+func (as *AlamedaScaler) GetKafkaNamespace() string {
+
+	if as.Spec.Kafka == nil {
+		return ""
+	}
+
+	return as.Spec.Kafka.ExporterNamespace
+}
+
+func (as *AlamedaScaler) ListKafkaTopics() []string {
+
+	if as.Spec.Kafka == nil {
+		return nil
+	}
+
+	return as.Spec.Kafka.Topics
+}
+
+func (as *AlamedaScaler) ListKafkaConsumerGroupSpecs() []KafkaConsumerGroupSpec {
+
+	if as.Spec.Kafka == nil {
+		return nil
+	}
+
+	return as.Spec.Kafka.ConsumerGroups
 }
 
 // GetMonitoredPods returns pods restoring in AlamedaScaler.Status
@@ -244,7 +392,8 @@ func (as *AlamedaScaler) GetRequestCPUMilliCores() string {
 		if executionStrategy.Resources != nil {
 			if executionStrategy.Resources.Requests != nil {
 				if executionStrategy.Resources.Requests.Cpu() != nil {
-					cpuMilliCores = fmt.Sprintf("%d", executionStrategy.Resources.Requests.Cpu().MilliValue())
+					cpuMilliCores = fmt.Sprintf("%d",
+						executionStrategy.Resources.Requests.Cpu().MilliValue())
 				}
 			}
 		}
@@ -262,7 +411,8 @@ func (as *AlamedaScaler) GetRequestMemoryBytes() string {
 		if executionStrategy.Resources != nil {
 			if executionStrategy.Resources.Requests != nil {
 				if executionStrategy.Resources.Requests.Memory() != nil {
-					memoryBytes = fmt.Sprintf("%d", executionStrategy.Resources.Requests.Memory().Value())
+					memoryBytes = fmt.Sprintf("%d",
+						executionStrategy.Resources.Requests.Memory().Value())
 				}
 			}
 		}
@@ -280,7 +430,8 @@ func (as *AlamedaScaler) GetLimitCPUMilliCores() string {
 		if executionStrategy.Resources != nil {
 			if executionStrategy.Resources.Limits != nil {
 				if executionStrategy.Resources.Limits.Cpu() != nil {
-					cpuMilliCores = fmt.Sprintf("%d", executionStrategy.Resources.Limits.Cpu().MilliValue())
+					cpuMilliCores = fmt.Sprintf("%d",
+						executionStrategy.Resources.Limits.Cpu().MilliValue())
 				}
 			}
 		}
@@ -298,7 +449,8 @@ func (as *AlamedaScaler) GetLimitMemoryBytes() string {
 		if executionStrategy.Resources != nil {
 			if executionStrategy.Resources.Limits != nil {
 				if executionStrategy.Resources.Limits.Memory() != nil {
-					memoryBytes = fmt.Sprintf("%d", executionStrategy.Resources.Limits.Memory().Value())
+					memoryBytes = fmt.Sprintf("%d",
+						executionStrategy.Resources.Limits.Memory().Value())
 				}
 			}
 		}
@@ -308,7 +460,8 @@ func (as *AlamedaScaler) GetLimitMemoryBytes() string {
 }
 
 func (as *AlamedaScaler) IsEnableExecution() bool {
-	if as.Spec.EnableExecution == nil || *as.Spec.EnableExecution == false {
+	if as.Spec.EnableExecution == nil ||
+		*as.Spec.EnableExecution == false {
 		return false
 	}
 	return true
@@ -320,6 +473,10 @@ func (as *AlamedaScaler) IsScalingToolTypeHPA() bool {
 
 func (as *AlamedaScaler) IsScalingToolTypeVPA() bool {
 	return as.Spec.ScalingTool.Type == ScalingToolTypeVPA
+}
+
+func (as *AlamedaScaler) IsScalingToolTypeCA() bool {
+	return as.Spec.ScalingTool.Type == ScalingToolTypeCA
 }
 
 // HasAlamedaPod returns true if the pod is reocording in AlamedaScaler.Status
@@ -353,6 +510,19 @@ func (as *AlamedaScaler) HasAlamedaPod(namespace, name string) bool {
 	return false
 }
 
+func (as *AlamedaScaler) AddAlamedaResourceIntoStatus(
+	arType AlamedaControllerType, ar AlamedaResource) {
+	ac := as.Status.AlamedaController
+	switch arType {
+	case DeploymentController:
+		ac.Deployments[ar.GetNamespacedName()] = ar
+	case DeploymentConfigController:
+		ac.DeploymentConfigs[ar.GetNamespacedName()] = ar
+	case StatefulSetController:
+		ac.StatefulSets[ar.GetNamespacedName()] = ar
+	}
+}
+
 func (as *AlamedaScaler) setDefaultEnableExecution() {
 	if as.Spec.EnableExecution == nil {
 		copyDefaultEnableExecution := defaultEnableExecution
@@ -370,18 +540,23 @@ func (as *AlamedaScaler) setDefaultScalingTool() {
 		if as.Spec.ScalingTool.ExecutionStrategy == nil {
 			as.setDefaultExecutionStrategy()
 		}
-		if as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "" || as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0" || as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0%" {
-			as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable = DefaultMaxUnavailablePercentage
+		if as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "" ||
+			as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0" ||
+			as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0%" {
+			as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable =
+				DefaultMaxUnavailablePercentage
 		}
 
 		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold == nil {
 			as.setDefaultTriggerThreshold()
 		}
 		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.CPU == "" {
-			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.CPU = DefaultTriggerThresholdCPUPercentage
+			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.CPU =
+				DefaultTriggerThresholdCPUPercentage
 		}
 		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.Memory == "" {
-			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.Memory = DefaultTriggerThresholdMemoryPercentage
+			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.Memory =
+				DefaultTriggerThresholdMemoryPercentage
 		}
 	}
 }
@@ -393,10 +568,11 @@ func (as *AlamedaScaler) setDefaultExecutionStrategy() {
 
 func (as *AlamedaScaler) setDefaultTriggerThreshold() {
 	defaultTriggerThreshold := NewDefaultTriggerThreshold()
-	as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold = &defaultTriggerThreshold
+	as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold =
+		&defaultTriggerThreshold
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 
 // AlamedaScalerList contains a list of AlamedaScaler
 type AlamedaScalerList struct {
