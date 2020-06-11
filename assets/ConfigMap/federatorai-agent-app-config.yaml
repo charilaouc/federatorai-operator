@@ -60,6 +60,7 @@ data:
 
     [[datasource.kubernetes.measurement]]
     name = "haproxy_server_http_average_response_latency_milliseconds"
+    expr = "echo 'show stat' | socat - UNIX-CONNECT:/var/lib/haproxy/run/haproxy.sock | grep 'be_http:%s:%s' | grep BACKEND | cut -d',' -f62"
     tags = ["exported_service", "exported_namespace"]
     [datasource.kubernetes.measurement.element.value]
     type = "float"
