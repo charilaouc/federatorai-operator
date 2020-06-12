@@ -60,3 +60,5 @@ spec:
       - name: alameda-influxdb-tls
         secret:
           secretName: alameda-influxdb-tls
+      serviceAccount: alameda-influxdb
+      serviceAccountName: alameda-influxdb

@@ -51,12 +51,17 @@ var (
 	}
 
 	influxDBList = []string{
+		"ClusterRoleBinding/alameda-influxdbCRB.yaml",
+		"ClusterRole/alameda-influxdbCR.yaml",
 		"Service/alameda-influxdbSV.yaml",
 		"Deployment/alameda-influxdbDM.yaml",
 		"Secret/alameda-influxdb.yaml",
+		"ServiceAccount/alameda-influxdbSA.yaml",
 	}
 
 	aiEngineList = []string{
+		"ClusterRoleBinding/alameda-aiCRB.yaml",
+		"ClusterRole/alameda-aiCR.yaml",
 		"ServiceAccount/alameda-aiSA.yaml",
 		"Service/alameda-ai-metricsSV.yaml",
 		"Deployment/alameda-aiDM.yaml",
@@ -71,8 +76,11 @@ var (
 	}
 
 	recommenderList = []string{
+		"ClusterRoleBinding/alameda-recommenderCRB.yaml",
+		"ClusterRole/alameda-recommenderCR.yaml",
 		"ConfigMap/alameda-recommender-config.yaml",
 		"Deployment/alameda-recommenderDM.yaml",
+		"ServiceAccount/alameda-recommenderSA.yaml",
 	}
 
 	analyzerList = []string{
@@ -112,6 +120,8 @@ var (
 	}
 
 	fedemeterList = []string{
+		"ClusterRoleBinding/fedemeter-apiCRB.yaml",
+		"ClusterRole/fedemeter-apiCR.yaml",
 		"Deployment/fedemeterDM.yaml",
 		"Service/fedemeterSV.yaml",
 		"ConfigMap/fedemeter-config.yaml",
@@ -120,11 +130,15 @@ var (
 		"Ingress/fedemeterIG.yaml",
 		"Ingress/fedemeterSwaggerIG.yaml",
 		"Secret/fedemeter-tls.yaml",
+		"ServiceAccount/fedemeter-apiSA.yaml",
 	}
 
 	aiDispatcherList = []string{
+		"ClusterRoleBinding/alameda-ai-dispatcherCRB.yaml",
+		"ClusterRole/alameda-ai-dispatcherCR.yaml",
 		"Deployment/alameda-ai-dispatcherDM.yaml",
 		"Service/alameda-ai-dispatcher.yaml",
+		"ServiceAccount/alameda-ai-dispatcherSA.yaml",
 	}
 
 	weavescopeList = []string{
@@ -152,8 +166,11 @@ var (
 	}
 
 	federatoraiAgentList = []string{
+		"ClusterRoleBinding/federatorai-agentCRB.yaml",
+		"ClusterRole/federatorai-agentCR.yaml",
 		"Deployment/federatorai-agent.yaml",
 		"ConfigMap/federatorai-agent-config.yaml",
+		"ServiceAccount/federatorai-agentSA.yaml",
 	}
 
 	federatoraiAgentGPUList = []string{

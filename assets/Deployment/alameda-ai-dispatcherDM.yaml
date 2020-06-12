@@ -56,3 +56,5 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 60
             timeoutSeconds: 5
+      serviceAccount: alameda-ai-dispatcher
+      serviceAccountName: alameda-ai-dispatcher
