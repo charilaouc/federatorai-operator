@@ -58,3 +58,5 @@ spec:
             name: federatorai-agent-gpu-config
         - name: federatorai-agent-gpu-data-storage
         - name: federatorai-agent-gpu-log-storage
+      serviceAccount: federatorai-agent-gpu
+      serviceAccountName: federatorai-agent-gpu

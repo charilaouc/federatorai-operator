@@ -174,6 +174,9 @@ var (
 	}
 
 	federatoraiAgentGPUList = []string{
+		"ClusterRoleBinding/federatorai-agent-gpuCRB.yaml",
+		"ClusterRole/federatorai-agent-gpuCR.yaml",
+		"ServiceAccount/federatorai-agent-gpuSA.yaml",
 		"ConfigMap/federatorai-agent-gpu-config.yaml",
 		"Deployment/federatorai-agent-gpuDM.yaml",
 	}
@@ -188,6 +191,9 @@ var (
 	}
 
 	federatoraiAgentPreloaderList = []string{
+		"ClusterRoleBinding/federatorai-agent-preloaderCRB.yaml",
+		"ClusterRole/federatorai-agent-preloaderCR.yaml",
+		"ServiceAccount/federatorai-agent-preloaderSA.yaml",
 		"ConfigMap/federatorai-agent-preloader-config.yaml",
 		"Deployment/federatorai-agent-preloaderDM.yaml",
 	}
