@@ -27,7 +27,6 @@ const (
 
 	FedemeterGroup GroupEnums = "alameda/fedemeter"
 	AlamedaGroup   GroupEnums = "alameda"
-	GrafanaGroup   GroupEnums = "grafana"
 	InfluxDBGroup  GroupEnums = "influxdb"
 	//deployment name
 	AlamedaaiDPN                 = "alameda-ai"
@@ -40,7 +39,6 @@ const (
 	AlamedadispatcherDPN         = "alameda-ai-dispatcher"
 	AlamedaRabbitMQDPN           = "alameda-rabbitmq"
 	FedemeterDPN                 = "fedemeter-api"
-	GrafanaDPN                   = "alameda-grafana"
 	InfluxdbDPN                  = "alameda-influxdb"
 	AlamedaweavescopeDPN         = "alameda-weave-scope-app"
 	AlamedaweavescopeProbeDPN    = "alameda-weave-scope-cluster-agent"
@@ -68,7 +66,6 @@ const (
 	FedemeterCTN                 = "fedemeter-api"
 	FedemeterInfluxDBCTN         = "fedemeter-influxdb"
 	GetTokenCTN                  = "gettoken"
-	GrafanaCTN                   = "grafana"
 	InfluxdbCTN                  = "influxdb"
 	AlamedaweavescopeCTN         = "alameda-weave-scope-app"
 	AlamedaweavescopeProbeCTN    = "alameda-weave-scope-cluster-agent"
@@ -99,10 +96,6 @@ const (
 	//MountPath
 	DataMountPath = "/var/lib"
 	LogMountPath  = "/var/log"
-
-	//Delete Deployment When Modify ConfigMap or Service(Temporary strategy)
-	GrafanaYaml            = "Deployment/alameda-grafanaDM.yaml"
-	GrafanaDatasourcesName = "grafana-datasources"
 
 	// Influxdb environment variables name
 	AlamedaInfluxDBAdminUserEnvName     = "INFLUXDB_ADMIN_USER"

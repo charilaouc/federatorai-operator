@@ -55,8 +55,7 @@ spec:
     codeNumber: D3JXN-LIFTQ-KQEZ3-WZBNI-DA3WZ-A7HKQ		## default trial keycode
   selfDriving: false            ## to enable resource self-orchestration of the deployed Federator.ai components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled	
-  enableExecution: true
-  enableGui: true
+  enableExecution: true  
   enableFedemeter: true
   enableDispatcher: false
 
@@ -71,7 +70,7 @@ spec:
       class: "normal"           ## mandatory when type=pvc
 ```
 By creating this CR, **Federator.ai Operator** starts to:
-- deploy Federator.ai core components, components for recommendation execution and components for GUI
+- deploy Federator.ai core components, components for recommendation execution
 - pull Federator.ai component images on the tag specified by _version_ except InfluxDB image is on '1.7-alpine' tag. To overwrite the pulled image tag of InfluxDB, users can specify it in _section schema_.
 - set Alameda datahub to retrieve metrics from Prometheus at the address defined by _prometheusService_
 - mount _emptyDir{}_ to log path for each component

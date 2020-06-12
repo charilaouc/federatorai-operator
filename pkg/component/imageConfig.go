@@ -9,7 +9,6 @@ const (
 	defaultImageEvictioner                = "quay.io/prophetstor/alameda-evictioner-ubi:latest"
 	defaultImageExecutor                  = "quay.io/prophetstor/alameda-executor-ubi:latest"
 	defaultImageAlpine                    = "alpine"
-	defaultImageGrafana                   = "quay.io/prophetstor/alameda-grafana:latest"
 	defaultImageInfluxDB                  = "influxdb:1.7-alpine"
 	defaultImageNotifier                  = "quay.io/prophetstor/alameda-notifier-ubi:latest"
 	defaultImageOperator                  = "quay.io/prophetstor/alameda-operator-ubi:latest"
@@ -35,7 +34,6 @@ type ImageConfig struct {
 	Evictioner                string
 	Executor                  string
 	Alpine                    string
-	Grafana                   string
 	InfluxDB                  string
 	Notifier                  string
 	Operator                  string
@@ -63,7 +61,6 @@ func NewDefautlImageConfig() ImageConfig {
 		Evictioner:                defaultImageEvictioner,
 		Executor:                  defaultImageExecutor,
 		Alpine:                    defaultImageAlpine,
-		Grafana:                   defaultImageGrafana,
 		InfluxDB:                  defaultImageInfluxDB,
 		Notifier:                  defaultImageNotifier,
 		Operator:                  defaultImageOperator,
@@ -119,11 +116,6 @@ func (i *ImageConfig) SetExecutor(image string) {
 // SetAlpine sets image to imageConfig
 func (i *ImageConfig) SetAlpine(image string) {
 	i.Alpine = image
-}
-
-// SetGrafana sets image to imageConfig
-func (i *ImageConfig) SetGrafana(image string) {
-	i.Grafana = image
 }
 
 // SetInfluxdb sets image to imageConfig

@@ -3,7 +3,7 @@
 
 **Federator.ai Operator** is an Operator that manages **Federator.ai** components for an OpenShift cluster. Once installed, the Federator.ai Operator provides the following features:
 - **Create/Clean up**: Launch **Federator.ai** components using the Operator.
-- **Easy Configuration**: Easily configure data source of Prometheus and enable/disable add-on components, such as GUI, and predictive autoscaling.
+- **Easy Configuration**: Easily configure data source of Prometheus and enable/disable add-on components, such as predictive autoscaling.
 - **Pod Scaling Recommendation/Autoscaling**: Use provided CRD to setup target pods and desired policies for scaling recommendation and autoscaling.
 
 > **Note:** **Federator.ai** requires a Prometheus datasource to get historical metrics of pods and nodes. When launching **Federator.ai** components, Prometheus connection settings need to be provided.

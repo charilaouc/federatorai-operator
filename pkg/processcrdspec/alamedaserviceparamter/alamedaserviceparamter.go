@@ -99,16 +99,6 @@ var (
 		"Deployment/alameda-analyzerDM.yaml",
 	}
 
-	guiList = []string{
-		"ClusterRoleBinding/alameda-grafanaCRB.yaml",
-		"ClusterRole/alameda-grafanaCR.yaml",
-		"ServiceAccount/alameda-grafanaSA.yaml",
-		"ConfigMap/grafana-datasources.yaml",
-		"Deployment/alameda-grafanaDM.yaml",
-		"Service/alameda-grafanaSV.yaml",
-		"Route/alameda-grafanaRT.yaml",
-	}
-
 	vpaList = []string{
 		"ClusterRoleBinding/alameda-evictionerCRB.yaml",
 		"ClusterRoleBinding/admission-controllerCRB.yaml",
@@ -227,7 +217,6 @@ var (
 
 	logPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml",
-		"PersistentVolumeClaim/my-alameda-grafana-log.yaml",
 		"PersistentVolumeClaim/alameda-ai-log.yaml",
 		"PersistentVolumeClaim/alameda-operator-log.yaml",
 		"PersistentVolumeClaim/alameda-datahub-log.yaml",
@@ -250,7 +239,6 @@ var (
 
 	dataPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml",
-		"PersistentVolumeClaim/my-alameda-grafana-data.yaml",
 		"PersistentVolumeClaim/alameda-ai-data.yaml",
 		"PersistentVolumeClaim/alameda-operator-data.yaml",
 		"PersistentVolumeClaim/alameda-datahub-data.yaml",
@@ -289,12 +277,6 @@ func GetExcutionResource() *Resource {
 	r, _ := getResourceFromList(hpaList)
 	tmp, _ := getResourceFromList(vpaList)
 	r.add(tmp)
-	return &r
-}
-
-// GetGUIResource returns resource that needs to be installed for GUI
-func GetGUIResource() *Resource {
-	r, _ := getResourceFromList(guiList)
 	return &r
 }
 
@@ -394,7 +376,6 @@ type AlamedaServiceParamter struct {
 	SelfDriving                         bool
 	Platform                            string
 	EnableExecution                     bool
-	EnableGUI                           bool
 	EnableVPA                           bool
 	EnableGPU                           bool
 	EnableDispatcher                    bool
@@ -411,7 +392,6 @@ type AlamedaServiceParamter struct {
 	Storages                            []v1alpha1.StorageSpec
 	ServiceExposures                    []v1alpha1.ServiceExposureSpec
 	InfluxdbSectionSet                  v1alpha1.AlamedaComponentSpec
-	GrafanaSectionSet                   v1alpha1.AlamedaComponentSpec
 	AlamedaAISectionSet                 v1alpha1.AlamedaComponentSpec
 	AlamedaOperatorSectionSet           v1alpha1.AlamedaComponentSpec
 	AlamedaDatahubSectionSet            v1alpha1.AlamedaComponentSpec
@@ -445,7 +425,6 @@ func NewAlamedaServiceParamter(
 		SelfDriving:                         instance.Spec.SelfDriving,
 		Platform:                            instance.Spec.Platform,
 		EnableExecution:                     instance.Spec.EnableExecution,
-		EnableGUI:                           instance.Spec.EnableGUI,
 		EnableVPA:                           *instance.Spec.EnableVPA,
 		EnableGPU:                           *instance.Spec.EnableGPU,
 		EnableDispatcher:                    *instance.Spec.EnableDispatcher,
@@ -462,7 +441,6 @@ func NewAlamedaServiceParamter(
 		Storages:                            instance.Spec.Storages,
 		ServiceExposures:                    instance.Spec.ServiceExposures,
 		InfluxdbSectionSet:                  instance.Spec.InfluxdbSectionSet,
-		GrafanaSectionSet:                   instance.Spec.GrafanaSectionSet,
 		AlamedaAISectionSet:                 instance.Spec.AlamedaAISectionSet,
 		AlamedaOperatorSectionSet:           instance.Spec.AlamedaOperatorSectionSet,
 		AlamedaDatahubSectionSet:            instance.Spec.AlamedaDatahubSectionSet,
@@ -507,10 +485,6 @@ func (asp *AlamedaServiceParamter) GetInstallResource() *Resource {
 
 	if asp.SelfDriving {
 		r, _ := getResourceFromList(selfDrivingList)
-		resource.add(r)
-	}
-	if asp.EnableGUI {
-		r, _ := getResourceFromList(guiList)
 		resource.add(r)
 	}
 	if asp.EnableExecution {
@@ -577,9 +551,6 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 		pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(
-		pvc, asp.GrafanaSectionSet.Storages,
-		"PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
-	pvc = sectionUninstallPersistentVolumeClaimSource(
 		pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(
@@ -636,8 +607,6 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
-	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
-		"PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
@@ -717,8 +686,6 @@ func (asp *AlamedaServiceParamter) getInstallPersistentVolumeClaimSource() []str
 
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
-		"PersistentVolumeClaim/my-alameda-grafana-log.yaml", v1alpha1.Log)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
@@ -761,8 +728,6 @@ func (asp *AlamedaServiceParamter) getInstallPersistentVolumeClaimSource() []str
 
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
-	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.GrafanaSectionSet.Storages,
-		"PersistentVolumeClaim/my-alameda-grafana-data.yaml", v1alpha1.Data)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,

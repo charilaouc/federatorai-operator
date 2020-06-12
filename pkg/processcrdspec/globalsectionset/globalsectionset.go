@@ -77,11 +77,6 @@ func GlobalSectionSetParamterToDeployment(
 			"fedemeter-type.pvc", util.FedemeterGroup)
 		util.SetStorageToMountPath(dep, asp.Storages, util.FedemeterCTN,
 			"fedemeter-type-storage", util.FedemeterGroup)
-	case util.GrafanaDPN:
-		util.SetStorageToVolumeSource(dep, asp.Storages,
-			"my-alameda.grafana-type.pvc", util.GrafanaGroup)
-		util.SetStorageToMountPath(dep, asp.Storages, util.GrafanaCTN,
-			"grafana-type-storage", util.GrafanaGroup)
 	case util.AlamedaweavescopeDPN:
 		util.SetImagePullPolicy(dep, util.AlamedaweavescopeCTN,
 			asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)

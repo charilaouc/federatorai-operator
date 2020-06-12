@@ -23,9 +23,8 @@ spec:
   autoPatchPrometheusRules: true ## patch prometheus rules automatically
   selfDriving: false             ## to enable resource self-orchestration of the deployed Alameda components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled
-  enableExecution: true
-  enableGui: true
-  version: latest               ## for Alameda components. (exclude grafana and influxdb)
+  enableExecution: true  
+  version: latest               ## for Alameda components. (exclude influxdb)
   prometheusService: https://prometheus-k8s.openshift-monitoring:9091
   storages:                     ## see following details for where it is used in each component
     - usage: log                ## storage setting for log

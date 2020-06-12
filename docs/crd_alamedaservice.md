@@ -1,7 +1,7 @@
 ## AlamedaService Custom Resource Definition
 
 **Federator.ai Operator** provides _AlamedaService_ [CRD](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) as a channel for users to manage Alameda components including:
-- Deployment of Alameda components such as _alameda-operator_, _alameda-datahub_, _alameda-ai_, _alameda-evictioner_, _alameda-admission-controller_, _alameda-recommender_, _InfluxDB_ and _Grafana_. Please visit [Alamede architecture](https://github.com/containers-ai/alameda/blob/master/design/architecture.md) for more details.
+- Deployment of Alameda components such as _alameda-operator_, _alameda-datahub_, _alameda-ai_, _alameda-evictioner_, _alameda-admission-controller_, _alameda-recommender_ and _InfluxDB_. Please visit [Alamede architecture](https://github.com/containers-ai/alameda/blob/master/design/architecture.md) for more details.
 - Seamless updation of Alameda between versions.
 - Application lifecycle and storage management.
 
@@ -26,9 +26,8 @@ spec:
   selfDriving: false             ## to enable resource self-orchestration of the deployed Alameda components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled
   enableExecution: true
-  enableDispatcher: true        #use Dispatcher sent job to alameda-ai
-  enableGui: true
-  version: latest               ## for Alameda components. (exclude grafana and influxdb)
+  enableDispatcher: true        #use Dispatcher sent job to alameda-ai  
+  version: latest               ## for Alameda components. (exclude influxdb)
   prometheusService: https://prometheus-k8s.openshift-monitoring:9091
   storages:                     ## see following details for where it is used in each component
     - usage: log                ## storage setting for log
@@ -40,9 +39,9 @@ spec:
 ```
 
 In this example, it creates an _AlamedaService_ CR with name _my-alamedaservice_ in namespace `alameda`. By creating this CR, **Federator.ai Operator** starts to:
-- deploy Alameda core components, components for recommendation execution and components for GUI
+- deploy Alameda core components, components for recommendation execution
 - create an [_AlamedaScaler_](https://github.com/containers-ai/alameda/blob/master/design/crd_alamedascaler.md) to self-orchestrate Alameda's resource usage
-- pull _latest_ Alameda component image except InfluxDB and Grafana components. To overwrite the pulled image tag of InfluxDB and Grafana, users can specify them in _section schema for each component_.
+- pull _latest_ Alameda component image except InfluxDB components. To overwrite the pulled image tag of InfluxDB, users can specify them in _section schema for each component_.
 - set Alameda datahub to retrieve metrics from Prometheus at _https://prometheus-k8s.openshift-monitoring:9091_
 - mount _emptyDir{}_ to log path for each component
 - claim volumn by PVC and mount it to data path for each component
@@ -59,10 +58,9 @@ metadata:
 spec:
   selfDriving: false             ## to enable resource self-orchestration of the deployed Alameda components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled
-  enableExecution: true
-  enableGui: true
+  enableExecution: true  
   enableDispatcher: true        #use Dispatcher sent job to alameda-ai
-  version: v0.3.38              ## for Alameda components. (exclude grafana and influxdb)
+  version: v0.3.38              ## for Alameda components. (exclude influxdb)
   prometheusService: https://prometheus-k8s.openshift-monitoring:9091
   storages:
     - usage: log                ## storage for log of each component
@@ -82,15 +80,6 @@ spec:
       usage: log      ## for path /var/log/alameda
       type: pvc
       size: 10Gi
-      class: "normal"
-
-  alameda-grafana:
-    image: grafana/grafana
-    version: 5.4.3
-    storages:
-      usage: data     ## for path /var/lib/grafana
-      type: pvc
-      size: 1Gi
       class: "normal"
 
   alameda-influxdb:
@@ -130,9 +119,6 @@ spec:
 - Field: enableExecution
   - type: boolean
   - description: Federator.ai Operator will deploy components to execute _AlamedaRecommendation_ CRs if this field is set to _true_. Default is _false_.
-- Field: enableGui
-  - type: boolean
-  - description: Federator.ai Operator will deploy GUI to visualize Alameda predictions/recommendations and cluster/node status if this field is set to _true_. Default is _true_.
 - Field: enableDispatcher
   - type: boolean
   - description: Federator.ai Operator will deploy alameda-dispatcher and rabittmq to sent predict job to alameda-ai if this field is set to _true_. Default is _true_.
@@ -159,7 +145,7 @@ spec:
   - description: It sets the version tag when pulling Alameda component images.
 - Field: prometheusService
   - type: string
-  - description: This field tells datahub and Grafana where the Prometheus URL is to retrieve pods/nodes peformance metrics data.
+  - description: This field tells datahub where the Prometheus URL is to retrieve pods/nodes peformance metrics data.
 - Field: kafka
   - type: [KafkaSpec](#kafkaspec)
   - description: This field is optional and Federator.ai Operator will configures componenets that need to conmunucate with Kafka with this field.
@@ -187,9 +173,6 @@ spec:
 - Field: alamedaInfluxdb
   - type: [AlamedaComponentSpec](#alamedacomponentspec)
   - description: Spec for InfluxDB component. This field is optional.
-- Field: alamedaGrafana
-  - type: [AlamedaComponentSpec](#alamedacomponentspec)
-  - description: Spec for Alameda-grafana component. This field is optional.
 - Field: alamedaRecommender
   - type: [AlamedaComponentSpec](#alamedacomponentspec)
   - description: Spec for Alameda-recommender component. This field is optional.

@@ -55,7 +55,6 @@ type AlamedaServiceSpec struct {
 	// +kubebuilder:validation:Enum=openshift3.9
 	Platform        Platform `json:"platform,omitempty"`
 	EnableExecution bool     `json:"enableExecution"`
-	EnableGUI       bool     `json:"enableGui"`
 	EnableVPA       *bool    `json:"enableVPA"`
 	EnableGPU       *bool    `json:"enableGPU"`
 	// +nullable
@@ -78,7 +77,6 @@ type AlamedaServiceSpec struct {
 
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb,omitempty"`
-	GrafanaSectionSet                   AlamedaComponentSpec    `json:"alamedaGrafana,omitempty"`
 	AlamedaAISectionSet                 AlamedaComponentSpec    `json:"alamedaAi,omitempty"`
 	AlamedaOperatorSectionSet           AlamedaComponentSpec    `json:"alamedaOperator,omitempty"`
 	AlamedaDatahubSectionSet            AlamedaComponentSpec    `json:"alamedaDatahub,omitempty"`

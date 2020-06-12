@@ -90,8 +90,6 @@ spec:
               value: quay.io/prophetstor/federatorai-dashboard-backend:latest
             - name: RELATED_IMAGE_FEDERATORAI_RESTAPI
               value: quay.io/prophetstor/federatorai-rest-ubi:latest
-            - name: RELATED_IMAGE_GRAFANA
-              value: quay.io/prophetstor/alameda-grafana:latest
             - name: RELATED_IMAGE_INFLUXDB
               value: quay.io/prophetstor/alameda-influxdb:latest
             - name: RELATED_IMAGE_NOTIFIER

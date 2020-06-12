@@ -145,7 +145,6 @@ func (in *AlamedaServiceSpec) DeepCopyInto(out *AlamedaServiceSpec) {
 	out.Nginx = in.Nginx
 	in.ClusterAutoScaler.DeepCopyInto(&out.ClusterAutoScaler)
 	in.InfluxdbSectionSet.DeepCopyInto(&out.InfluxdbSectionSet)
-	in.GrafanaSectionSet.DeepCopyInto(&out.GrafanaSectionSet)
 	in.AlamedaAISectionSet.DeepCopyInto(&out.AlamedaAISectionSet)
 	in.AlamedaOperatorSectionSet.DeepCopyInto(&out.AlamedaOperatorSectionSet)
 	in.AlamedaDatahubSectionSet.DeepCopyInto(&out.AlamedaDatahubSectionSet)

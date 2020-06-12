@@ -111,16 +111,6 @@ func SectionSetParamterToDeployment(
 		util.SetStorageToMountPath(dep, asp.AlamedaFedemeterSectionSet.Storages,
 			util.FedemeterCTN,
 			"fedemeter-type-storage", util.FedemeterGroup)
-	case util.GrafanaDPN:
-		envVars = asp.GrafanaSectionSet.EnvVars
-		util.SetBootStrapImageStruct(dep, asp.GrafanaSectionSet, util.GetTokenCTN)
-		util.SetImagePullPolicy(dep, util.GrafanaCTN,
-			asp.GrafanaSectionSet.ImagePullPolicy)
-		util.SetStorageToVolumeSource(dep, asp.GrafanaSectionSet.Storages,
-			"my-alameda.grafana-type.pvc", util.GrafanaGroup)
-		util.SetStorageToMountPath(dep, asp.GrafanaSectionSet.Storages,
-			util.GrafanaCTN,
-			"grafana-type-storage", util.GrafanaGroup)
 	case util.AlamedaweavescopeDPN:
 		envVars = asp.AlamedaWeavescopeSectionSet.EnvVars
 		util.SetImagePullPolicy(dep, util.AlamedaweavescopeCTN,
@@ -292,9 +282,6 @@ func SectionSetParamterToPersistentVolumeClaim(
 		case fmt.Sprintf("my-alameda.influxdb-%s.pvc", pvcusage):
 			util.SetStorageToPersistentVolumeClaimSpec(
 				pvc, asp.InfluxdbSectionSet.Storages, pvcusage)
-		case fmt.Sprintf("my-alameda.grafana-%s.pvc", pvcusage):
-			util.SetStorageToPersistentVolumeClaimSpec(
-				pvc, asp.GrafanaSectionSet.Storages, pvcusage)
 		case fmt.Sprintf("federatorai-agent-%s.pvc", pvcusage):
 			util.SetStorageToPersistentVolumeClaimSpec(
 				pvc, asp.FederatoraiAgentSectionSet.Storages, pvcusage)

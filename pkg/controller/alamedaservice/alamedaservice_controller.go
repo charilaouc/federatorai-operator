@@ -508,16 +508,6 @@ func (r *ReconcileAlamedaService) Reconcile(
 		}
 	}
 
-	//Uninstall GUI Component
-	if !asp.EnableGUI {
-		resource := r.removeUnsupportedResource(*alamedaserviceparamter.GetGUIResource())
-		if err := r.uninstallResource(resource); err != nil {
-			log.V(-1).Info("Uninstall gui resources failed, retry reconciling AlamedaService",
-				"AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name",
-				instance.Name, "msg", err.Error())
-			return reconcile.Result{Requeue: true, RequeueAfter: 1 * time.Second}, nil
-		}
-	}
 	//Uninstall dispatcher Component
 	if !asp.EnableDispatcher {
 		resource := r.removeUnsupportedResource(*alamedaserviceparamter.GetDispatcherResource())
@@ -1429,16 +1419,6 @@ func (r *ReconcileAlamedaService) syncConfigMap(
 				if err != nil {
 					return errors.Errorf("update configMap %s/%s failed: %s",
 						foundCM.Namespace, foundCM.Name, err.Error())
-				} else {
-					if foundCM.Name == util.GrafanaDatasourcesName { //if modify grafana-datasource then delete Deployment(Temporary strategy)
-						grafanaDep := componentConfig.NewDeployment(util.GrafanaYaml)
-						err = r.deleteDeploymentWhenModifyConfigMapOrService(grafanaDep)
-						if err != nil {
-							errors.Errorf(
-								"delete Deployment when modify ConfigMap %s/%s failed: %s",
-								grafanaDep.Namespace, grafanaDep.Name, err.Error())
-						}
-					}
 				}
 				log.Info("Successfully Update Resource ConfigMap",
 					"resourceCM.Name", foundCM.Name)

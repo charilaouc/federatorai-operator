@@ -23,7 +23,6 @@ var (
 		"RELATED_IMAGE_DATAHUB",
 		"RELATED_IMAGE_EVICTIONER",
 		"RELATED_IMAGE_EXECUTOR",
-		"RELATED_IMAGE_GRAFANA",
 		"RELATED_IMAGE_INFLUXDB",
 		"RELATED_IMAGE_NOTIFIER",
 		"RELATED_IMAGE_OPERATOR",
@@ -132,10 +131,6 @@ func setImageConfigWithAlamedaServiceParameterGlobalConfiguration(imageConfig co
 func setImageConfigWithAlamedaServiceParameter(imageConfig component.ImageConfig, asp alamedaserviceparamter.AlamedaServiceParamter) component.ImageConfig {
 	if image := asp.InfluxdbSectionSet.Image; image != "" {
 		imageConfig.SetInfluxdb(image)
-	}
-
-	if image := asp.GrafanaSectionSet.Image; image != "" {
-		imageConfig.SetGrafana(image)
 	}
 
 	if image := asp.AlamedaAISectionSet.Image; image != "" {
@@ -249,10 +244,6 @@ func setImageConfigWithEnv(imageConfig component.ImageConfig) component.ImageCon
 		case "RELATED_IMAGE_EXECUTOR":
 			if value := os.Getenv("RELATED_IMAGE_EXECUTOR"); value != "" {
 				imageConfig.SetExecutor(value)
-			}
-		case "RELATED_IMAGE_GRAFANA":
-			if value := os.Getenv("RELATED_IMAGE_GRAFANA"); value != "" {
-				imageConfig.SetGrafana(value)
 			}
 		case "RELATED_IMAGE_INFLUXDB":
 			if value := os.Getenv("RELATED_IMAGE_INFLUXDB"); value != "" {
