@@ -101,3 +101,9 @@ rules:
   - update
   - list
   - delete
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
