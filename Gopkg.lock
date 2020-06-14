@@ -35,7 +35,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:26e900b77a2fc73f43a06bbd9b80116180deff36abc1e16063220f661ae4492f"
+  digest = "1:5e876f73a3007926774c550f53329ead768089da5e3e887c4e5da68aa32c881c"
   name = "github.com/containers-ai/alameda"
   packages = [
     "operator/api/v1alpha1",
@@ -44,7 +44,7 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "3b20a1e9670a51e23097eaaae03dd24406858be1"
+  revision = "487226eec93f9b6a51e19a5b6fc3b2530a4b9026"
 
 [[projects]]
   branch = "master"

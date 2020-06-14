@@ -50,10 +50,10 @@ spec:
                   namespace:
                     type: string
                   scaleDownDelay:
-                    format: int32
+                    format: int64
                     type: integer
                   scaleUpDelay:
-                    format: int32
+                    format: int64
                     type: integer
                 required:
                 - name
