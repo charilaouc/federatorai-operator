@@ -47,7 +47,7 @@ data:
     historical_replica_capacity_period_seconds = 300
     beta = 0
     initial_none_zero_count = 3
-    replicas_capacity_resize_percentage = 1.2
+    replicas_capacity_resize_percentage = 1.0
 
     [kafka]
     terminating_time = 30
