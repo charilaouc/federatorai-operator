@@ -14,6 +14,8 @@
 #       [-v] # Revert environment to normal mode
 #       [-n nginx_prefix_name] # Specify nginx prefix name (optional)
 #       [-h] # Display script usage
+#   Optional:
+#       [-s nginx_namespace] # Specify nginx namespace
 #   Standalone options:
 #       [-i] # Install Nginx
 #       [-k] # Remove Nginx
@@ -495,7 +497,7 @@ new_nginx_example()
     echo -e "\n$(tput setaf 6)Creating new NGINX sample pod ...$(tput sgr 0)"
 
     if [[ "`kubectl get po -n $nginx_ns 2>/dev/null|grep -v "NAME"|grep "Running"|wc -l`" -gt "0" ]]; then
-        echo "nginx-preloader-sample namespace and pod are already exist."
+        echo "$nginx_ns namespace and pod are already exist."
     else
         if [ "$openshift_minor_version" != "" ]; then
             # OpenShift
@@ -967,7 +969,7 @@ if [ "$#" -eq "0" ]; then
     exit
 fi
 
-while getopts "f:x:ecpvrdhikn:" o; do
+while getopts "f:x:s:ecpvrdhikn:" o; do
     case "${o}" in
         p)
             prepare_environment="y"
@@ -994,6 +996,10 @@ while getopts "f:x:ecpvrdhikn:" o; do
         x)
             autoscaling_specified="y"
             x_arg=${OPTARG}
+            ;;
+        s)
+            nginx_namespace_specified="y"
+            s_arg=${OPTARG}
             ;;
         n)
             nginx_name_specified="y"
@@ -1042,6 +1048,12 @@ else
     nginx_name="nginx-prepared"
 fi
 
+if [ "$nginx_namespace_specified" = "y" ]; then
+    nginx_ns=$s_arg
+else
+    nginx_ns="nginx-preloader-sample"
+fi
+
 kubectl version|grep -q "^Server"
 if [ "$?" != "0" ];then
     echo -e "\nPlease login to kubernetes first."
@@ -1067,8 +1079,6 @@ if [ "$alamedaservice_name" = "" ]; then
 fi
 
 file_folder="/tmp/preloader"
-nginx_ns="nginx-preloader-sample"
-
 debug_log="debug.log"
 
 rm -rf $file_folder
