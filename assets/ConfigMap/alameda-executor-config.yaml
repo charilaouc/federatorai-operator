@@ -14,7 +14,7 @@ data:
     expire-time = 300 # second
     enable = true
       [executor.ca]
-      check-cycle = 180 # second
+      check-cycle = 30 # second
       minimum-execution-interval = 3600 # second
 
     [gRPC]
