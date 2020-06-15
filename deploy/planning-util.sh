@@ -179,13 +179,12 @@ check_rest_api_url()
         api_url="https://$api_url"
     else
         # K8S
-        get_k8s_rest_api_node_port
-        read -r -p "$(tput setaf 2)Please input REST API service external IP: $(tput sgr 0) " rest_ip </dev/tty
-        if [ "$rest_ip" != "" ]; then
-            api_url="https://$rest_ip:$https_node_port"
+        #get_k8s_rest_api_node_port
+        read -r -p "$(tput setaf 2)Please input REST API service URL:(e.g. https://<URL>:<PORT>) $(tput sgr 0) " api_url </dev/tty
+        if [ "$api_url" != "" ]; then
             echo "api_url = $api_url"
         else
-            echo -e "\n$(tput setaf 1)Error! Please input correct REST API service IP.$(tput sgr 0)"
+            echo -e "\n$(tput setaf 1)Error! Please input correct REST API URL.$(tput sgr 0)"
             leave_prog
             exit 8
         fi
