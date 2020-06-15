@@ -690,7 +690,7 @@ __EOF__
     fi
 
     # Enable resource requirement configuration
-    if [ "${ENABLE_RESOURCE_REQUIRMENT}" = "y" ]; then
+    if [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ]; then
         cat >> ${alamedaservice_example} << __EOF__
   resources:
     limits:
