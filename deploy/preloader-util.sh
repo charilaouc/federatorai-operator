@@ -37,6 +37,8 @@ show_usage()
         [-v] # Revert environment to normal mode
         [-n nginx_prefix_name] # Specify nginx prefix name (optional)
         [-h] # Display script usage
+    Optional:
+        [-s nginx_namespace] # Specify nginx namespace
     Standalone options:
         [-i] # Install Nginx
         [-k] # Remove Nginx
