@@ -510,7 +510,7 @@ generate_controller_patch()
         exit 8
     fi
 
-    check_support_controller
+    #check_support_controller
 
 
     image_name="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.template.spec.containers[0].image'`"
