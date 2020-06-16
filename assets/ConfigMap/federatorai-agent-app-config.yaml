@@ -148,9 +148,9 @@ data:
     type = "float"
 
     [[datasource.prometheus.measurement]]
-    name = "node_cpu_cores"
-    expr = "machine_cpu_cores"
-    tags = ["node", "namespace"]
+    name = "node_cpu_cores_allocatable"
+    expr = "sum(kube_node_status_allocatable{resource='cpu',unit='core'}) by (node)"
+    tags = ["node"]
     [datasource.prometheus.measurement.element.value]
     type = "float"
     {{end}}
