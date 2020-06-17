@@ -547,7 +547,7 @@ func (r *ReconcileAlamedaServiceKeycode) getKeycodeRepository(namespace string) 
 	if err != nil {
 		return nil, errors.Wrap(err, "get Datahub address failed")
 	}
-	datahubClient := r.getOrCreateDatahubClient(datahubAddress)
+	datahubClient := r.getOrCreateDatahubClient(datahubAddress, namespace)
 	keycodeRepository := repository_keycode_datahub.NewKeycodeRepository(&datahubClient)
 
 	return keycodeRepository, nil
@@ -567,12 +567,12 @@ func (r *ReconcileAlamedaServiceKeycode) getDatahubAddressByNamespace(namespace 
 	return datahubAddress, nil
 }
 
-func (r *ReconcileAlamedaServiceKeycode) getOrCreateDatahubClient(datahubAddress string) client_datahub.Client {
+func (r *ReconcileAlamedaServiceKeycode) getOrCreateDatahubClient(datahubAddress, ns string) client_datahub.Client {
 
 	if _, exist := r.datahubClientMap[datahubAddress]; !exist {
 		r.datahubClientMapLock.Lock()
 		defer r.datahubClientMapLock.Unlock()
-		datahubClientConfig := client_datahub.NewDefaultConfig()
+		datahubClientConfig := client_datahub.NewDefaultConfig(ns)
 		datahubClientConfig.Address = datahubAddress
 		r.datahubClientMap[datahubAddress] = client_datahub.NewDatahubClient(datahubClientConfig)
 	}
@@ -653,7 +653,7 @@ func (r *ReconcileAlamedaServiceKeycode) flushEvents(isAlamedaServiceOwningLock 
 		log.V(-1).Info("Flush events failed: get datahub address failed %s", err.Error())
 	}
 
-	cli := r.getOrCreateDatahubClient(datahubAddress)
+	cli := r.getOrCreateDatahubClient(datahubAddress, namespace)
 
 	var events []*datahubv1alpha1_event.Event
 	eventChan := r.getEventChan(namespace)
