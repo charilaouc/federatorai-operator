@@ -1,6 +1,7 @@
 package datahub
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -11,9 +12,9 @@ type Config struct {
 }
 
 // NewDefaultConfig returns default configuration
-func NewDefaultConfig() Config {
+func NewDefaultConfig(ns string) Config {
 	return Config{
 		Timeout: 30 * time.Second,
-		Address: "alameda-datahub.federatorai.svc.cluster.local:50050",
+		Address: fmt.Sprintf("alameda-datahub.%s.svc.cluster.local:50050", ns),
 	}
 }
