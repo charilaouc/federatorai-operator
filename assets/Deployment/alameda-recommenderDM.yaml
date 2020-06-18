@@ -25,7 +25,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: FEDERATOR_AI_SETUP_TYPE
-          value: "on-premise"
+          value: "cloud"
         volumeMounts:
           - name: alameda-recommender-config
             mountPath: /etc/alameda/federatorai-recommendation/config.toml
