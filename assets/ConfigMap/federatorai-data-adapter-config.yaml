@@ -74,7 +74,7 @@ data:
         application_key = "$DATADOG_APPLICATION_KEY"
         User-Agent = "Federator.ai/4.2"
         dashboard_dir = "/etc/telegraf/dashboards/datadog"
-        enable_kafka_dashboard = true
+        enable_kafka_dashboard = false
 
         # This pattern support federatorai.integration.status, federatorai.recommendation and federator.predictoin.*
         [[outputs.datadog.integration_metrics]]
