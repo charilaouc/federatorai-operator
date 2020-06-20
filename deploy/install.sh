@@ -524,9 +524,10 @@ fi
 if [ "$need_prometheus_rule_patch" = "y" ] && [ "$patch_prometheus_rule" = "n" ]; then
     echo -e "\n$(tput setaf 1)Uninstalling Federator.ai operator...$(tput sgr 0)"
     for yaml_fn in `ls [0-9]*.yaml | sort -nr`; do
-        echo "Deletiabort the installationng ${yaml_fn}..."
+        echo "Deleting the yaml ${yaml_fn}..."
         kubectl delete -f ${yaml_fn}
     done
+    echo "Done."
     leave_prog
     exit 8
 fi
