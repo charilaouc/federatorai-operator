@@ -51,6 +51,8 @@ data:
       ri = true
       granularity = "3600"    # daily: 3600, weekly: 21600, monthly: 86400
       fill_days = "1"         # daily: 1, weekly: 7, monthly: 31
+      ondemand_workload = 0
+      ondemand_baseline = 0
 
   cost_analysis_weekly.toml: |
     [datahub]
@@ -72,6 +74,8 @@ data:
       ri = true
       granularity = "21600"    # daily: 3600, weekly: 21600, monthly: 86400
       fill_days = "7"         # daily: 1, weekly: 7, monthly: 31
+      ondemand_workload = 0
+      ondemand_baseline = 0
 
   cost_analysis_monthly.toml: |
     [datahub]
@@ -93,3 +97,5 @@ data:
       ri = true
       granularity = "86400"    # daily: 3600, weekly: 21600, monthly: 86400
       fill_days = "31"         # daily: 1, weekly: 7, monthly: 31
+      ondemand_workload = 0
+      ondemand_baseline = 0
