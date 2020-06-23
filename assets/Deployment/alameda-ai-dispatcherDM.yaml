@@ -63,3 +63,5 @@ spec:
             name: alameda-ai-dispatcher-config
         - name:  alameda-dispatcher-data-storage
         - name:  alameda-dispatcher-log-storage
+      serviceAccount: alameda-ai-dispatcher
+      serviceAccountName: alameda-ai-dispatcher
