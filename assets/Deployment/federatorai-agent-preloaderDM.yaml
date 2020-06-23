@@ -41,3 +41,5 @@ spec:
       - name: federatorai-agent-preloader-config
         configMap:
           name: federatorai-agent-preloader-config
+      serviceAccount: federatorai-agent-preloader
+      serviceAccountName: federatorai-agent-preloader

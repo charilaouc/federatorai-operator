@@ -36,3 +36,9 @@ rules:
   - get
   - list
   - update
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use

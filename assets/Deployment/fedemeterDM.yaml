@@ -35,3 +35,5 @@ spec:
         volumes:
         - name: fedemeter{{.VolumeNameSuffixes.Data}}
         - name: fedemeter{{.VolumeNameSuffixes.Log}}
+        serviceAccount: fedemeter-api
+        serviceAccountName: fedemeter-api

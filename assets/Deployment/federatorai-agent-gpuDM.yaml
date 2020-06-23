@@ -64,3 +64,5 @@ spec:
             name: federatorai-agent-gpu-config
         - name: federatorai-agent-gpu{{.VolumeNameSuffixes.Data}}
         - name: federatorai-agent-gpu{{.VolumeNameSuffixes.Log}}
+      serviceAccount: federatorai-agent-gpu
+      serviceAccountName: federatorai-agent-gpu

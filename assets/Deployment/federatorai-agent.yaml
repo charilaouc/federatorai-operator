@@ -67,3 +67,5 @@ spec:
           name: federatorai-agent-config
       - name: federatorai-agent{{.VolumeNameSuffixes.Data}}
       - name: federatorai-agent{{.VolumeNameSuffixes.Log}}
+      serviceAccount: federatorai-agent
+      serviceAccountName: federatorai-agent

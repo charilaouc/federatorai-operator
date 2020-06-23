@@ -69,3 +69,5 @@ spec:
             name: alameda-ai-dispatcher-config
         - name:  alameda-dispatcher{{.VolumeNameSuffixes.Data}}
         - name:  alameda-dispatcher{{.VolumeNameSuffixes.Log}}
+      serviceAccount: alameda-ai-dispatcher
+      serviceAccountName: alameda-ai-dispatcher

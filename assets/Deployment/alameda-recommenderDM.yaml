@@ -60,3 +60,5 @@ spec:
         - name: alameda-recommender-config
           configMap:
             name: alameda-recommender-config
+      serviceAccount: alameda-recommender
+      serviceAccountName: alameda-recommender

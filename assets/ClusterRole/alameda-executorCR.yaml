@@ -65,3 +65,9 @@ rules:
   - machineautoscalers
   verbs:
   - list
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
