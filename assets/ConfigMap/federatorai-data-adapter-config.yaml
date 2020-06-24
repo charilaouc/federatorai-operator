@@ -73,8 +73,10 @@ data:
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
         User-Agent = "Federator.ai/4.2"
-        dashboard_dir = "/etc/telegraf/dashboards/datadog"
+        kafka_dashboards = ["/etc/telegraf/dashboards/datadog/kafka/overview.json"]
+        general_dashboards = ["/etc/telegraf/dashboards/datadog/kubernetes/application-overview.json", "/etc/telegraf/dashboards/datadog/kubernetes/insight-overview.json"]
         enable_kafka_dashboard = false
+        enable_general_dashboard = false
 
         # This pattern support federatorai.integration.status, federatorai.recommendation and federator.predictoin.*
         [[outputs.datadog.integration_metrics]]
