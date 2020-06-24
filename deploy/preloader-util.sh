@@ -212,8 +212,35 @@ delete_all_alamedascaler()
     echo "Duration delete_all_alamedascaler = $duration" >> $debug_log
 }
 
+wait_for_cluster_status_data_ready()
+{
+    start=`date +%s`
+    echo -e "\n$(tput setaf 6)Checking cluster status...$(tput sgr 0)"
+    influxdb_pod_name="`kubectl get pods -n $install_namespace |grep "alameda-influxdb-"|awk '{print $1}'|head -1`"
+    repeat_count="30"
+    sleep_interval="20"
+    for i in $(seq 1 $repeat_count)
+    do
+        kubectl exec $influxdb_pod_name -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_cluster_status -execute "select * from pod" 2>/dev/null |grep -q "nginx-app"
+        if [ "$?" != 0 ]; then
+            echo "Not ready, keep retrying cluster status..."
+            sleep $sleep_interval
+        else
+            break
+        fi
+    done
+
+    echo "Done."
+    end=`date +%s`
+    duration=$((end-start))
+    echo "Duration wait_for_cluster_status_data_ready = $duration" >> $debug_log
+}
+
 run_preloader_command()
 {
+    # check env is ready
+    wait_for_cluster_status_data_ready
+
     start=`date +%s`
     echo -e "\n$(tput setaf 6)Running preloader...$(tput sgr 0)"
     get_current_preloader_name
