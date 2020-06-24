@@ -126,12 +126,35 @@ data:
     # api proto metric type
     [metricType]
     undefined = 0
-    cpu_usage_seconds_percentage = 1
-    memory_usage_bytes = 2
-    power_usage_watts = 3
-    temperature_celsius  = 4
-    duty_cycle = 5
-    current_offset = 6
+    cpu_seconds_total = 1
+    cpu_millicores_total = 2
+    cpu_millicores_avail = 3
+    cpu_millicores_usage = 4
+    cpu_millicores_usage_pct = 5
+    cpu_millicores_allocatable = 6
+    memory_bytes_total = 7
+    memory_bytes_avail = 8
+    memory_bytes_usage = 9
+    memory_bytes_usage_pct = 10
+    memory_bytes_allocatable = 11
+    fs_bytes_total = 12
+    fs_bytes_avail = 13
+    fs_bytes_usage = 14
+    fs_bytes_usage_pct = 15
+    http_requests_count = 16
+    http_requests_total = 17
+    http_response_count = 18
+    http_response_total = 19
+    disk_io_seconds_total = 20
+    disk_io_utilization = 21
+    restarts_total = 22
+    power_usage_watts = 23
+    temperature_celsius = 24
+    duty_cycle = 25
+    current_offset = 26
+    lag = 27
+    latency = 28
+    number = 29
     
     # api proto table
     [scope]
