@@ -1,7 +1,7 @@
 package resourceread
 
 import (
-	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/v1alpha1"
+	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/autoscaling/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 )

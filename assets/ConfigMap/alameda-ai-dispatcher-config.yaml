@@ -148,13 +148,14 @@ data:
     disk_io_seconds_total = 20
     disk_io_utilization = 21
     restarts_total = 22
-    power_usage_watts = 23
-    temperature_celsius = 24
-    duty_cycle = 25
-    current_offset = 26
-    lag = 27
-    latency = 28
-    number = 29
+    unschedulable = 23
+    power_usage_watts = 24
+    temperature_celsius = 25
+    duty_cycle = 26
+    current_offset = 27
+    lag = 28
+    latency = 29
+    number = 30
     
     # api proto table
     [scope]
