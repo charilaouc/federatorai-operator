@@ -45,11 +45,11 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "88105ae244d6202bdeb776fa0ac73b1941a5f62b"
+  revision = "ff61c77098368c21ae229e538632434e0ad263bf"
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:ebce8cd8728ba42f2086c0cbd93109105ee76465f5fe70b435d3c6a6a72bd832"
+  digest = "1:bccbb3a15b11c4ba3e43728fdb82b976754d5521d057883a414178349681c3ed"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -72,7 +72,7 @@
     "datahub/keycodes",
   ]
   pruneopts = "NT"
-  revision = "7dbcdc4610928420aa309b916d7d5989ae69470a"
+  revision = "8ac122bcf1421b1ea8c2db117243e05b63885dad"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -752,6 +752,8 @@
   name = "google.golang.org/grpc"
   packages = [
     ".",
+    "attributes",
+    "backoff",
     "balancer",
     "balancer/base",
     "balancer/roundrobin",
@@ -767,10 +769,13 @@
     "internal/backoff",
     "internal/balancerload",
     "internal/binarylog",
+    "internal/buffer",
     "internal/channelz",
     "internal/envconfig",
     "internal/grpcrand",
     "internal/grpcsync",
+    "internal/resolver/dns",
+    "internal/resolver/passthrough",
     "internal/syscall",
     "internal/transport",
     "keepalive",
@@ -778,8 +783,7 @@
     "naming",
     "peer",
     "resolver",
-    "resolver/dns",
-    "resolver/passthrough",
+    "serviceconfig",
     "stats",
     "status",
     "tap",
