@@ -48,20 +48,20 @@ data:
       #    application = "<monitored_application>"
       #    [[inputs.datadog.watched_source.watched_metrics]]
       #      name="kubernetes.cpu.usage.total"
-      #      metric_type="CPU_USAGE_SECONDS_PERCENTAGE"
+      #      metric_type="CPU_MILLICORES_USAGE"
       #    [[inputs.datadog.watched_source.watched_metrics]]
       #      name="kubernetes.memory.usage"
-      #      metric_type="MEMORY_USAGE_BYTES"
+      #      metric_type="MEMORY_BYTES_USAGE"
 
       #  [[inputs.datadog.watched_source]]
       #    namespace = "<monitored_application_namespace>"
       #    application = "<monitored_application>"
       #    [[inputs.datadog.watched_source.watched_metrics]]
       #      name="kubernetes.cpu.usage.total"
-      #      metric_type="CPU_USAGE_SECONDS_PERCENTAGE"
+      #      metric_type="CPU_MILLICORES_USAGE"
       #    [[inputs.datadog.watched_source.watched_metrics]]
       #      name="kubernetes.memory.usage"
-      #      metric_type="MEMORY_USAGE_BYTES"
+      #      metric_type="MEMORY_BYTES_USAGE"
 
       #[[inputs.prometheus_query]]
       #  url = "$PROMETHEUS_URL"
