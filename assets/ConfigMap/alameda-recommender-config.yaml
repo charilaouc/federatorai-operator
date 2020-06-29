@@ -41,6 +41,8 @@ data:
     observation_period_seconds = 300
     upper_resource_tolerance = 2
     lower_resource_tolerance = 0.5
+    upper_http_response_percentage = 1.5
+    lower_http_response_percentage = 0.5
     evaluation_type = "moving-avg"
     moving_average_period_seconds = 60
     shift_best_execution_time_seconds = 0
