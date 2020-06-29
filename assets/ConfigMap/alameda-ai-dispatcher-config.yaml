@@ -127,16 +127,16 @@ data:
     [metricType]
     undefined = 0
     cpu_seconds_total = 1
-    cpu_millicores_total = 2
-    cpu_millicores_avail = 3
-    cpu_millicores_usage = 4
-    cpu_millicores_usage_pct = 5
-    cpu_millicores_allocatable = 6
-    memory_bytes_total = 7
-    memory_bytes_avail = 8
-    memory_bytes_usage = 9
-    memory_bytes_usage_pct = 10
-    memory_bytes_allocatable = 11
+    cpu_cores_allocatable = 2
+    cpu_millicores_total = 3
+    cpu_millicores_avail = 4
+    cpu_millicores_usage = 5
+    cpu_millicores_usage_pct = 6
+    memory_bytes_allocatable = 7
+    memory_bytes_total = 8
+    memory_bytes_avail = 9
+    memory_bytes_usage = 10
+    memory_bytes_usage_pct = 11
     fs_bytes_total = 12
     fs_bytes_avail = 13
     fs_bytes_usage = 14
@@ -149,13 +149,14 @@ data:
     disk_io_utilization = 21
     restarts_total = 22
     unschedulable = 23
-    power_usage_watts = 24
-    temperature_celsius = 25
-    duty_cycle = 26
-    current_offset = 27
-    lag = 28
-    latency = 29
-    number = 30
+    health = 24
+    power_usage_watts = 25
+    temperature_celsius = 26
+    duty_cycle = 27
+    current_offset = 28
+    lag = 29
+    latency = 30
+    number = 31
     
     # api proto table
     [scope]
