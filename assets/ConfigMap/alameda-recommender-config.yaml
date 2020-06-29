@@ -39,10 +39,12 @@ data:
     margin = 0.2
     observation_granularity_seconds = 60
     observation_period_seconds = 300
-    upper_resource_tolerance = 2
-    lower_resource_tolerance = 0.5
-    upper_http_response_percentage = 1.5
-    lower_http_response_percentage = 0.5
+    max_upscale_ratio = 2.0
+    max_downscale_ratio = 0.5
+    ratio_to_inc_alpha = 1.5
+    ratio_to_dec_alpha = 0.5
+    upper_ratio_to_count_replica_capacity = 1.1
+    lower_ratio_to_count_replica_capacity = 0.8
     evaluation_type = "moving-avg"
     moving_average_period_seconds = 60
     shift_best_execution_time_seconds = 0
