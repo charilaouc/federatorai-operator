@@ -262,7 +262,7 @@ rest_api_get_pod_planning()
     granularity="3600"
     type="recommendation"
 
-    planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/pods?granularity=$granularity&type=$type&names=$target_pod_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token" |jq '.plannings[].containerPlannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/pods?granularity=$granularity&type=$type&names=$target_pod_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token" |jq ".plannings[].containerPlannings[0]|\"\(.limitPlannings.${query_cpu_string}[].numValue) \(.requestPlannings.${query_cpu_string}[].numValue) \(.limitPlannings.${query_memory_string}[].numValue) \(.requestPlannings.${query_memory_string}[].numValue)\""|tr -d "\""`
     limits_pod_cpu="`echo $planning_values |awk '{print $1}'`"
     requests_pod_cpu="`echo $planning_values |awk '{print $2}'`"
     limits_pod_memory="`echo $planning_values |awk '{print $3}'`"
@@ -297,10 +297,10 @@ rest_api_get_controller_planning()
 
     if [ "$openshift_minor_version" != "" ]; then
         # OpenShift
-        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deploymentconfigs?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deploymentconfigs?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq ".plannings[].plannings[0]|\"\(.limitPlannings.${query_cpu_string}[].numValue) \(.requestPlannings.${query_cpu_string}[].numValue) \(.limitPlannings.${query_memory_string}[].numValue) \(.requestPlannings.${query_memory_string}[].numValue)\""|tr -d "\""`
     else
         # K8S
-        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deployments?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+        planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace/deployments?granularity=$granularity&type=$type&names=$owner_reference_name&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token"|jq ".plannings[].plannings[0]|\"\(.limitPlannings.${query_cpu_string}[].numValue) \(.requestPlannings.${query_cpu_string}[].numValue) \(.limitPlannings.${query_memory_string}[].numValue) \(.requestPlannings.${query_memory_string}[].numValue)\""|tr -d "\""`
     fi
 
     replica_number="`kubectl get $owner_reference_kind $owner_reference_name -n $target_namespace -o json|jq '.spec.replicas'`"
@@ -350,7 +350,7 @@ rest_api_get_namespace_planning()
     granularity="3600"
     type="recommendation"
 
-    planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace?granularity=$granularity&type=$type&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token" |jq '.plannings[].plannings[0]|"\(.limitPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.requestPlannings.CPU_USAGE_SECONDS_PERCENTAGE[].numValue) \(.limitPlannings.MEMORY_USAGE_BYTES[].numValue) \(.requestPlannings.MEMORY_USAGE_BYTES[].numValue)"'|tr -d "\""`
+    planning_values=`curl -sS -k -X GET "$api_url/apis/v1/plannings/clusters/$cluster_name/namespaces/$target_namespace?granularity=$granularity&type=$type&limit=1&order=desc&startTime=$interval_start_time&endTime=$interval_end_time" -H "accept: application/json" -H "Authorization: Bearer $access_token" |jq ".plannings[].plannings[0]|\"\(.limitPlannings.${query_cpu_string}[].numValue) \(.requestPlannings.${query_cpu_string}[].numValue) \(.limitPlannings.${query_memory_string}[].numValue) \(.requestPlannings.${query_memory_string}[].numValue)\""|tr -d "\""`
     limits_ns_cpu="`echo $planning_values |awk '{print $1}'`"
     requests_ns_cpu="`echo $planning_values |awk '{print $2}'`"
     limits_ns_memory="`echo $planning_values |awk '{print $3}'`"
@@ -384,6 +384,21 @@ get_needed_info()
     fi
     if [ "$do_controller_related" != "" ]; then
         get_controller_info_from_controller
+    fi
+    check_federatorai_version
+}
+
+check_federatorai_version()
+{
+    kubectl get alamedaservices --all-namespaces -o jsonpath='{.items[].spec.version}' 2>/dev/null|grep -q "4.2"
+    if [ "$?" = "0" ]; then
+        # 4.2 version
+        query_cpu_string="CPU_USAGE_SECONDS_PERCENTAGE"
+        query_memory_string="MEMORY_USAGE_BYTES"
+    else
+        # 4.3 or later
+        query_cpu_string="CPU_MILLICORES_USAGE"
+        query_memory_string="MEMORY_BYTES_USAGE"
     fi
 }
 
