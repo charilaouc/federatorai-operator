@@ -121,6 +121,7 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 		util.SetStorageToMountPath(dep, asp.FederatoraiAgentGPUSectionSet.Storages, util.FederatoraiAgentGPUCTN, "federatorai-agent-gpu-type-storage", util.AlamedaGroup)
 	case util.FederatoraiAgentAppDPN:
 		envVars = asp.FederatoraiAgentAppSectionSet.EnvVars
+		resources = asp.FederatoraiAgentAppSectionSet.Resources
 		util.SetImagePullPolicy(dep, util.FederatoraiAgentAppCTN, asp.FederatoraiAgentAppSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.FederatoraiAgentAppSectionSet.Storages, "federatorai-agent-app-type.pvc", util.AlamedaGroup)
 		util.SetStorageToMountPath(dep, asp.FederatoraiAgentAppSectionSet.Storages, util.FederatoraiAgentAppCTN, "federatorai-agent-app-type-storage", util.AlamedaGroup)
@@ -138,11 +139,13 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 		util.SetStorageToMountPath(dep, asp.FederatoraiAgentPreloaderSectionSet.Storages, util.FederatoraiAgentPreloaderCTN, "federatorai-agent-preloader-type-storage", util.AlamedaGroup)
 	case util.FederatoraiFrontendDPN:
 		envVars = asp.FederatoraiFrontendSectionSet.EnvVars
+		resources = asp.FederatoraiFrontendSectionSet.Resources
 		util.SetImagePullPolicy(dep, util.FederatoraiFrontendCTN, asp.FederatoraiFrontendSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.FederatoraiFrontendSectionSet.Storages, "federatorai-frontend-type.pvc", util.AlamedaGroup)
 		util.SetStorageToMountPath(dep, asp.FederatoraiFrontendSectionSet.Storages, util.FederatoraiFrontendCTN, "federatorai-frontend-type-storage", util.AlamedaGroup)
 	case util.FederatoraiBackendDPN:
 		envVars = asp.FederatoraiBackendSectionSet.EnvVars
+		resources = asp.FederatoraiBackendSectionSet.Resources
 		util.SetImagePullPolicy(dep, util.FederatoraiBackendCTN, asp.FederatoraiBackendSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.FederatoraiBackendSectionSet.Storages, "federatorai-backend-type.pvc", util.AlamedaGroup)
 		util.SetStorageToMountPath(dep, asp.FederatoraiBackendSectionSet.Storages, util.FederatoraiBackendCTN, "federatorai-backend-type-storage", util.AlamedaGroup)
