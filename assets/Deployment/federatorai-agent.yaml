@@ -61,3 +61,5 @@ spec:
           name: federatorai-agent-config
       - name: federatorai-agent-data-storage
       - name: federatorai-agent-log-storage
+      serviceAccount: federatorai-agent
+      serviceAccountName: federatorai-agent

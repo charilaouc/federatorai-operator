@@ -693,6 +693,39 @@ spec:
                 memory: "50Mi"
         ports:
         - containerPort: 80
+      serviceAccount: ${nginx_name}
+      serviceAccountName: ${nginx_name}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ${nginx_name}
+rules:
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ${nginx_name}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ${nginx_name}
+subjects:
+- kind: ServiceAccount
+  name: ${nginx_name}
+  namespace: ${nginx_ns}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${nginx_name}
+  namespace: ${nginx_ns}
 __EOF__
             kubectl create ns $nginx_ns
             kubectl apply -f $nginx_k8s_yaml

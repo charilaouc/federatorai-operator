@@ -27,3 +27,9 @@ rules:
   - watch
   - update
   - create
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
