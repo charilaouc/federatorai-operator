@@ -127,8 +127,6 @@ var (
 		"ConfigMap/fedemeter-config.yaml",
 		"Service/fedemeter-influxdbSV.yaml",
 		"StatefulSet/fedemeter-influxdbSS.yaml",
-		"Ingress/fedemeterIG.yaml",
-		"Ingress/fedemeterSwaggerIG.yaml",
 		"Secret/fedemeter-tls.yaml",
 		"ServiceAccount/fedemeter-apiSA.yaml",
 	}
@@ -719,7 +717,6 @@ type Resource struct {
 	AlamedaScalerList                  []string
 	RouteList                          []string
 	StatefulSetList                    []string
-	IngressList                        []string
 	PodSecurityPolicyList              []string
 	DaemonSetList                      []string
 	SecurityContextConstraintsList     []string
@@ -783,9 +780,6 @@ func (r *Resource) GetAll() []string {
 	for _, file := range r.StatefulSetList {
 		files = append(files, file)
 	}
-	for _, file := range r.IngressList {
-		files = append(files, file)
-	}
 	for _, file := range r.RouteList {
 		files = append(files, file)
 	}
@@ -823,7 +817,6 @@ func (r *Resource) add(in Resource) {
 	r.AlamedaScalerList = append(r.AlamedaScalerList, in.AlamedaScalerList...)
 	r.RouteList = append(r.RouteList, in.RouteList...)
 	r.StatefulSetList = append(r.StatefulSetList, in.StatefulSetList...)
-	r.IngressList = append(r.IngressList, in.IngressList...)
 	r.PodSecurityPolicyList = append(r.PodSecurityPolicyList, in.PodSecurityPolicyList...)
 	r.DaemonSetList = append(r.DaemonSetList, in.DaemonSetList...)
 	r.SecurityContextConstraintsList = append(r.SecurityContextConstraintsList, in.SecurityContextConstraintsList...)
@@ -848,7 +841,6 @@ func (r *Resource) delete(in Resource) {
 	r.AlamedaScalerList = util.StringSliceDelete(r.AlamedaScalerList, in.AlamedaScalerList)
 	r.RouteList = util.StringSliceDelete(r.RouteList, in.RouteList)
 	r.StatefulSetList = util.StringSliceDelete(r.StatefulSetList, in.StatefulSetList)
-	r.IngressList = util.StringSliceDelete(r.IngressList, in.IngressList)
 	r.PodSecurityPolicyList = util.StringSliceDelete(r.PodSecurityPolicyList, in.PodSecurityPolicyList)
 	r.DaemonSetList = util.StringSliceDelete(r.DaemonSetList, in.DaemonSetList)
 	r.SecurityContextConstraintsList = util.StringSliceDelete(r.SecurityContextConstraintsList, in.SecurityContextConstraintsList)
@@ -874,7 +866,6 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 	var alamedaScalerList = make([]string, 0)
 	var routeList = make([]string, 0)
 	var statefulSetList = make([]string, 0)
-	var ingressList = make([]string, 0)
 	var podSecurityPolicyList = make([]string, 0)
 	var daemonSetList = make([]string, 0)
 	var securityContextConstraintsList = make([]string, 0)
@@ -912,8 +903,6 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 				routeList = append(routeList, assetFile)
 			case "StatefulSet":
 				statefulSetList = append(statefulSetList, assetFile)
-			case "Ingress":
-				ingressList = append(ingressList, assetFile)
 			case "PodSecurityPolicy":
 				podSecurityPolicyList = append(podSecurityPolicyList, assetFile)
 			case "DaemonSet":
@@ -953,7 +942,6 @@ func getResourceFromList(resourceList []string) (Resource, error) {
 		AlamedaScalerList:                  alamedaScalerList,
 		RouteList:                          routeList,
 		StatefulSetList:                    statefulSetList,
-		IngressList:                        ingressList,
 		PodSecurityPolicyList:              podSecurityPolicyList,
 		DaemonSetList:                      daemonSetList,
 		SecurityContextConstraintsList:     securityContextConstraintsList,

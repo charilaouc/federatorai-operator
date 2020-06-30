@@ -340,10 +340,6 @@ func (r *ReconcileAlamedaService) Reconcile(request reconcile.Request) (reconcil
 		log.V(-1).Info("sync statefulset failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
 		return reconcile.Result{Requeue: true, RequeueAfter: 1 * time.Second}, nil
 	}
-	if err := r.syncIngress(instance, asp, installResource); err != nil {
-		log.V(-1).Info("sync Ingress failed, retry reconciling AlamedaService", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
-		return reconcile.Result{Requeue: true, RequeueAfter: 1 * time.Second}, nil
-	}
 	if err := r.syncRoute(instance, asp, installResource); err != nil {
 		log.V(-1).Info("Sync route failed, retry reconciling.", "AlamedaService.Namespace", instance.Namespace, "AlamedaService.Name", instance.Name, "msg", err.Error())
 		return reconcile.Result{Requeue: true, RequeueAfter: requeueAfter}, nil
@@ -1316,28 +1312,6 @@ func (r *ReconcileAlamedaService) syncRoute(instance *federatoraiv1alpha1.Alamed
 	return nil
 }
 
-func (r *ReconcileAlamedaService) syncIngress(instance *federatoraiv1alpha1.AlamedaService, asp *alamedaserviceparamter.AlamedaServiceParamter, resource *alamedaserviceparamter.Resource) error {
-	for _, FileStr := range resource.IngressList {
-		resourceIG := componentConfig.NewIngress(FileStr)
-		if err := controllerutil.SetControllerReference(instance, resourceIG, r.scheme); err != nil {
-			return errors.Errorf("Fail resourceIG SetControllerReference: %s", err.Error())
-		}
-		foundIG := &extensionsv1beta1.Ingress{}
-		err := r.client.Get(context.TODO(), types.NamespacedName{Name: resourceIG.Name, Namespace: resourceIG.Namespace}, foundIG)
-		if err != nil && k8sErrors.IsNotFound(err) {
-			log.Info("Creating a new Resource Route... ", "resourceIG.Name", resourceIG.Name)
-			err = r.client.Create(context.TODO(), resourceIG)
-			if err != nil {
-				return errors.Errorf("create route %s/%s failed: %s", resourceIG.Namespace, resourceIG.Name, err.Error())
-			}
-			log.Info("Successfully Creating Resource route", "resourceRT.Name", resourceIG.Name)
-		} else if err != nil {
-			return errors.Errorf("get route %s/%s failed: %s", resourceIG.Namespace, resourceIG.Name, err.Error())
-		}
-	}
-	return nil
-}
-
 func (r *ReconcileAlamedaService) syncStatefulSet(instance *federatoraiv1alpha1.AlamedaService, asp *alamedaserviceparamter.AlamedaServiceParamter, resource *alamedaserviceparamter.Resource) error {
 	for _, FileStr := range resource.StatefulSetList {
 		resourceSS := componentConfig.NewStatefulSet(FileStr)
@@ -1388,19 +1362,6 @@ func (r *ReconcileAlamedaService) uninstallStatefulSet(instance *federatoraiv1al
 			return nil
 		} else if err != nil {
 			return errors.Errorf("delete statefulset %s/%s failed: %s", resourceSS.Namespace, resourceSS.Name, err.Error())
-		}
-	}
-	return nil
-}
-
-func (r *ReconcileAlamedaService) uninstallIngress(instance *federatoraiv1alpha1.AlamedaService, resource *alamedaserviceparamter.Resource) error {
-	for _, fileString := range resource.IngressList {
-		resourceIG := componentConfig.NewIngress(fileString)
-		err := r.client.Delete(context.TODO(), resourceIG)
-		if err != nil && k8sErrors.IsNotFound(err) {
-			return nil
-		} else if err != nil {
-			return errors.Errorf("delete ingress %s/%s failed: %s", resourceIG.Namespace, resourceIG.Name, err.Error())
 		}
 	}
 	return nil
@@ -1631,10 +1592,6 @@ func (r *ReconcileAlamedaService) uninstallResource(resource alamedaserviceparam
 
 	if err := r.uninstallStatefulSet(nil, &resource); err != nil {
 		return errors.Wrap(err, "uninstall StatefulSet failed")
-	}
-
-	if err := r.uninstallIngress(nil, &resource); err != nil {
-		return errors.Wrap(err, "uninstall Ingress failed")
 	}
 
 	if err := r.uninstallRoute(nil, &resource); err != nil {
