@@ -304,16 +304,6 @@ func (c ComponentConfig) NewRoute(str string) *routev1.Route {
 	return rt
 }
 
-func (c ComponentConfig) NewIngress(str string) *extensionsv1beta1.Ingress {
-	igByte, err := assets.Asset(str)
-	if err != nil {
-		log.Error(err, "Failed to Test create ingress")
-
-	}
-	ig := resourceread.ReadIngressv1beta1(c.templateAssets(string(igByte[:])))
-	return ig
-}
-
 func (c ComponentConfig) NewStatefulSet(str string) *appsv1.StatefulSet {
 	ssByte, err := assets.Asset(str)
 	if err != nil {
