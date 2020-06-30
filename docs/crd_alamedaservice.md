@@ -133,7 +133,7 @@ spec:
   - description: Federator.ai Operator will deploy Fedemeter and you must add your Fedemeter serviceAccount to privileged SecurityContextConstraints
 - Field: enableVPA
   - type: boolean
-  - description: Federator.ai Operator will deploy admissionController/alameda-evictioner if this field is set to _true_. Default is _true_.
+  - description: Federator.ai Operator will deploy admissionController/alameda-evictioner if this field is set to _true_. Default is _false_.
 - Field: enableGPU
   - type: boolean
   - description: Federator.ai Operator will deploy federatorai-agent-gpu if this field is set to _true_. Default is _true_.
