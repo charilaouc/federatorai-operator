@@ -14,6 +14,8 @@ func GlobalSectionSetParamterToStatefulset(ss *appsv1.StatefulSet, asp *alamedas
 	switch ss.Name {
 	case util.FedemeterInflixDBSSN:
 	}
+	util.SetResourcesForContainers(ss, asp.Resources, false)
+	util.SetResourcesForContainers(ss, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaserviceparamter.AlamedaServiceParamter) {
@@ -83,6 +85,8 @@ func GlobalSectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedase
 		util.SetStorageToVolumeSource(dep, asp.Storages, "federatorai-backend-type.pvc", util.AlamedaGroup)
 		util.SetStorageToMountPath(dep, asp.Storages, util.FederatoraiBackendCTN, "federatorai-backend-type-storage", util.AlamedaGroup)
 	}
+	util.SetResourcesForContainers(dep, asp.Resources, false)
+	util.SetResourcesForContainers(dep, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
@@ -90,6 +94,8 @@ func GlobalSectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaservi
 	case util.AlamedaweavescopeAgentDS:
 		util.SetDaemonSetImagePullPolicy(ds, util.AlamedaweavescopeAgentCTN, asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
 	}
+	util.SetResourcesForContainers(ds, asp.Resources, false)
+	util.SetResourcesForContainers(ds, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToPersistentVolumeClaim(pvc *corev1.PersistentVolumeClaim, asp *alamedaserviceparamter.AlamedaServiceParamter) {

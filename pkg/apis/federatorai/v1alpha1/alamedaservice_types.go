@@ -41,24 +41,24 @@ type AlamedaServiceSpec struct {
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
 	// +kubebuilder:validation:Enum=openshift3.9
-	Platform                 Platform              `json:"platform,omitempty"`
-	EnableExecution          bool                  `json:"enableExecution"`
-	EnableGUI                bool                  `json:"enableGui"`
-	EnableVPA                *bool                 `json:"enableVPA"`
-	EnableGPU                *bool                 `json:"enableGPU"`
-	EnableDispatcher         *bool                 `json:"enableDispatcher"`
-	EnablePreloader          bool                  `json:"enablePreloader"`
-	SelfDriving              bool                  `json:"selfDriving"`
-	AutoPatchPrometheusRules bool                  `json:"autoPatchPrometheusRules"`
-	Version                  string                `json:"version"`
-	ImageLocation            string                `json:"imageLocation"`
-	PrometheusService        string                `json:"prometheusService"`
-	Storages                 []StorageSpec         `json:"storages"`
-	ServiceExposures         []ServiceExposureSpec `json:"serviceExposures"`
-	EnableWeavescope         bool                  `json:"enableWeavescope"`
-	Keycode                  KeycodeSpec           `json:"keycode"`
-	Kafka                    KafkaSpec             `json:"kafka"`
-
+	Platform                 Platform                    `json:"platform,omitempty"`
+	EnableExecution          bool                        `json:"enableExecution"`
+	EnableGUI                bool                        `json:"enableGui"`
+	EnableVPA                *bool                       `json:"enableVPA"`
+	EnableGPU                *bool                       `json:"enableGPU"`
+	EnableDispatcher         *bool                       `json:"enableDispatcher"`
+	EnablePreloader          bool                        `json:"enablePreloader"`
+	SelfDriving              bool                        `json:"selfDriving"`
+	AutoPatchPrometheusRules bool                        `json:"autoPatchPrometheusRules"`
+	Version                  string                      `json:"version"`
+	ImageLocation            string                      `json:"imageLocation"`
+	PrometheusService        string                      `json:"prometheusService"`
+	Storages                 []StorageSpec               `json:"storages"`
+	Resources                corev1.ResourceRequirements `json:"resources,omitempty"`
+	ServiceExposures         []ServiceExposureSpec       `json:"serviceExposures"`
+	EnableWeavescope         bool                        `json:"enableWeavescope"`
+	Keycode                  KeycodeSpec                 `json:"keycode"`
+	Kafka                    KafkaSpec                   `json:"kafka"`
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb"`
 	GrafanaSectionSet                   AlamedaComponentSpec    `json:"alamedaGrafana"`
@@ -86,12 +86,13 @@ type AlamedaServiceSpec struct {
 }
 
 type AlamedaComponentSpec struct {
-	Image              string            `json:"image"`
-	Version            string            `json:"version"`
-	ImagePullPolicy    corev1.PullPolicy `json:"imagepullpolicy"`
-	Storages           []StorageSpec     `json:"storages"`
-	BootStrapContainer Imagestruct       `json:"bootstrap"`
-	EnvVars            []corev1.EnvVar   `json:"env"`
+	Image              string                      `json:"image"`
+	Version            string                      `json:"version"`
+	ImagePullPolicy    corev1.PullPolicy           `json:"imagepullpolicy"`
+	Storages           []StorageSpec               `json:"storages"`
+	BootStrapContainer Imagestruct                 `json:"bootstrap"`
+	EnvVars            []corev1.EnvVar             `json:"env"`
+	Resources          corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 type FederatoraiAgentGPUSpec struct {
