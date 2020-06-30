@@ -68,13 +68,13 @@ type AlamedaServiceSpec struct {
 	ImageLocation            string            `json:"imageLocation,omitempty"`
 	Storages                 []StorageSpec     `json:"storages"`
 	// +nullable
-	ServiceExposures  []ServiceExposureSpec `json:"serviceExposures,omitempty"`
-	EnableWeavescope  bool                  `json:"enableWeavescope,omitempty"`
-	Keycode           KeycodeSpec           `json:"keycode"`
-	Kafka             KafkaSpec             `json:"kafka"`
-	Nginx             NginxSpec             `json:"nginx"`
-	ClusterAutoScaler ClusterAutoScalerSpec `json:"clusterAutoScaler,omitempty"`
-
+	ServiceExposures  []ServiceExposureSpec       `json:"serviceExposures,omitempty"`
+	EnableWeavescope  bool                        `json:"enableWeavescope,omitempty"`
+	Keycode           KeycodeSpec                 `json:"keycode"`
+	Kafka             KafkaSpec                   `json:"kafka"`
+	Nginx             NginxSpec                   `json:"nginx"`
+	ClusterAutoScaler ClusterAutoScalerSpec       `json:"clusterAutoScaler,omitempty"`
+	Resources         corev1.ResourceRequirements `json:"resources,omitempty"`
 	//Component Section Schema
 	InfluxdbSectionSet                  AlamedaComponentSpec    `json:"alamedaInfluxdb,omitempty"`
 	AlamedaAISectionSet                 AlamedaComponentSpec    `json:"alamedaAi,omitempty"`
@@ -108,7 +108,8 @@ type AlamedaComponentSpec struct {
 	Storages           []StorageSpec `json:"storages"`
 	BootStrapContainer Imagestruct   `json:"bootstrap"`
 	// +nullable
-	EnvVars []corev1.EnvVar `json:"env"`
+	EnvVars   []corev1.EnvVar             `json:"env"`
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 type FederatoraiAgentGPUSpec struct {

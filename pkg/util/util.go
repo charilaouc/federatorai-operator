@@ -427,3 +427,35 @@ func ServerHasResourceInAPIGroupVersion(
 	}
 	return false, nil
 }
+
+func SetResourcesForContainers(
+	obj interface{}, targetResources corev1.ResourceRequirements,
+	isInitContainer bool) {
+	rtObj := reflect.ValueOf(obj).Elem()
+	ctType := "Containers"
+	if isInitContainer {
+		ctType = "InitContainers"
+	}
+	containers := rtObj.FieldByName("Spec").FieldByName(
+		"Template").FieldByName("Spec").FieldByName(ctType)
+	for i := 0; i < reflect.ValueOf(containers.Interface()).Len(); i++ {
+		resources := containers.Index(i).FieldByName("Resources")
+		if resources.FieldByName("Requests").IsNil() {
+			resources.FieldByName("Requests").Set(
+				reflect.ValueOf(corev1.ResourceList{}))
+		}
+		if resources.FieldByName("Limits").IsNil() {
+			resources.FieldByName("Limits").Set(
+				reflect.ValueOf(corev1.ResourceList{}))
+		}
+
+		for k, v := range targetResources.Requests {
+			resources.FieldByName("Requests").SetMapIndex(
+				reflect.ValueOf(k), reflect.ValueOf(v))
+		}
+		for k, v := range targetResources.Limits {
+			resources.FieldByName("Limits").SetMapIndex(
+				reflect.ValueOf(k), reflect.ValueOf(v))
+		}
+	}
+}

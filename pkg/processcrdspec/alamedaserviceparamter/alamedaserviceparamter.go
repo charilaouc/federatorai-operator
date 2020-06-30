@@ -3,10 +3,10 @@ package alamedaserviceparamter
 import (
 	"strings"
 
-	"github.com/pkg/errors"
-
 	"github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/util"
+	"github.com/pkg/errors"
+	corev1 "k8s.io/api/core/v1"
 )
 
 var (
@@ -411,6 +411,7 @@ type AlamedaServiceParamter struct {
 	Nginx                               v1alpha1.NginxSpec
 	ClusterAutoScaler                   v1alpha1.ClusterAutoScalerSpec
 	Storages                            []v1alpha1.StorageSpec
+	Resources                           corev1.ResourceRequirements
 	ServiceExposures                    []v1alpha1.ServiceExposureSpec
 	InfluxdbSectionSet                  v1alpha1.AlamedaComponentSpec
 	AlamedaAISectionSet                 v1alpha1.AlamedaComponentSpec
@@ -460,6 +461,7 @@ func NewAlamedaServiceParamter(
 		Kafka:                               instance.Spec.Kafka,
 		ClusterAutoScaler:                   instance.Spec.ClusterAutoScaler,
 		Storages:                            instance.Spec.Storages,
+		Resources:                           instance.Spec.Resources,
 		ServiceExposures:                    instance.Spec.ServiceExposures,
 		InfluxdbSectionSet:                  instance.Spec.InfluxdbSectionSet,
 		AlamedaAISectionSet:                 instance.Spec.AlamedaAISectionSet,

@@ -20,6 +20,8 @@ func GlobalSectionSetParamterToStatefulset(
 		util.SetStorageToMountPath(ss, asp.Storages, util.InfluxdbCTN,
 			"influxdb-type-storage", util.InfluxDBGroup)
 	}
+	util.SetResourcesForContainers(ss, asp.Resources, false)
+	util.SetResourcesForContainers(ss, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToDeployment(
@@ -121,6 +123,8 @@ func GlobalSectionSetParamterToDeployment(
 		util.SetStorageToMountPath(dep, asp.Storages, util.FederatoraiBackendCTN,
 			"federatorai-backend-type-storage", util.AlamedaGroup)
 	}
+	util.SetResourcesForContainers(dep, asp.Resources, false)
+	util.SetResourcesForContainers(dep, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToDaemonSet(
@@ -131,6 +135,8 @@ func GlobalSectionSetParamterToDaemonSet(
 			ds, util.AlamedaweavescopeAgentCTN,
 			asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
 	}
+	util.SetResourcesForContainers(ds, asp.Resources, false)
+	util.SetResourcesForContainers(ds, asp.Resources, true)
 }
 
 func GlobalSectionSetParamterToPersistentVolumeClaim(
