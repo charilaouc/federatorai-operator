@@ -294,7 +294,7 @@ spec:
   - description: This field is mandatory if type is _pvc_. It claims a persistent volume from K8s with the matching _storageClassName_.
 - Field: accessMode
   - type: string
-  - description: This field is for _pvc_ type. Is sets how the claimed volume is mounted. Default is _ReadWriteOnce_.
+  - description: This field is for _pvc_ type. Is sets how the claimed volume is mounted. Default is _ReadWriteMany_.
 
 ### AlamedaComponentSpec
 
