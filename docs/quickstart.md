@@ -56,7 +56,7 @@ spec:
   selfDriving: false            ## to enable resource self-orchestration of the deployed Federator.ai components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled	
   enableExecution: true
-  enableGui: true
+  enableGui: false
   enableFedemeter: true
   enableDispatcher: false
 
