@@ -463,6 +463,10 @@ fi
 sed -i "s/name: federatorai/name: ${install_namespace}/g" 00*.yaml
 sed -i "s/namespace: federatorai/namespace: ${install_namespace}/g" 01*.yaml 03*.yaml 05*.yaml 06*.yaml 07*.yaml
 
+if [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ]; then
+    sed -i -e "/image: /a\          resources:\n            limits:\n              cpu: 4000m\n              memory: 8000Mi\n            requests:\n              cpu: 100m\n              memory: 100Mi" `ls 03*.yaml`
+fi
+
 echo -e "\n$(tput setaf 2)Applying Federator.ai operator yaml files...$(tput sgr 0)"
 
 # kubectl get APIService v1beta1.admission.certmanager.k8s.io >/dev/null 2>&1
@@ -689,6 +693,52 @@ __EOF__
       type: NodePort
 __EOF__
         fi
+    fi
+
+    # Enable resource requirement configuration
+    if [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ]; then
+        cat >> ${alamedaservice_example} << __EOF__
+  resources:
+    limits:
+      cpu: 4000m
+      memory: 8000Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  alamedaAi:
+    resources:
+      limits:
+        cpu: 8000m
+        memory: 8000Mi
+      requests:
+        cpu: 2000m
+        memory: 1000Mi
+  alamedaDatahub:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+  alamedaInfluxdb:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+  alamedaOperator:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 250Mi
+  alamedaRabbitMQ:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 250Mi
+  fedemeterInfluxdb:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+__EOF__
     fi
 
     kubectl apply -f $alamedaservice_example &>/dev/null
