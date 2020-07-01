@@ -150,12 +150,6 @@ spec:
                   minItems: 1
                   type: array
               type: object
-            maxReplicas:
-              format: int32
-              type: integer
-            minReplicas:
-              format: int32
-              type: integer
             nginx:
               properties:
                 exporterNamespace:
@@ -278,6 +272,12 @@ spec:
                   type: object
                 machineGroupScaler:
                   type: string
+                maxReplicas:
+                  format: int32
+                  type: integer
+                minReplicas:
+                  format: int32
+                  type: integer
                 type:
                   enum:
                   - ""
