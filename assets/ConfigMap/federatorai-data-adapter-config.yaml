@@ -166,19 +166,3 @@ data:
           namespace = "<kafka_topic_namespace>"
           measurement = "kafka_topic_partition_current_offset"
           scope = "prediction"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "prediction"
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "recommendation"
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "planning"
