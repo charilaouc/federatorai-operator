@@ -31,37 +31,27 @@ data:
         drop_original = true
         namedrop = ["federatorai.*"]
 
+      #[[aggregators.federatorai]]
+      #  period = "1m"
+      #  drop_original = true
+      #  namepass = ["kafka_topic_partition_current_offset","kafka_consumer_group_current_offset","kafka_consumer_group_lag"]
+
+      #  [[aggregators.federatorai.metric]]
+      #      measurement_name = "kafka_topic_partition_current_offset"
+      #      expression = "sum(delta(kafka_topic_partition_current_offset[1m]))by(consumer_group,topic,namespace)"
+      #      fields = ["value"]
+      #  [[aggregators.federatorai.metric]]
+      #      measurement_name = "kafka_consumer_group_current_offset"
+      #      expression = "sum(delta(kafka_consumer_group_current_offset[1m]))by(consumer_group,topic,namespace)"
+      #      fields = ["value"]
+      #  [[aggregators.federatorai.metric]]
+      #      measurement_name = "kafka_consumer_group_lag"
+      #      expression = "sum(kafka_consumer_group_lag)by(namespace,consumer_group,topic)"
+      #      fields = ["value"]
+
       [[outputs.datahub]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
-
-      #[[inputs.datadog]]
-      #  urls = ["$DATADOG_QUERY_URL"]
-      #  api_key = "$DATADOG_API_KEY"
-      #  application_key = "$DATADOG_APPLICATION_KEY"
-      #  # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-      #  cluster_name = "$CLUSTER_NAME"
-      #  # Watched source
-      #  # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
-      #  [[inputs.datadog.watched_source]]
-      #    namespace = "<monitored_application_namespace>"
-      #    application = "<monitored_application>"
-      #    [[inputs.datadog.watched_source.watched_metrics]]
-      #      name="kubernetes.cpu.usage.total"
-      #      metric_type="CPU_MILLICORES_USAGE"
-      #    [[inputs.datadog.watched_source.watched_metrics]]
-      #      name="kubernetes.memory.usage"
-      #      metric_type="MEMORY_BYTES_USAGE"
-
-      #  [[inputs.datadog.watched_source]]
-      #    namespace = "<monitored_application_namespace>"
-      #    application = "<monitored_application>"
-      #    [[inputs.datadog.watched_source.watched_metrics]]
-      #      name="kubernetes.cpu.usage.total"
-      #      metric_type="CPU_MILLICORES_USAGE"
-      #    [[inputs.datadog.watched_source.watched_metrics]]
-      #      name="kubernetes.memory.usage"
-      #      metric_type="MEMORY_BYTES_USAGE"
 
       #[[inputs.prometheus_query]]
       #  url = "$PROMETHEUS_URL"
@@ -92,6 +82,50 @@ data:
           aggregation_type="diff"
 
       # anchor
+      [[inputs.datadog]]
+        urls = ["$DATADOG_QUERY_URL"]
+        api_key = "$DATADOG_API_KEY"
+        application_key = "$DATADOG_APPLICATION_KEY"
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        cluster_name = "$CLUSTER_NAME"
+        # Watched source
+        # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
+        [[inputs.datadog.watched_source]]
+          namespace = "<monitored_application_namespace>"
+          application = "<monitored_application>"
+          [[inputs.datadog.watched_source.watched_metrics]]
+            name="kubernetes.cpu.usage.total"
+            metric_type="CPU_MILLICORES_USAGE"
+          [[inputs.datadog.watched_source.watched_metrics]]
+            name="kubernetes.memory.usage"
+            metric_type="MEMORY_BYTES_USAGE"
+
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        ##The recommendation query range, unit: minutes
+        recommendation_interval = 5
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        cluster_name = "$CLUSTER_NAME"
+
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "prediction"
+
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "recommendation"
+
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "planning"
+
       [[inputs.datadog_application_aware]]
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
