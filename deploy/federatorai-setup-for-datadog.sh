@@ -6,6 +6,7 @@ show_usage()
 
     Usage:
         Requirement:
+            # Note: -k is for OpenShift env only.
             [-k OpenShift kubeconfig file] # e.g. -k .kubeconfig
                 File .kubeconfig can be created by using the following command.
                 sh -c "export KUBECONFIG=.kubeconfig; oc login <K8s_LOGIN_URL>"
@@ -330,6 +331,50 @@ restart_data_adapter_pod()
     wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 5
 }
 
+check_version()
+{
+    openshift_required_minor_version="9"
+    k8s_required_version="11"
+
+    oc version 2>/dev/null|grep "oc v"|grep -q " v[4-9]"
+    if [ "$?" = "0" ];then
+        # oc version is 4-9, passed
+        openshift_minor_version="12"
+        return 0
+    fi
+
+    # OpenShift Container Platform 4.x
+    oc version 2>/dev/null|grep -q "Server Version: 4"
+    if [ "$?" = "0" ];then
+        # oc server version is 4, passed
+        openshift_minor_version="12"
+        return 0
+    fi
+
+    oc version 2>/dev/null|grep "oc v"|grep -q " v[0-2]"
+    if [ "$?" = "0" ];then
+        # oc version is 0-2, failed
+        echo -e "\n$(tput setaf 10)Error! OpenShift version less than 3.$openshift_required_minor_version is not supported by Federator.ai$(tput sgr 0)"
+        exit 5
+    fi
+
+    # oc major version = 3
+    openshift_minor_version=`oc version 2>/dev/null|grep "oc v"|cut -d '.' -f2`
+    # k8s version = 1.x
+    k8s_version=`kubectl version 2>/dev/null|grep Server|grep -o "Minor:\"[0-9]*.\""|tr ':+"' " "|awk '{print $2}'`
+
+    if [ "$openshift_minor_version" != "" ] && [ "$openshift_minor_version" -lt "$openshift_required_minor_version" ]; then
+        echo -e "\n$(tput setaf 10)Error! OpenShift version less than 3.$openshift_required_minor_version is not supported by Federator.ai$(tput sgr 0)"
+        exit 5
+    elif [ "$openshift_minor_version" = "" ] && [ "$k8s_version" != "" ] && [ "$k8s_version" -lt "$k8s_required_version" ]; then
+        echo -e "\n$(tput setaf 10)Error! Kubernetes version less than 1.$k8s_required_version is not supported by Federator.ai$(tput sgr 0)"
+        exit 6
+    elif [ "$openshift_minor_version" = "" ] && [ "$k8s_version" = "" ]; then
+        echo -e "\n$(tput setaf 10)Error! Can't get Kubernetes or OpenShift version$(tput sgr 0)"
+        exit 5
+    fi
+}
+
 prepare_env()
 {
     get_alamedaservice_full_version
@@ -371,10 +416,16 @@ __EOF__
     configStr=$(./jq -c '.' $json_file)
 }
 
-if [ "$#" -eq "0" ]; then
-    show_usage
-    exit 1
-fi
+# If more option is added into script in the future, uncomment this section
+
+# if [ "$#" -eq "0" ]; then
+#     show_usage
+#     exit 1
+# fi
+
+echo "Checking environment version..."
+check_version
+echo "...Passed"
 
 while getopts "hk:" o; do
     case "${o}" in
@@ -398,15 +449,19 @@ file_folder="./config_result"
 current_location=`pwd`
 mkdir -p $file_folder
 
-if [ "${kubeconfig}" = "" ]; then
-    echo -e "\n$(tput setaf 1)Error! Need to use \"-k\" to specify openshift kubeconfig file.$(tput sgr 0)"
-    show_usage
+if [ "$openshift_minor_version" != "" ]; then
+    # OpenShift
+    if [ "${kubeconfig}" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Need to use \"-k\" to specify openshift kubeconfig file.$(tput sgr 0)"
+        show_usage
+    fi
+    export KUBECONFIG=${kubeconfig}
 fi
-export KUBECONFIG=${kubeconfig}
+
 # Check if kubectl connect to server.
 result="`echo ""|kubectl cluster-info 2>/dev/null`"
 if [ "$?" != "0" ]; then
-    echo -e "\n$(tput setaf 1)Error! Please login into OpenShift cluster first.$(tput sgr 0)"
+    echo -e "\n$(tput setaf 1)Error! Please login into cluster first.$(tput sgr 0)"
     exit 1
 fi
 current_server="`echo $result|sed 's/.*at //'|awk '{print $1}'`"
