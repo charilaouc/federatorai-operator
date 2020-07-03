@@ -93,6 +93,8 @@ data:
         [[inputs.datadog.watched_source]]
           namespace = "<monitored_application_namespace>"
           application = "<monitored_application>"
+          min_replicas = 0 # monitored_application_min_replicas
+          max_replicas = 0 # monitored_application_max_replicas
           [[inputs.datadog.watched_source.watched_metrics]]
             name="kubernetes.cpu.usage.total"
             metric_type="CPU_MILLICORES_USAGE"
