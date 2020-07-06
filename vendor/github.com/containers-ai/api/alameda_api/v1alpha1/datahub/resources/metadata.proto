@@ -1,0 +1,37 @@
+// This file has messages related to compute resources
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.resources;
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/resources";
+
+// Represents kubernetes resource kind
+enum Kind {
+    KIND_UNDEFINED   = 0;
+    DEPLOYMENT       = 1;
+    DEPLOYMENTCONFIG = 2;
+    STATEFULSET      = 3;
+    ALAMEDASCALER    = 4;
+}
+
+enum ScalingTool {
+    SCALING_TOOL_UNDEFINED = 0;
+    NONE                   = 1;
+    VPA                    = 2;
+    HPA                    = 3;
+    CA                     = 4;
+}
+
+message ObjectMeta {
+    string name         = 1;
+    string namespace    = 2;
+    string node_name    = 3;
+    string cluster_name = 4;
+    string uid          = 5;
+}
+
+message OwnerReference {
+    ObjectMeta object_meta = 1;
+    Kind       kind        = 2;
+}

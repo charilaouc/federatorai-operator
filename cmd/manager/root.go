@@ -25,19 +25,21 @@ import (
 	"github.com/containers-ai/federatorai-operator/pkg/protocol/grpc"
 	"github.com/containers-ai/federatorai-operator/pkg/version"
 	prom_op_api "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	"github.com/pkg/errors"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-
 	routev1 "github.com/openshift/api/route/v1"
 	securityv1 "github.com/openshift/api/security/v1"
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
 	"github.com/operator-framework/operator-sdk/pkg/metrics"
+	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	apiextensionv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	k8sapierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/wait"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	rest "k8s.io/client-go/rest"
@@ -261,7 +263,11 @@ func execute() {
 	}
 
 	// Create Service object to expose the metrics port.
-	_, err = metrics.ExposeMetricsPort(ctx, metricsPort)
+	_, err = metrics.CreateMetricsService(ctx, cfg, []corev1.ServicePort{
+		{
+			Port: metricsPort, Name: metrics.OperatorPortName, Protocol: corev1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: metricsPort},
+		},
+	})
 	if err != nil {
 		log.Info(err.Error())
 	}
@@ -301,7 +307,7 @@ func createCustomeResourceDefinitions(clientConfig *rest.Config) error {
 		crd := cc.NewCustomResourceDefinition(asset)
 		addCRDToRegisterdAPIResources(crd)
 		//use apiExtensionsClientset.ApiextensionsV1() in k8s 1.19 or later
-		_, err = apiExtensionsClientset.ApiextensionsV1beta1().CustomResourceDefinitions().Create(crd)
+		_, err = apiExtensionsClientset.ApiextensionsV1beta1().CustomResourceDefinitions().Create(context.TODO(), crd, metav1.CreateOptions{})
 		if err != nil && k8sapierrors.IsAlreadyExists(err) {
 			log.Info("CustomResourceDefinition is existing in cluster, will not create or update it.", "CustomResourceDefinition name", crd.Name)
 			continue

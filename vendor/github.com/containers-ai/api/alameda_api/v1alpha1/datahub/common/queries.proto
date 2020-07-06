@@ -1,0 +1,70 @@
+// This file has messages related general definitions
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.common;
+
+import "alameda_api/v1alpha1/datahub/common/types.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/common";
+
+/**
+ * Represents a time range definition
+ *
+ */
+message TimeRange {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time   = 2;
+    google.protobuf.Duration  step       = 3;
+    enum AggregateFunction {
+        NONE = 0;
+        MAX  = 1;
+        AVG  = 2;
+    }
+    AggregateFunction         aggregateFunction = 4;
+    google.protobuf.Timestamp apply_time        = 5;
+}
+
+message Condition {
+    repeated string          keys      = 1;
+    repeated string          values    = 2;
+    repeated string          operators = 3;
+    repeated common.DataType types     = 4;
+}
+
+message Function {
+    FunctionType    type               = 1;
+    repeated string fields             = 2;
+    repeated string tags               = 3;
+    string          target             = 4;
+    string          regular_expression = 5;
+    string          unit               = 6;
+    int64           number             = 7;
+}
+
+message Into {
+    string database                    = 1;
+    string retention_policy            = 2;
+    string measurement                 = 3;
+    bool   is_default_retention_policy = 4;
+    bool   is_all_measurements         = 5;
+}
+
+message QueryCondition {
+    TimeRange time_range = 1;
+    enum Order {
+        NONE = 0;
+        ASC  = 1;
+        DESC = 2;
+    }
+    Order              order           = 2;
+    Function           function        = 3;
+    Into               into            = 4;
+    string             where_clause    = 5;
+    repeated Condition where_condition = 6;
+    repeated string    selects         = 7;
+    repeated string    groups          = 8;
+    uint64             limit           = 9;
+}

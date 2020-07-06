@@ -1,7 +1,7 @@
 package updateresource
 
 import (
-	certmanagerv1alpha1 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha1"
+	certmanagerv1alpha3 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha3"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
@@ -129,7 +129,7 @@ func MisMatchResourceDaemonSet(clusterDS, sourceDS *appsv1.DaemonSet) bool {
 }
 
 // UpdateIssuer returns issuer that necessary fields have been updated
-func UpdateIssuer(from, to certmanagerv1alpha1.Issuer) certmanagerv1alpha1.Issuer {
+func UpdateIssuer(from, to certmanagerv1alpha3.Issuer) certmanagerv1alpha3.Issuer {
 
 	newIssuer := to.DeepCopy()
 
@@ -139,7 +139,7 @@ func UpdateIssuer(from, to certmanagerv1alpha1.Issuer) certmanagerv1alpha1.Issue
 
 // UpdateCertificate returns certificate that necessary fields have been updated
 func UpdateCertificate(
-	from, to certmanagerv1alpha1.Certificate) certmanagerv1alpha1.Certificate {
+	from, to certmanagerv1alpha3.Certificate) certmanagerv1alpha3.Certificate {
 
 	newCertificate := to.DeepCopy()
 

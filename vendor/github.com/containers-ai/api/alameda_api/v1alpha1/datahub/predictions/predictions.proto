@@ -1,0 +1,71 @@
+// This file has messages related to predictions of containers, pods, and nodes
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.predictions;
+
+import "alameda_api/v1alpha1/datahub/common/metrics.proto";
+import "alameda_api/v1alpha1/datahub/common/rawdata.proto";
+import "alameda_api/v1alpha1/datahub/common/types.proto";
+import "alameda_api/v1alpha1/datahub/predictions/types.proto";
+import "alameda_api/v1alpha1/datahub/resources/metadata.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/predictions";
+
+// Represents a list of predicted metric data of a container
+message ContainerPrediction {
+    string              name                      = 1;
+    repeated MetricData predicted_raw_data        = 2;
+    repeated MetricData predicted_upperbound_data = 3;
+    repeated MetricData predicted_lowerbound_data = 4;
+}
+
+// Represents a list of predicted metrics data of a pod
+message PodPrediction {
+    resources.ObjectMeta         object_meta           = 1;
+    repeated ContainerPrediction container_predictions = 2;
+}
+
+message ControllerPrediction  {
+    resources.ObjectMeta object_meta               = 1;
+    resources.Kind       kind                      = 2;
+    repeated MetricData  predicted_raw_data        = 3;
+    repeated MetricData  predicted_upperbound_data = 4;
+    repeated MetricData  predicted_lowerbound_data = 5;
+}
+
+message ApplicationPrediction  {
+    resources.ObjectMeta object_meta               = 1;
+    repeated MetricData  predicted_raw_data        = 2;
+    repeated MetricData  predicted_upperbound_data = 3;
+    repeated MetricData  predicted_lowerbound_data = 4;
+}
+
+message NamespacePrediction  {
+    resources.ObjectMeta object_meta               = 1;
+    repeated MetricData  predicted_raw_data        = 2;
+    repeated MetricData  predicted_upperbound_data = 3;
+    repeated MetricData  predicted_lowerbound_data = 4;
+}
+
+// Represents a list of predicted metric data of a node
+message NodePrediction {
+    resources.ObjectMeta object_meta               = 1;
+    bool                 is_scheduled              = 2;
+    repeated MetricData  predicted_raw_data        = 3;
+    repeated MetricData  predicted_upperbound_data = 4;
+    repeated MetricData  predicted_lowerbound_data = 5;
+}
+
+message ClusterPrediction {
+    resources.ObjectMeta object_meta               = 1;
+    repeated MetricData  predicted_raw_data        = 2;
+    repeated MetricData  predicted_upperbound_data = 3;
+    repeated MetricData  predicted_lowerbound_data = 4;
+}
+
+message WritePrediction {
+    common.MetricType       metric_type       = 1;
+    common.ResourceBoundary resource_boundary = 2;
+    common.WriteData        write_data        = 3;
+}

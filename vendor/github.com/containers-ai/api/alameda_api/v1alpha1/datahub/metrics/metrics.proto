@@ -1,0 +1,55 @@
+// This file has messages related to metric data of containers, pods, and nodes
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.metrics;
+
+import "alameda_api/v1alpha1/datahub/common/metrics.proto";
+import "alameda_api/v1alpha1/datahub/common/rawdata.proto";
+import "alameda_api/v1alpha1/datahub/resources/metadata.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/metrics";
+
+// Represents metric data of a container
+message ContainerMetric {
+    string                     name        = 1;
+    repeated common.MetricData metric_data = 2;
+}
+
+// Represents metric data of a pod
+message PodMetric {
+    resources.ObjectMeta     object_meta       = 1;
+    repeated ContainerMetric container_metrics = 2;
+}
+
+message ControllerMetric  {
+    resources.ObjectMeta       object_meta = 1;
+    resources.Kind             kind        = 2;
+    repeated common.MetricData metric_data = 3;
+}
+
+message ApplicationMetric  {
+    resources.ObjectMeta       object_meta = 1;
+    repeated common.MetricData metric_data = 2;
+}
+
+message NamespaceMetric  {
+    resources.ObjectMeta       object_meta = 1;
+    repeated common.MetricData metric_data = 2;
+}
+
+// Represents metric data of a node
+message NodeMetric {
+    resources.ObjectMeta       object_meta = 1;
+    repeated common.MetricData metric_data = 2;
+}
+
+message ClusterMetric  {
+    resources.ObjectMeta       object_meta = 1;
+    repeated common.MetricData metric_data = 2;
+}
+
+message WriteMetric {
+    common.MetricType metric_type = 1;
+    common.WriteData  write_data  = 2;
+}

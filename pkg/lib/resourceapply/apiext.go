@@ -1,6 +1,7 @@
 package resourceapply
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -22,7 +23,7 @@ var log = logf.Log.WithName("controller_alamedaservice")
 func CheckClusterType(client apiextclientv1beta1.CustomResourceDefinitionsGetter) string {
 	//crdName := "alamedaanomalies.analysis.containers.ai"
 	crdName := "projects.workflow.nks.netapp.io"
-	_, err := client.CustomResourceDefinitions().Get(crdName, metav1.GetOptions{})
+	_, err := client.CustomResourceDefinitions().Get(context.TODO(), crdName, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		log.Info("Not Found CRD", "CustomResourceDefinition.Name", crdName)
 		return "Opensift"
@@ -39,19 +40,18 @@ func ApplyCustomResourceDefinition(client apiextclientv1beta1.CustomResourceDefi
 	asp *alamedaserviceparamter.AlamedaServiceParamter) (*apiextv1beta1.CustomResourceDefinition, error) {
 
 	waitInterval := 500 * time.Millisecond
-
-	cluster, err := client.CustomResourceDefinitions().Get(required.Name, metav1.GetOptions{})
+	cluster, err := client.CustomResourceDefinitions().Get(context.TODO(), required.Name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		log.Info("Not Found CRD And Create", "CustomResourceDefinition.Name", required.Name)
 		if err := controllerutil.SetControllerReference(gcIns, required, scheme); err != nil {
 			return nil, errors.Errorf("Fail resourceCRD SetControllerReference: %s", err.Error())
 		}
-		actual, err := client.CustomResourceDefinitions().Create(required)
+		actual, err := client.CustomResourceDefinitions().Create(context.TODO(), required, metav1.CreateOptions{})
 		if err != nil {
 			return nil, errors.Wrapf(err, "apply CustomResourceDefinition %s failed", required.Name)
 		}
 		if err = wait.Poll(waitInterval, 30*time.Second, func() (bool, error) {
-			_, getErr := client.CustomResourceDefinitions().Get(required.Name, metav1.GetOptions{})
+			_, getErr := client.CustomResourceDefinitions().Get(context.TODO(), required.Name, metav1.GetOptions{})
 			if getErr == nil {
 				log.Info("Get CRD Ok", "CRD.Name", required.Name)
 				return true, nil
@@ -69,7 +69,7 @@ func ApplyCustomResourceDefinition(client apiextclientv1beta1.CustomResourceDefi
 		if err := controllerutil.SetControllerReference(gcIns, cluster, scheme); err != nil {
 			return nil, errors.Errorf("Fail resourceCRD SetControllerReference: %s", err.Error())
 		}
-		actual, err := client.CustomResourceDefinitions().Update(cluster)
+		actual, err := client.CustomResourceDefinitions().Update(context.TODO(), cluster, metav1.UpdateOptions{})
 		if err != nil {
 			return nil, errors.Wrapf(err, "update CustomResourceDefinition %s failed", required.Name)
 		}
@@ -82,7 +82,7 @@ func ApplyCustomResourceDefinition(client apiextclientv1beta1.CustomResourceDefi
 	return nil, nil
 }
 func DeleteCustomResourceDefinition(client apiextclientv1beta1.CustomResourceDefinitionsGetter, required *apiextv1beta1.CustomResourceDefinition) (*apiextv1beta1.CustomResourceDefinition, bool, error) {
-	existing, err := client.CustomResourceDefinitions().Get(required.Name, metav1.GetOptions{})
+	existing, err := client.CustomResourceDefinitions().Get(context.TODO(), required.Name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		log.Info("Not Found CRD", "CustomResourceDefinition.Name", required.Name)
 		return nil, false, err
@@ -91,7 +91,7 @@ func DeleteCustomResourceDefinition(client apiextclientv1beta1.CustomResourceDef
 		return nil, false, err
 	} else {
 		log.Info("Found CRD And Delete", "CustomResourceDefinition.Name", required.Name)
-		err = client.CustomResourceDefinitions().Delete(existing.Name, nil)
+		err = client.CustomResourceDefinitions().Delete(context.TODO(), existing.Name, metav1.DeleteOptions{})
 	}
 	return nil, false, err
 }

@@ -1,0 +1,70 @@
+// This file has messages related to compute resources
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.resources;
+
+import "alameda_api/v1alpha1/datahub/resources/metadata.proto";
+import "alameda_api/v1alpha1/datahub/resources/policies.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/resources";
+
+message AlamedaPodSpec {
+    ObjectMeta           alameda_scaler           = 1;
+    ScalingTool          scaling_tool             = 2;
+    string               used_recommendation_id   = 3;
+    RecommendationPolicy policy                   = 4;
+    ResourceRequirements alameda_scaler_resources = 5;
+}
+
+message AlamedaControllerSpec {
+    ObjectMeta           alameda_scaler                  = 1;
+    ScalingTool          scaling_tool                    = 2;
+    RecommendationPolicy policy                          = 3;
+    bool                 enable_recommendation_execution = 4;
+}
+
+message AlamedaApplicationSpec {
+    ScalingTool scaling_tool = 1;
+    int32       min_replicas = 2;
+    int32       max_replicas = 3;
+}
+
+message AlamedaNodeSpec {
+    Provider provider             = 1;
+    string   machineset_name      = 2;
+    string   machineset_namespace = 3;
+    bool     role_master          = 4;
+    bool     role_worker          = 5;
+    bool     role_infra           = 6;
+}
+
+// Represents the capacity of a Kubernetes node
+message Capacity {
+    int64 cpu_cores                   = 1;
+    int64 memory_bytes                = 2;
+    int64 network_megabits_per_second = 3;
+}
+
+message Provider {
+    string provider      = 1;
+    string instance_type = 2;
+    string region        = 3;
+    string zone          = 4;
+    string os            = 5;
+    string role          = 6;
+    string instance_id   = 7;
+    int64  storage_size  = 8;
+}
+
+/**
+ * ResourceRequirements describes the compute resource requirements
+ */
+message ResourceRequirements {
+    // limits describes the maximum amount of compute resources allowed
+    // use enum ResourceName as key of the map which defined in common
+    map<int32, string> limits = 1;
+    // requests describes the minimum amount of compute resources required
+    // use enum ResourceName as key of the map which defined in common
+    map<int32, string> requests = 2;
+}

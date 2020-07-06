@@ -43,18 +43,9 @@ cmd/patch/pkg/assets/bindata.go: $(GOBINDATA_BIN)
 	cd cmd/patch/assets && $(GOBINDATA_BIN) -pkg assets -o ../../../$@ \
 		./... \
 
-.PHONY: depend
-depend: $(GOBINDATA_BIN)
-	dep version || go get -u github.com/golang/dep/cmd/dep
-	dep ensure
-
-.PHONY: depend-update
-depend-update:
-	dep ensure -update
-
 .PHONY: build
 build: pkg/assets/bindata.go cmd/patch/pkg/assets/bindata.go ## build binaries
-	$(DOCKER_CMD) go build $(GOGCFLAGS) -ldflags "$(LD_FLAGS)" -o "$(BUILD_DEST)" "$(REPO_PATH)/cmd/manager"
+	$(DOCKER_CMD) go build -mod=vendor $(GOGCFLAGS) -ldflags "$(LD_FLAGS)" -o "$(BUILD_DEST)" "$(REPO_PATH)/cmd/manager"
 
 .PHONY: images
 images: ## Create images
@@ -85,7 +76,7 @@ vet: ## Apply go vet to all go files
 	hack/go-vet.sh ./...
 
 $(GOBINDATA_BIN):
-	go get -u github.com/shuLhan/go-bindata/...
+	go get -mod=readonly -u github.com/shuLhan/go-bindata/...
 
 .PHONY: help
 help:
@@ -93,7 +84,7 @@ help:
 
 .PHONY: osdk-check
 osdk-check:
-	export SDK_VERSION="v0.17.0"; \
+	export SDK_VERSION="v0.18.2"; \
 	if [ "`./operator-sdk version 2>&1 | cut -d\\" -f 2`" != "$${SDK_VERSION}" ]; then \
 	    curl -L https://github.com/operator-framework/operator-sdk/releases/download/$${SDK_VERSION}/operator-sdk-$${SDK_VERSION}-x86_64-linux-gnu > ./operator-sdk; \
 	    chmod 755 ./operator-sdk; \

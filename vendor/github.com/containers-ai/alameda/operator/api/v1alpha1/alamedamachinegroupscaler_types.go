@@ -63,8 +63,8 @@ type MachineSet struct {
 	Namespace      string `json:"namespace"`
 	MinReplicas    *int32 `json:"minReplicas,omitempty"`
 	MaxReplicas    *int32 `json:"maxReplicas,omitempty"`
-	ScaleUpDelay   *int32 `json:"scaleUpDelay,omitempty"`
-	ScaleDownDelay *int32 `json:"scaleDownDelay,omitempty"`
+	ScaleUpDelay   *int64 `json:"scaleUpDelay,omitempty"`
+	ScaleDownDelay *int64 `json:"scaleDownDelay,omitempty"`
 }
 
 type MetricRule struct {

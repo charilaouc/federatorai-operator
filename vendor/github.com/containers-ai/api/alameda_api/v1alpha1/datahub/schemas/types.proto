@@ -1,0 +1,42 @@
+// This file has messages related to recommendations of containers, pods, and nodes
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.schemas;
+
+import "alameda_api/v1alpha1/datahub/common/metrics.proto";
+import "alameda_api/v1alpha1/datahub/common/types.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/schemas";
+
+enum Scope {
+    SCOPE_UNDEFINED      = 0;
+    SCOPE_APPLICATION    = 1;
+    SCOPE_EXECUTION      = 2;
+    SCOPE_METRIC         = 3;
+    SCOPE_PLANNING       = 4;
+    SCOPE_PREDICTION     = 5;
+    SCOPE_RECOMMENDATION = 6;
+    SCOPE_RESOURCE       = 7;
+}
+
+message SchemaMeta {
+    Scope  scope    = 1;
+    string category = 2;
+    string type     = 3;
+}
+
+message Measurement {
+    string                  name              = 1;
+    common.MetricType       metric_type       = 2;
+    common.ResourceBoundary resource_boundary = 3;
+    common.ResourceQuota    resource_quota    = 4;
+    repeated Column         columns           = 5;
+}
+
+message Column {
+    string            name        = 1;
+    bool              required    = 2;
+    common.ColumnType column_type = 3;
+    common.DataType   data_type   = 4;
+}

@@ -1,0 +1,63 @@
+// This file has messages related to compute resources
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.resources;
+
+import "alameda_api/v1alpha1/datahub/resources/metadata.proto";
+import "alameda_api/v1alpha1/datahub/resources/status.proto";
+import "alameda_api/v1alpha1/datahub/resources/types.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/resources";
+
+// Represents a container and its containing limit and requeset configurations
+message Container {
+    string               name      = 1;
+    ResourceRequirements resources = 2;
+    ContainerStatus      status    = 3;
+}
+
+// Represents a Kubernetes pod
+message Pod {
+    ObjectMeta                object_meta      = 1;
+    google.protobuf.Timestamp start_time       = 2;
+    string                    resource_link    = 3;
+    string                    app_name         = 4;
+    string                    app_part_of      = 5;
+    AlamedaPodSpec            alameda_pod_spec = 6;
+    Controller                top_controller   = 7;
+    PodStatus                 status           = 8;
+    repeated Container        containers       = 9;
+}
+
+message Controller {
+    ObjectMeta              object_meta             = 1;
+    Kind                    kind                    = 2;
+    int32                   replicas                = 3;
+    int32                   spec_replicas           = 4;
+    AlamedaControllerSpec   alameda_controller_spec = 5;
+}
+
+message Application {
+    ObjectMeta             object_meta              = 1;
+    AlamedaApplicationSpec alameda_application_spec = 2;
+    repeated Controller    controllers              = 3;
+}
+
+message Namespace {
+    ObjectMeta object_meta = 1;
+}
+
+// Represents a Kubernetes node
+message Node {
+    ObjectMeta                object_meta        = 1;
+    google.protobuf.Timestamp start_time         = 2;
+    google.protobuf.Timestamp machine_start_time = 3;
+    Capacity                  capacity           = 4;
+    AlamedaNodeSpec           alameda_node_spec  = 5;
+}
+
+message Cluster {
+    ObjectMeta object_meta = 1;
+}

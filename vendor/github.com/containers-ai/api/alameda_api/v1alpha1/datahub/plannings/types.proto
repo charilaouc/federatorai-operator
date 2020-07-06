@@ -1,0 +1,57 @@
+// This file has messages related to plannings of containers, pods, and controllers
+
+syntax = "proto3";
+
+package containersai.alameda.v1alpha1.datahub.plannings;
+
+import "alameda_api/v1alpha1/datahub/common/metrics.proto";
+import "alameda_api/v1alpha1/datahub/common/rawdata.proto";
+import "alameda_api/v1alpha1/datahub/common/types.proto";
+import "alameda_api/v1alpha1/datahub/schemas/types.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/plannings";
+
+enum PlanningType {
+    PT_UNDEFINED      = 0;
+    PT_RECOMMENDATION = 1;
+    PT_PLANNING       = 2;
+}
+
+enum ControllerPlanningType {
+    CPT_UNDEFINED = 0;
+    CPT_PRIMITIVE = 1;
+    CPT_K8S       = 2;
+}
+
+message ControllerPlanningSpec {
+    int32                     current_replicas     = 1;
+    int32                     desired_replicas     = 2;
+    google.protobuf.Timestamp time                 = 3;
+    google.protobuf.Timestamp create_time          = 4;
+    double                    current_cpu_requests = 5;
+    double                    current_mem_requests = 6;
+    double                    current_cpu_limits   = 7;
+    double                    current_mem_limits   = 8;
+    double                    desired_cpu_limits   = 9;
+    double                    desired_mem_limits   = 10;
+    double                    total_cost           = 11;
+}
+
+message ControllerPlanningSpecK8s {
+    int32                     current_replicas = 1;
+    int32                     desired_replicas = 2;
+    google.protobuf.Timestamp time             = 3;
+    google.protobuf.Timestamp create_time      = 4;
+}
+
+message RawPlanning {
+    schemas.SchemaMeta    schema_meta   = 1;
+    repeated PlanningData planning_data = 2;
+}
+
+message PlanningData {
+    common.MetricType    metric_type    = 1;
+    common.ResourceQuota resource_quota = 2;
+    common.ReadData      read_data      = 3;
+}

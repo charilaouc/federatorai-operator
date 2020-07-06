@@ -165,9 +165,11 @@ const (
 type ScalingToolSpec struct {
 	// +kubebuilder:validation:Enum="";vpa;hpa;ca;N/A
 	Type               string             `json:"type,omitempty" protobuf:"bytes,1,name=type"`
-	ExecutionStrategy  *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,2,name=execution_strategy"`
-	CASafeToEvict      bool               `json:"caSafeToEvict,omitempty" protobuf:"bytes,4,name=caSafeToEvict"`
-	MachineGroupScaler string             `json:"machineGroupScaler,omitempty" protobuf:"bytes,5,name=machineGroupScaler"`
+	MinReplicas        *int32             `json:"minReplicas,omitempty" protobuf:"bytes,2,opt,name=min_replicas"`
+	MaxReplicas        *int32             `json:"maxReplicas,omitempty" protobuf:"bytes,3,opt,name=max_replicas"`
+	ExecutionStrategy  *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,4,name=execution_strategy"`
+	CASafeToEvict      bool               `json:"caSafeToEvict,omitempty" protobuf:"bytes,5,name=caSafeToEvict"`
+	MachineGroupScaler string             `json:"machineGroupScaler,omitempty" protobuf:"bytes,6,name=machineGroupScaler"`
 }
 
 //type AlamedaScalerType = string
