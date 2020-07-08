@@ -25,7 +25,7 @@ metadata:
 spec:
   selfDriving: false             ## to enable resource self-orchestration of the deployed Alameda components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled
-  enableExecution: true
+  enableExecution: false
   enableDispatcher: true        #use Dispatcher sent job to alameda-ai
   enableGui: false
   version: latest               ## for Alameda components. (exclude grafana and influxdb)
@@ -59,7 +59,7 @@ metadata:
 spec:
   selfDriving: false             ## to enable resource self-orchestration of the deployed Alameda components
                                 ## it is recommended NOT to use ephemeral data storage for Alameda influxdb component when self-Driving is enabled
-  enableExecution: true
+  enableExecution: false
   enableGui: false
   enableDispatcher: true        #use Dispatcher sent job to alameda-ai
   version: v0.3.38              ## for Alameda components. (exclude grafana and influxdb)
