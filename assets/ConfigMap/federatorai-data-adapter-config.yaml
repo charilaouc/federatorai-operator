@@ -88,7 +88,7 @@ data:
         application_key = "$DATADOG_APPLICATION_KEY"
         # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
-        enable_set_default_cloud_info_if_empty = false
+        enable_set_default_cloud_info_if_empty = true
         default_provider = "aws"
         default_region = "us-west1"
         default_instance_type = "m5.4xlarge"
