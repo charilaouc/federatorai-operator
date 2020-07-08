@@ -17,7 +17,6 @@
 #
 #   -t followed by tag_number
 #   -n followed by install_namespace
-#   -e followed by enable_execution (y or n)
 #   -p followed by prometheus_address
 #   -s followed by storage_type
 #   -l followed by log_size
@@ -70,7 +69,7 @@ webhook_reminder()
 {
     if [ "$openshift_minor_version" != "" ]; then
         echo -e "\n========================================"
-        echo -e "$(tput setaf 9)Note!$(tput setaf 10) Below $(tput setaf 9)two admission plugins $(tput setaf 10)needed to be enabled on $(tput setaf 9)every master nodes $(tput setaf 10)to let VPA Execution and Email Notifier working properly."
+        echo -e "$(tput setaf 9)Note!$(tput setaf 10) The following $(tput setaf 9)two admission plugins $(tput setaf 10)need to be enabled on $(tput setaf 9)each master node $(tput setaf 10)to make Email Notification work properly."
         echo -e "$(tput setaf 6)1. ValidatingAdmissionWebhook 2. MutatingAdmissionWebhook$(tput sgr 0)"
         echo -e "Steps: (On every master nodes)"
         echo -e "A. Edit /etc/origin/master/master-config.yaml"
@@ -373,7 +372,7 @@ done
 
 [ "${t_arg}" = "" ] && silent_mode_disabled="y"
 [ "${n_arg}" = "" ] && silent_mode_disabled="y"
-[ "${e_arg}" = "" ] && silent_mode_disabled="y"
+#[ "${e_arg}" = "" ] && silent_mode_disabled="y"
 [ "${p_arg}" = "" ] && silent_mode_disabled="y"
 [ "${s_arg}" = "" ] && silent_mode_disabled="y"
 [ "${s_arg}" = "persistent" ] && [ "${l_arg}" = "" ] && silent_mode_disabled="y"
@@ -382,7 +381,7 @@ done
 
 [ "${t_arg}" != "" ] && tag_number="${t_arg}"
 [ "${n_arg}" != "" ] && install_namespace="${n_arg}"
-[ "${e_arg}" != "" ] && enable_execution="${e_arg}"
+#[ "${e_arg}" != "" ] && enable_execution="${e_arg}"
 [ "${p_arg}" != "" ] && prometheus_address="${p_arg}"
 [ "${s_arg}" != "" ] && storage_type="${s_arg}"
 [ "${l_arg}" != "" ] && log_size="${l_arg}"
@@ -450,7 +449,7 @@ else
     echo -e "\n----------------------------------------"
     echo "tag_number=$tag_number"
     echo "install_namespace=$install_namespace"
-    echo "enable_execution=$enable_execution"
+    #echo "enable_execution=$enable_execution"
     echo "prometheus_address=$prometheus_address"
     echo "storage_type=$storage_type"
     echo "log_size=$log_size"
@@ -586,17 +585,12 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
     while [[ "$information_correct" != "y" ]] && [[ "$information_correct" != "Y" ]]
     do
         # init variables
-        enable_execution=""
         prometheus_address=""
         storage_type=""
         log_size=""
         data_size=""
         storage_class=""
         expose_service=""
-
-        default="y"
-        read -r -p "$(tput setaf 127)Do you want to enable execution? [default: y]: $(tput sgr 0): " enable_execution </dev/tty
-        enable_execution=${enable_execution:-$default}
 
         if [ "$set_prometheus_rule_to" = "y" ]; then
             get_recommended_prometheus_url
@@ -637,11 +631,7 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
 
         echo -e "\n----------------------------------------"
         echo "install_namespace = $install_namespace"
-        if [[ "$enable_execution" == "y" ]]; then
-            echo "enable_execution = true"
-        else
-            echo "enable_execution = false"
-        fi
+
         if [ "$set_prometheus_rule_to" = "y" ]; then
             echo "prometheus_address = $prometheus_address"
         fi
@@ -670,12 +660,6 @@ dashboard_frontend_node_port="31012"
 if [ "$need_upgrade" != "y" ]; then 
     # First time installation case
     sed -i "s|\bnamespace:.*|namespace: ${install_namespace}|g" ${alamedaservice_example}
-
-    if [[ "$enable_execution" == "y" ]]; then
-        sed -i "s/\benableExecution:.*/enableExecution: true/g" ${alamedaservice_example}
-    else
-        sed -i "s/\benableExecution:.*/enableExecution: false/g" ${alamedaservice_example}
-    fi
 
     if [ "$set_prometheus_rule_to" = "y" ]; then
         sed -i "s|\bprometheusService:.*|prometheusService: ${prometheus_address}|g" ${alamedaservice_example}
