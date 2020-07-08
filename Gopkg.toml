@@ -86,6 +86,10 @@ required = [
     non-go = false
     unused-packages = true
 
+  [[prune.project]]
+    name = "github.com/containers-ai/api"
+    unused-packages = true
+
 [[constraint]]
   name = "github.com/grpc-ecosystem/go-grpc-middleware"
   version = "1.1.0"

@@ -35,7 +35,7 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:a0b0265fb5e3fabb2b47851253d03ff0d69e13586b75c49f1b479d2b5b619a2b"
+  digest = "1:9d35e380bbd8d93dbc980ebe84d9fe340948b299ad9bbfff729b8cf49cbe13fe"
   name = "github.com/containers-ai/alameda"
   packages = [
     "operator/api/autoscaling/v1alpha1",
@@ -45,11 +45,11 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "6e45c41e011ee4d50fc47916ecce7ebac1706d93"
+  revision = "525a0e13b0b9a54adf4c0dd17f0775af6cf37aa7"
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:fe7706a5d9c99f7889ea86fc2bf9cb849cda438f54bebea4aa4d9fb388e2a296"
+  digest = "1:dd9c6b50f53eb8b19a4f72850ad926783c799b1a42017b7f4b70b36ef4bb366c"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -71,7 +71,7 @@
     "common",
     "datahub/keycodes",
   ]
-  pruneopts = "NT"
+  pruneopts = "NUT"
   revision = "d6b533b07c3394aa8d7c4adbddc25403edabe1cf"
 
 [[projects]]
