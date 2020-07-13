@@ -49,6 +49,19 @@ data:
       #      expression = "sum(kafka_consumer_group_lag)by(namespace,consumer_group,topic)"
       #      fields = ["value"]
 
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        ##The recommendation query range, unit: minutes
+        recommendation_interval = 5
+        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        cluster_name = "$CLUSTER_NAME"
+
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "prediction"
+
+
       [[outputs.datahub]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
