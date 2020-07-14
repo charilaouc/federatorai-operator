@@ -57,7 +57,7 @@ spec:
           periodSeconds: 60
           timeoutSeconds: 5
       volumes:
-      - name:  alameda-evictioner-data-storage
-      - name:  alameda-evictioner-log-storage
+      - name:  alameda-evictioner{{.VolumeNameSuffixes.Data}}
+      - name:  alameda-evictioner{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-evictioner
       serviceAccountName: alameda-evictioner

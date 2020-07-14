@@ -27,7 +27,7 @@ spec:
             - configMapRef:
                 name: fedemeter-config
         volumes:
-        - name: fedemeter-data-storage
-        - name: fedemeter-log-storage
+        - name: fedemeter{{.VolumeNameSuffixes.Data}}
+        - name: fedemeter{{.VolumeNameSuffixes.Log}}
         serviceAccount: fedemeter-api
         serviceAccountName: fedemeter-api

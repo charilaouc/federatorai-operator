@@ -47,8 +47,8 @@ spec:
           periodSeconds: 60
           timeoutSeconds: 5
       volumes:
-        - name: alameda-executor-data-storage
-        - name: alameda-executor-log-storage
+        - name: alameda-executor{{.VolumeNameSuffixes.Data}}
+        - name: alameda-executor{{.VolumeNameSuffixes.Log}}
         - name: alameda-executor-config
           configMap:
             name: alameda-executor-config

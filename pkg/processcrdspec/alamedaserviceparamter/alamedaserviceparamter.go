@@ -70,7 +70,7 @@ var (
 		"ClusterRoleBinding/alameda-influxdbCRB.yaml",
 		"ClusterRole/alameda-influxdbCR.yaml",
 		"Service/alameda-influxdbSV.yaml",
-		"Deployment/alameda-influxdbDM.yaml",
+		"StatefulSet/alameda-influxdbSS.yaml",
 		"Secret/alameda-influxdb.yaml",
 		"ServiceAccount/alameda-influxdbSA.yaml",
 	}
@@ -324,9 +324,9 @@ func GetAlamedaInfluxdbResource() Resource {
 }
 
 // GetAlamedaInfluxdbService returns service that needs to be installed for influxdb
-func GetAlamedaInfluxdbDeployment() string {
+func GetAlamedaInfluxdbStatefulSet() string {
 	for _, r := range influxDBList {
-		if strings.HasPrefix(r, "Deployment/") {
+		if strings.HasPrefix(r, "StatefulSet/") {
 			return r
 		}
 	}

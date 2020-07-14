@@ -80,12 +80,6 @@ func SectionSetParamterToDeployment(dep *appsv1.Deployment, asp *alamedaservicep
 		util.SetImagePullPolicy(dep, util.FedemeterCTN, asp.AlamedaFedemeterSectionSet.ImagePullPolicy)
 		util.SetStorageToVolumeSource(dep, asp.AlamedaFedemeterSectionSet.Storages, "fedemeter-type.pvc", util.FedemeterGroup)
 		util.SetStorageToMountPath(dep, asp.AlamedaFedemeterSectionSet.Storages, util.FedemeterCTN, "fedemeter-type-storage", util.FedemeterGroup)
-	case util.InfluxdbDPN:
-		envVars = asp.InfluxdbSectionSet.EnvVars
-		resources = asp.InfluxdbSectionSet.Resources
-		util.SetImagePullPolicy(dep, util.InfluxdbCTN, asp.InfluxdbSectionSet.ImagePullPolicy)
-		util.SetStorageToVolumeSource(dep, asp.InfluxdbSectionSet.Storages, "my-alameda.influxdb-type.pvc", util.InfluxDBGroup)
-		util.SetStorageToMountPath(dep, asp.InfluxdbSectionSet.Storages, util.InfluxdbCTN, "influxdb-type-storage", util.InfluxDBGroup)
 	case util.GrafanaDPN:
 		envVars = asp.GrafanaSectionSet.EnvVars
 		resources = asp.GrafanaSectionSet.Resources
@@ -166,7 +160,7 @@ func SectionSetParamterToDaemonSet(ds *appsv1.DaemonSet, asp *alamedaservicepara
 	case util.AlamedaweavescopeAgentDS:
 		envVars = asp.AlamedaWeavescopeSectionSet.EnvVars
 		resources = asp.AlamedaWeavescopeSectionSet.Resources
-		util.SetDaemonSetImagePullPolicy(ds, util.AlamedaweavescopeAgentCTN, asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
+		util.SetImagePullPolicy(ds, util.AlamedaweavescopeAgentCTN, asp.AlamedaWeavescopeSectionSet.ImagePullPolicy)
 	}
 
 	for i, container := range ds.Spec.Template.Spec.Containers {
@@ -182,10 +176,16 @@ func SectionSetParamterToStatefulSet(ss *appsv1.StatefulSet, asp *alamedaservice
 	envVars := []corev1.EnvVar{}
 	resources := corev1.ResourceRequirements{}
 	switch ss.Name {
-	case util.FedemeterInflixDBSSN:
+	case util.FedemeterInfluxDBSSN:
 		envVars = asp.AlamedaFedemeterInfluxdbSectionSet.EnvVars
 		resources = asp.AlamedaFedemeterInfluxdbSectionSet.Resources
-		util.SetStatefulSetImagePullPolicy(ss, util.FedemeterInfluxDBCTN, asp.InfluxdbSectionSet.ImagePullPolicy)
+		util.SetImagePullPolicy(ss, util.FedemeterInfluxDBCTN, asp.InfluxdbSectionSet.ImagePullPolicy)
+	case util.InfluxdbDPN:
+		envVars = asp.InfluxdbSectionSet.EnvVars
+		util.SetImagePullPolicy(ss, util.InfluxdbCTN, asp.InfluxdbSectionSet.ImagePullPolicy)
+		util.SetStorageToVolumeSource(ss, asp.InfluxdbSectionSet.Storages,
+			"my-alameda.influxdb-type.pvc", util.InfluxDBGroup)
+		util.SetStorageToMountPath(ss, asp.InfluxdbSectionSet.Storages, util.InfluxdbCTN, "influxdb-type-storage", util.InfluxDBGroup)
 	}
 
 	for i, container := range ss.Spec.Template.Spec.Containers {

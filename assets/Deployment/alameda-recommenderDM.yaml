@@ -49,8 +49,8 @@ spec:
           periodSeconds: 60
           timeoutSeconds: 5
       volumes:
-        - name: alameda-recommender-data-storage
-        - name: alameda-recommender-log-storage
+        - name: alameda-recommender{{.VolumeNameSuffixes.Data}}
+        - name: alameda-recommender{{.VolumeNameSuffixes.Log}}
         - name: alameda-recommender-config
           configMap:
             name: alameda-recommender-config
