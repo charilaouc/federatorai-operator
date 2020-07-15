@@ -257,7 +257,12 @@ func SectionSetParamterToStatefulSet(
 		resources = asp.AlamedaFedemeterInfluxdbSectionSet.Resources
 		util.SetImagePullPolicy(
 			ss, util.FedemeterInfluxDBCTN,
-			asp.InfluxdbSectionSet.ImagePullPolicy)
+			asp.AlamedaFedemeterInfluxdbSectionSet.ImagePullPolicy)
+		util.SetStorageToVolumeSource(ss, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+			"fedemeter-influxdb-type.pvc", util.InfluxDBGroup)
+		util.SetStorageToMountPath(ss, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+			util.FedemeterInfluxDBCTN,
+			"fedemeter-influxdb-type-storage", util.InfluxDBGroup)
 	case util.InfluxdbDPN:
 		envVars = asp.InfluxdbSectionSet.EnvVars
 		resources = asp.InfluxdbSectionSet.Resources

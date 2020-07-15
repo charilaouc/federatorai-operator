@@ -13,10 +13,9 @@ require (
 	github.com/go-logr/zapr v0.1.1
 	github.com/go-openapi/spec v0.19.7
 	github.com/go-openapi/swag v0.19.9 // indirect
-	github.com/golang/protobuf v1.4.1
+	github.com/golang/protobuf v1.4.2
 	github.com/googleapis/gnostic v0.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/influxdata/influxdb1-client v0.0.0-20191209144304-8bf82d3c094d
 	github.com/jetstack/cert-manager v0.15.2
 	github.com/kr/pretty v0.2.0 // indirect
@@ -43,7 +42,6 @@ require (
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/genproto v0.0.0-20200603110839-e855014d5736
 	google.golang.org/grpc v1.29.1
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200603094226-e3079894b1e8
 	k8s.io/api v0.18.5
 	k8s.io/apiextensions-apiserver v0.18.5
@@ -51,8 +49,7 @@ require (
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/kube-aggregator v0.18.5
 	k8s.io/kube-openapi v0.0.0-20200410145947-61e04a5be9a6
-	k8s.io/utils v0.0.0-20200414100711-2df71ebbae66 // indirect
-	sigs.k8s.io/controller-runtime v0.6.0
+	sigs.k8s.io/controller-runtime v0.6.1
 )
 
 replace k8s.io/client-go => k8s.io/client-go v0.18.5

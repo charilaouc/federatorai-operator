@@ -14,6 +14,10 @@ func GlobalSectionSetParamterToStatefulset(
 	ss *appsv1.StatefulSet, asp *alamedaserviceparamter.AlamedaServiceParamter) {
 	switch ss.Name {
 	case util.FedemeterInfluxDBSSN:
+		util.SetStorageToVolumeSource(ss, asp.Storages,
+			"fedemeter-influxdb-type.pvc", util.InfluxDBGroup)
+		util.SetStorageToMountPath(ss, asp.Storages, util.FedemeterInfluxDBCTN,
+			"fedemeter-influxdb-type-storage", util.InfluxDBGroup)
 	case util.InfluxdbDPN:
 		util.SetStorageToVolumeSource(ss, asp.Storages,
 			"my-alameda.influxdb-type.pvc", util.InfluxDBGroup)
