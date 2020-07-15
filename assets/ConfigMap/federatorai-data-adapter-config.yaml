@@ -99,8 +99,11 @@ data:
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        ## If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
+        ## Cloud metric has 5 minutes to 10 minutes delay
+        cloud_metric_delay_interval = "10m0s"
+        ## Set default cloud information ifneeded
         enable_set_default_cloud_info_if_empty = true
         default_provider = "aws"
         default_region = "us-west1"
@@ -178,7 +181,7 @@ data:
 
         [[inputs.alameda_datahub_query.watched_source]]
           name = "<kafka_consumer_group_name>"
-          namespace = "<kafka_consumer_grou_namespace>"
+          namespace = "<kafka_consumer_group_namespace>"
           measurement = "kafka_consumer_group_current_offset"
           scope = "prediction"
 
