@@ -59,7 +59,7 @@ spec:
       - name: federatorai-agent-config
         configMap:
           name: federatorai-agent-config
-      - name: federatorai-agent-data-storage
-      - name: federatorai-agent-log-storage
+      - name: federatorai-agent{{.VolumeNameSuffixes.Data}}
+      - name: federatorai-agent{{.VolumeNameSuffixes.Log}}
       serviceAccount: federatorai-agent
       serviceAccountName: federatorai-agent

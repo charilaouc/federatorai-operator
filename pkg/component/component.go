@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/containers-ai/federatorai-operator/pkg/consts"
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 
@@ -57,9 +58,10 @@ type ComponentConfig struct {
 
 	Image ImageConfig
 
-	Prometheus      PrometheusConfig
-	Kafka           KafkaConfig
-	FedemeterConfig FedemeterConfig
+	Prometheus         PrometheusConfig
+	Kafka              KafkaConfig
+	FedemeterConfig    FedemeterConfig
+	VolumeNameSuffixes VolumeNameSuffixes
 }
 
 func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha1.AlamedaService, opts ...ComponentConfigOption) *ComponentConfig {
@@ -69,6 +71,10 @@ func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha
 		defaultPodSecurityPolicyGroup   = policyv1beta1.SchemeGroupVersion.Group
 		defaultPodSecurityPolicyVersion = policyv1beta1.SchemeGroupVersion.Version
 		defaultPrometheusConfig         = PrometheusConfig{}
+		defaultVolumeNameSuffixes       = VolumeNameSuffixes{
+			Data: consts.DataSuffix,
+			Log:  consts.LogSuffix,
+		}
 	)
 
 	c := ComponentConfig{
@@ -82,6 +88,7 @@ func NewComponentConfig(ptc PodTemplateConfig, alamedaService federatoraiv1alpha
 		Image:                    NewDefautlImageConfig(),
 		Prometheus:               defaultPrometheusConfig,
 		FedemeterConfig:          NewDefaultFedemeterConfig(),
+		VolumeNameSuffixes:       defaultVolumeNameSuffixes,
 	}
 
 	for _, opt := range opts {

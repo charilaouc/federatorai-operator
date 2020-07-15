@@ -89,7 +89,7 @@ spec:
         secret:
           defaultMode: 420
           secretName: alameda-operator-webhook-server-cert
-      - name:  alameda-operator-data-storage
-      - name:  alameda-operator-log-storage
+      - name:  alameda-operator{{.VolumeNameSuffixes.Data}}
+      - name:  alameda-operator{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-operator
       serviceAccountName: alameda-operator

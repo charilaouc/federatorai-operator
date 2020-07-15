@@ -61,7 +61,7 @@ spec:
         - name: alameda-ai-dispatcher-config
           configMap:
             name: alameda-ai-dispatcher-config
-        - name:  alameda-dispatcher-data-storage
-        - name:  alameda-dispatcher-log-storage
+        - name:  alameda-dispatcher{{.VolumeNameSuffixes.Data}}
+        - name:  alameda-dispatcher{{.VolumeNameSuffixes.Log}}
       serviceAccount: alameda-ai-dispatcher
       serviceAccountName: alameda-ai-dispatcher

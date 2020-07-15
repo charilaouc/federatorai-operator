@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: alameda-influxdb
   namespace: {{.NameSpace}}
@@ -52,11 +52,11 @@ spec:
           name: alameda-influxdb-tls
           readOnly: false
         - mountPath: /var/lib/influxdb
-          name: influxdb-data-storage
+          name: influxdb{{.VolumeNameSuffixes.Data}}
           subPath: influxdb
       volumes:
-      - name: influxdb-data-storage
-      - name: influxdb-log-storage
+      - name: influxdb{{.VolumeNameSuffixes.Data}}
+      - name: influxdb{{.VolumeNameSuffixes.Log}}
       - name: alameda-influxdb-tls
         secret:
           secretName: alameda-influxdb-tls

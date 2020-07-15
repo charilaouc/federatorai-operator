@@ -33,6 +33,11 @@ type KafkaConfig struct {
 	TLS  TLSConfig
 }
 
+type VolumeNameSuffixes struct {
+	Data string
+	Log  string
+}
+
 func NewDefaultFedemeterConfig() FedemeterConfig {
 	return FedemeterConfig{
 		FedemeterWorkerNodeLowerLimit: util.Openshift_FEDEMETER_WORKER_NODE_LOWER_LIMIT,

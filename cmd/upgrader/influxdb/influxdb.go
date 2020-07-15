@@ -178,7 +178,7 @@ func isAlamedaInfluxdbServiceExist(ctx context.Context, service corev1.Service) 
 	return exist, nil
 }
 
-func getInfluxdbConfigFromDeploymentAndService(deployment appsv1.Deployment, service corev1.Service) influxdb.Config {
+func getInfluxdbConfigFromStatefulSetAndService(deployment appsv1.StatefulSet, service corev1.Service) influxdb.Config {
 	i := influxdb.Config{}
 
 	enableHTTPS := false

@@ -62,5 +62,5 @@ spec:
         secret:
           defaultMode: 420
           secretName: alameda-notifier-webhook-server-cert
-      - name: alameda-notifier-data-storage
-      - name: alameda-notifier-log-storage
+      - name: alameda-notifier{{.VolumeNameSuffixes.Data}}
+      - name: alameda-notifier{{.VolumeNameSuffixes.Log}}
