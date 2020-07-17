@@ -102,7 +102,7 @@ data:
         ## If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
         ## Cloud metric has 5 minutes to 10 minutes delay
-        cloud_metric_delay_interval = "10m0s"
+        cloud_metric_delay_interval = "30m0s"
         ## Set default cloud information ifneeded
         enable_set_default_cloud_info_if_empty = true
         default_provider = "aws"
