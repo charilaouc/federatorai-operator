@@ -20,7 +20,7 @@ import (
 	"fmt"
 
 	// apivalidate "github.com/containers-ai/alameda/operator/api/validate"
-	"github.com/containers-ai/alameda/operator/pkg/utils"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	// ctrl "sigs.k8s.io/controller-runtime"
@@ -29,14 +29,16 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-type enableExecution = bool
+// +kubebuilder:validation:Enum=true;false
+type enableExecution bool
 
 const (
-	defaultEnableExecution = false
+	defaultEnableExecution enableExecution = false
 )
 
-type alamedaPolicy = string
-type NamespacedName = string
+// +kubebuilder:validation:Enum=stable;compact
+type alamedaPolicy string
+type NamespacedName string
 
 const (
 	RecommendationPolicySTABLE  alamedaPolicy = "stable"
@@ -56,7 +58,11 @@ type AlamedaPod struct {
 }
 
 func (p *AlamedaPod) GetNamespacedName() NamespacedName {
-	return utils.GetNamespacedNameKey(p.Namespace, p.Name)
+	return NamespacedName(getNamespacedNameKey(p.Namespace, p.Name))
+}
+
+func getNamespacedNameKey(namespace, name string) string {
+	return fmt.Sprintf("%s/%s", namespace, name)
 }
 
 type AlamedaResource struct {
@@ -70,7 +76,7 @@ type AlamedaResource struct {
 }
 
 func (a AlamedaResource) GetNamespacedName() NamespacedName {
-	return utils.GetNamespacedNameKey(a.Namespace, a.Name)
+	return NamespacedName(getNamespacedNameKey(a.Namespace, a.Name))
 }
 
 type AlamedaController struct {
@@ -150,7 +156,8 @@ func NewDefaultExecutionStrategy() ExecutionStrategy {
 	}
 }
 
-type ScalingToolType = string
+// +kubebuilder:validation:Enum="";vpa;hpa;N/A
+type ScalingToolType string
 
 const (
 	ScalingToolTypeVPA     ScalingToolType = "vpa"
@@ -159,14 +166,14 @@ const (
 )
 
 type ScalingToolSpec struct {
-	// +kubebuilder:validation:Enum="";vpa;hpa;N/A
-	Type              string             `json:"type,omitempty" protobuf:"bytes,1,name=type"`
+	Type              ScalingToolType    `json:"type,omitempty" protobuf:"bytes,1,name=type"`
 	MinReplicas       *int32             `json:"minReplicas,omitempty" protobuf:"bytes,2,opt,name=min_replicas"`
 	MaxReplicas       *int32             `json:"maxReplicas,omitempty" protobuf:"bytes,3,opt,name=max_replicas"`
 	ExecutionStrategy *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,4,name=execution_strategy"`
 }
 
-type AlamedaScalerType = string
+// +kubebuilder:validation:Enum="";default;kafka
+type AlamedaScalerType string
 
 const (
 	AlamedaScalerTypeNotDefine AlamedaScalerType = ""
@@ -204,14 +211,13 @@ type KubernetesResourceSpec struct {
 // AlamedaScalerSpec defines the desired state of AlamedaScaler
 // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 type AlamedaScalerSpec struct {
-	Selector        *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,1,name=selector"`
-	EnableExecution *enableExecution      `json:"enableExecution,omitempty" protobuf:"bytes,2,name=enable_execution"`
-	// +kubebuilder:validation:Enum=stable;compact
-	Policy                alamedaPolicy     `json:"policy,omitempty" protobuf:"bytes,3,opt,name=policy"`
-	CustomResourceVersion string            `json:"customResourceVersion,omitempty" protobuf:"bytes,4,opt,name=custom_resource_version"`
-	ScalingTool           ScalingToolSpec   `json:"scalingTool,omitempty" protobuf:"bytes,5,opt,name=scaling_tool"`
-	Type                  AlamedaScalerType `json:"type,omitempty" protobuf:"bytes,6,opt,name=type"`
-	Kafka                 *KafkaSpec        `json:"kafka,omitempty" protobuf:"bytes,7,opt,name=kafka"`
+	Selector              *metav1.LabelSelector `json:"selector,omitempty" protobuf:"bytes,1,name=selector"`
+	EnableExecution       *enableExecution      `json:"enableExecution,omitempty" protobuf:"bytes,2,name=enable_execution"`
+	Policy                alamedaPolicy         `json:"policy,omitempty" protobuf:"bytes,3,opt,name=policy"`
+	CustomResourceVersion string                `json:"customResourceVersion,omitempty" protobuf:"bytes,4,opt,name=custom_resource_version"`
+	ScalingTool           ScalingToolSpec       `json:"scalingTool,omitempty" protobuf:"bytes,5,opt,name=scaling_tool"`
+	Type                  AlamedaScalerType     `json:"type,omitempty" protobuf:"bytes,6,opt,name=type"`
+	Kafka                 *KafkaSpec            `json:"kafka,omitempty" protobuf:"bytes,7,opt,name=kafka"`
 }
 
 type KafkaStatus struct {

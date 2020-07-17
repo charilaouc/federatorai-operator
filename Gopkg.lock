@@ -35,21 +35,21 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:9d35e380bbd8d93dbc980ebe84d9fe340948b299ad9bbfff729b8cf49cbe13fe"
+  digest = "1:2026d6d9e960e9b997e35a23209d9eb4af8b031846720b793a2f7918a7dc18bf"
   name = "github.com/containers-ai/alameda"
   packages = [
-    "operator/api/autoscaling/v1alpha1",
+    "operator/api/v1alpha1",
     "operator/pkg/utils",
     "pkg/consts",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "e588bac70eaf859496ff996fc44a43f23d8f9f5d"
+  revision = "e5aa82c69b66d3abf7a0119d580259926d1c90b3"
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:3352384f3e96cb84d0998aa642fbca873b8bd06964eaa53b584ee6a522e82c8d"
+  digest = "1:e6b1f405e189673f5b5551f529c993570518645c0e4c31fc56bcfbcc7156d4f0"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -72,7 +72,7 @@
     "datahub/keycodes",
   ]
   pruneopts = "NUT"
-  revision = "b368d8c00a9db1766071bb2299e6f6d32c44d3b2"
+  revision = "5fa580d7ea1572e694cb53ee92a545e88300d2f4"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -1184,7 +1184,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/containers-ai/alameda/operator/api/autoscaling/v1alpha1",
+    "github.com/containers-ai/alameda/operator/api/v1alpha1",
     "github.com/containers-ai/alameda/pkg/utils/kubernetes",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/events",

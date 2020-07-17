@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/autoscaling/v1alpha1"
+	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/v1alpha1"
 
 	prom_patch "github.com/containers-ai/federatorai-operator/cmd/patch/prometheus"
 

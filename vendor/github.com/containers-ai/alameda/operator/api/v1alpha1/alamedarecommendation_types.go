@@ -49,7 +49,7 @@ type AlamedaRecommendation struct {
 }
 
 func (ar *AlamedaRecommendation) GetNamespacedName() NamespacedName {
-	return utils.GetNamespacedNameKey(ar.Namespace, ar.Name)
+	return NamespacedName(utils.GetNamespacedNameKey(ar.Namespace, ar.Name))
 }
 
 // +genclient
