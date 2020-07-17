@@ -119,6 +119,15 @@ patch_data_adapter_configmap()
         application_key = "\$DATADOG_APPLICATION_KEY"
         # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "\$CLUSTER_NAME"
+        ## Cloud metric has 5 minutes to 10 minutes delay
+        cloud_metric_delay_interval = "10m0s"
+        ## Set default cloud information ifneeded
+        enable_set_default_cloud_info_if_empty = true
+        default_provider = "aws"
+        default_region = "us-west1"
+        default_instance_type = "m5.4xlarge"
+        default_instance_id = "i-00cd730e045190cad"
+        default_zone = "us-west-1a"
         # Watched source
         # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
         [[inputs.datadog.watched_source]]
