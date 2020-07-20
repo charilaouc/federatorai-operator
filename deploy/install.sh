@@ -250,7 +250,7 @@ get_grafana_route()
         echo -e "\n========================================"
         echo "You can now access GUI through $(tput setaf 6)https://${link} $(tput sgr 0)"
         echo "Default login credential is $(tput setaf 6)admin/admin$(tput sgr 0)"
-        echo -e "\nAlso, you can start to apply alamedascaler CR for the namespace you would like to monitor."
+        echo -e "\nAlso, you can start to apply alamedascaler CR for the target you would like to monitor."
         echo "$(tput setaf 6)Review administration guide for further details.$(tput sgr 0)"
         echo "========================================"
         else
@@ -261,7 +261,7 @@ get_grafana_route()
             echo -e "\n========================================"
             echo "You can now access GUI through $(tput setaf 6)https://<YOUR IP>:$dashboard_frontend_node_port $(tput sgr 0)"
             echo "Default login credential is $(tput setaf 6)admin/admin$(tput sgr 0)"
-            echo -e "\nAlso, you can start to apply alamedascaler CR for the namespace you would like to monitor."
+            echo -e "\nAlso, you can start to apply alamedascaler CR for the target you would like to monitor."
             echo "$(tput setaf 6)Review administration guide for further details.$(tput sgr 0)"
             echo "========================================"
         fi

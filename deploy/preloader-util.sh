@@ -749,22 +749,37 @@ add_alamedascaler_for_nginx()
     start=`date +%s`
     echo -e "\n$(tput setaf 6)Adding NGINX alamedascaler ...$(tput sgr 0)"
     nginx_alamedascaler_file="nginx_alamedascaler_file"
+
+    if [ "$openshift_minor_version" = "" ]; then
+        # K8S
+        kind_type="Deployment"
+    else
+        # OpenShift
+        kind_type="DeploymentConfig"
+    fi
+
     kubectl get alamedascaler -n ${nginx_ns} 2>/dev/null|grep -q "nginx-alamedascaler"
     if [ "$?" != "0" ]; then
         cat > ${nginx_alamedascaler_file} << __EOF__
-apiVersion: autoscaling.containers.ai/v1alpha1
+apiVersion: autoscaling.containers.ai/v1alpha2
 kind: AlamedaScaler
 metadata:
-    name: nginx-app
+    name: nginx-alamedascaler
     namespace: ${nginx_ns}
 spec:
-    policy: stable
-    enableExecution: false
-    scalingTool:
-        type: ${autoscaling_method}
-    selector:
-        matchLabels:
-            app: ${nginx_name}
+    clusterName: ${cluster_name}
+    controllers:
+    - type: generic
+      enableExecution: false
+      scaling: ${autoscaling_method}
+      generic:
+        target:
+          namespace: ${nginx_ns}
+          name: ${nginx_name}
+          kind: ${kind_type}
+        hpaParameters:
+          maxReplicas: 40
+          minReplicas: 1
 __EOF__
         kubectl apply -f ${nginx_alamedascaler_file}
         if [ "$?" != "0" ]; then
@@ -982,6 +997,15 @@ disable_preloader_in_alamedaservice()
     echo "Duration disable_preloader_in_alamedaservice = $duration" >> $debug_log
 }
 
+get_cluster_name()
+{
+    cluster_name=`kubectl get cm cluster-info -n default -o yaml|grep uid|awk '{print $2}'`
+    if [ "$cluster_name" = "" ];then
+        echo -e "\n$(tput setaf 1)Error! Failed to get cluster name from cluster-info configmap.$(tput sgr 0)"
+        exit 3
+    fi
+}
+
 clean_environment_operations()
 {
     cleanup_influxdb_preloader_related_contents
@@ -1103,6 +1127,8 @@ mkdir -p $file_folder
 current_location=`pwd`
 cd $file_folder
 echo "Receiving command '$0 $@'" >> $debug_log
+
+get_cluster_name
 
 if [ "$prepare_environment" = "y" ]; then
     delete_all_alamedascaler
