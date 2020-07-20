@@ -4,8 +4,8 @@ go 1.13
 
 require (
 	cloud.google.com/go v0.56.0 // indirect
-	github.com/containers-ai/alameda v0.9.168-0.20200706014631-fbe20004c24a
-	github.com/containers-ai/api v4.2.790-0.20200701055307-09f6fd85b612+incompatible
+	github.com/containers-ai/alameda v0.9.168-0.20200714074612-47b570672d31
+	github.com/containers-ai/api v4.2.790-0.20200714053606-32a93688cdee+incompatible
 	github.com/coreos/prometheus-operator v0.39.0
 	github.com/emicklei/go-restful v2.9.6+incompatible // indirect
 	github.com/ghodss/yaml v1.0.0

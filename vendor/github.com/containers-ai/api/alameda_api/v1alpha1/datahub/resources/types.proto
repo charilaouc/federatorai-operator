@@ -21,13 +21,15 @@ message AlamedaControllerSpec {
     ObjectMeta           alameda_scaler                  = 1;
     ScalingTool          scaling_tool                    = 2;
     RecommendationPolicy policy                          = 3;
-    bool                 enable_recommendation_execution = 4;
+    int32                min_replicas                    = 4;
+    int32                max_replicas                    = 5;
+    bool                 enable_recommendation_execution = 6;
 }
 
 message AlamedaApplicationSpec {
     ScalingTool scaling_tool = 1;
-    int32       min_replicas = 2;
-    int32       max_replicas = 3;
+    string      app_spec     = 2;
+    string      selector     = 3;
 }
 
 message AlamedaNodeSpec {

@@ -8,12 +8,12 @@ github.com/PuerkitoBio/urlesc
 github.com/beorn7/perks/quantile
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/containers-ai/alameda v0.9.168-0.20200706014631-fbe20004c24a
+# github.com/containers-ai/alameda v0.9.168-0.20200714074612-47b570672d31
 github.com/containers-ai/alameda/operator/api/v1alpha1
 github.com/containers-ai/alameda/pkg/consts
 github.com/containers-ai/alameda/pkg/utils/kubernetes
 github.com/containers-ai/alameda/pkg/utils/log
-# github.com/containers-ai/api v4.2.790-0.20200701055307-09f6fd85b612+incompatible
+# github.com/containers-ai/api v4.2.790-0.20200714053606-32a93688cdee+incompatible
 github.com/containers-ai/api/alameda_api/v1alpha1/datahub
 github.com/containers-ai/api/alameda_api/v1alpha1/datahub/applications
 github.com/containers-ai/api/alameda_api/v1alpha1/datahub/common

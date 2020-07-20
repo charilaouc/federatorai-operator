@@ -165,10 +165,10 @@ github.com/containerd/go-runc v0.0.0-20180907222934-5a6d9f37cfa3/go.mod h1:IV7qH
 github.com/containerd/ttrpc v0.0.0-20190828154514-0e0f228740de/go.mod h1:PvCDdDGpgqzQIzDW1TphrGLssLDZp2GuS+X5DkEJB8o=
 github.com/containerd/ttrpc v1.0.1/go.mod h1:UAxOpgT9ziI0gJrmKvgcZivgxOp8iFPSk8httJEt98Y=
 github.com/containerd/typeurl v0.0.0-20180627222232-a93fcdb778cd/go.mod h1:Cm3kwCdlkCfMSHURc+r6fwoGH6/F1hH3S4sg0rLFWPc=
-github.com/containers-ai/alameda v0.9.168-0.20200706014631-fbe20004c24a h1:TIZKIXuzB4r99cOc4xlUj68JCdfh4FitRMepLSOw4RU=
-github.com/containers-ai/alameda v0.9.168-0.20200706014631-fbe20004c24a/go.mod h1:TNfsdgCH+D9uT2C41gc+uwYGZPpzoSHiFGwQm3Gp8b4=
-github.com/containers-ai/api v4.2.790-0.20200701055307-09f6fd85b612+incompatible h1:YIzr3WC483jteVQ/tk5CgxhjQRDF0qSl/+JxQ6NvJbU=
-github.com/containers-ai/api v4.2.790-0.20200701055307-09f6fd85b612+incompatible/go.mod h1:4lntUeoAjUdYzGVcVgb/N15po7roqVAgGWqeH1Twe04=
+github.com/containers-ai/alameda v0.9.168-0.20200714074612-47b570672d31 h1:l56emEfy6ao3kmQ1PCVv0GgRRFFgbji7kzV/in2buYA=
+github.com/containers-ai/alameda v0.9.168-0.20200714074612-47b570672d31/go.mod h1:aunlcprAEB/AiA7404If8phMjApBhNABCF5BxWq7e9g=
+github.com/containers-ai/api v4.2.790-0.20200714053606-32a93688cdee+incompatible h1:U6xoUpHzifJpaE3EQbJjnAhRyiEgnX59P15KQ8YWWV0=
+github.com/containers-ai/api v4.2.790-0.20200714053606-32a93688cdee+incompatible/go.mod h1:4lntUeoAjUdYzGVcVgb/N15po7roqVAgGWqeH1Twe04=
 github.com/coreos/bbolt v1.3.1-coreos.6/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
