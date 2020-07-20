@@ -253,10 +253,7 @@ type AlamedaScalerStatus struct {
 	Kafka             *KafkaStatus      `json:"kafka,omitempty" protobuf:"bytes,5,opt,name=kafka"`
 }
 
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +k8s:openapi-gen=true
-// +kubebuilder:resource:scope=Namespaced
+// +kubebuilder:object:root=true
 
 // AlamedaScaler is the Schema for the alamedascalers API
 type AlamedaScaler struct {
@@ -534,8 +531,7 @@ func (as *AlamedaScaler) setDefaultTriggerThreshold() {
 	as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold = &defaultTriggerThreshold
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
+// +kubebuilder:object:root=true
 // AlamedaScalerList contains a list of AlamedaScaler
 type AlamedaScalerList struct {
 	metav1.TypeMeta `json:",inline"`

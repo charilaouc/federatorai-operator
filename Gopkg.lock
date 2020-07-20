@@ -35,7 +35,7 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:2026d6d9e960e9b997e35a23209d9eb4af8b031846720b793a2f7918a7dc18bf"
+  digest = "1:ab273034999aacbd2ef947f75dafd21b26b3c09811999ec2cc4f34235e551a25"
   name = "github.com/containers-ai/alameda"
   packages = [
     "operator/api/v1alpha1",
@@ -45,7 +45,7 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "e5aa82c69b66d3abf7a0119d580259926d1c90b3"
+  revision = "0f9668af37eeb37a7ceb0381042e6a4b370d994f"
 
 [[projects]]
   branch = "4.3-husky"

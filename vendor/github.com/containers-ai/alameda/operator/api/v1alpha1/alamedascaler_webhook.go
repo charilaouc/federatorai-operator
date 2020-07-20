@@ -1,11 +1,9 @@
 package v1alpha1
 
-import (
 // autoscalingapi "github.com/containers-ai/alameda/operator/api"
 // runtime "k8s.io/apimachinery/pkg/runtime"
 // ctrl "sigs.k8s.io/controller-runtime"
 // "sigs.k8s.io/controller-runtime/pkg/webhook"
-)
 
 // func (r *AlamedaScaler) SetupWebhookWithManager(mgr ctrl.Manager) error {
 // 	r.Mgr = mgr
@@ -16,7 +14,7 @@ import (
 
 // // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 
-// // +kubebuilder:webhook:path=/mutate-autoscaling-containers-ai-v1alpha1-alamedascaler,mutating=true,failurePolicy=fail,groups=autoscaling.containers.ai,resources=alamedascalers,verbs=create;update,versions=v1alpha1,name=malamedascaler.kb.io
+// // +kubebuilder:webhook:path=/mutate-autoscaling-containers-ai-v1alpha1-alamedascaler,mutating=true,failurePolicy=fail,groups=autoscaling.containers.ai,resources=alamedascalers,verbs=create;update,versions=v1alpha1,name=malamedascaler.containers.ai
 
 // var _ webhook.Defaulter = &AlamedaScaler{}
 
@@ -28,7 +26,7 @@ import (
 // }
 
 // // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-// // +kubebuilder:webhook:verbs=create;update,path=/validate-autoscaling-containers-ai-v1alpha1-alamedascaler,mutating=false,failurePolicy=fail,groups=autoscaling.containers.ai,resources=alamedascalers,versions=v1alpha1,name=valamedascaler.kb.io
+// // +kubebuilder:webhook:verbs=create;update,path=/validate-autoscaling-containers-ai-v1alpha1-alamedascaler,mutating=false,failurePolicy=fail,groups=autoscaling.containers.ai,resources=alamedascalers,versions=v1alpha1,name=valamedascaler.containers.ai
 
 // var _ webhook.Validator = &AlamedaScaler{}
 
