@@ -10,6 +10,7 @@ import (
 	"time"
 
 	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/v1alpha1"
+	autoscaling_v1alpha2 "github.com/containers-ai/alameda/operator/api/v1alpha2"
 	fedOperator "github.com/containers-ai/federatorai-operator"
 	assets "github.com/containers-ai/federatorai-operator/assets"
 	"github.com/containers-ai/federatorai-operator/cmd/patch/prometheus"
@@ -235,6 +236,10 @@ func execute() {
 		log.Error(err, "")
 		os.Exit(1)
 	}
+	if err := autoscaling_v1alpha2.AddToScheme(mgr.GetScheme()); err != nil {
+		log.Error(err, "")
+		os.Exit(1)
+	}
 	if err := autoscaling_v1alpha1.AddToScheme(mgr.GetScheme()); err != nil {
 		log.Error(err, "")
 		os.Exit(1)
@@ -315,14 +320,17 @@ func addCRDToRegisterdAPIResources(crd *apiextensionv1beta1.CustomResourceDefini
 	group := crd.Spec.Group
 	kind := crd.Spec.Names.Kind
 
-	if crd.Spec.Version != "" {
-		version := crd.Spec.Version
-		groupVersionKind := fmt.Sprintf("%s/%s/%s", group, version, kind)
-		addAPIResource(groupVersionKind, registerdAPIResources)
+	for _, crdVersion := range crd.Spec.Versions {
+		if crdVersion.Storage {
+			version := crdVersion.Name
+			groupVersionKind := fmt.Sprintf("%s/%s/%s", group, version, kind)
+			addAPIResource(groupVersionKind, registerdAPIResources)
+			return
+		}
 	}
 
-	for _, crdVersion := range crd.Spec.Versions {
-		version := crdVersion.Name
+	if crd.Spec.Version != "" {
+		version := crd.Spec.Version
 		groupVersionKind := fmt.Sprintf("%s/%s/%s", group, version, kind)
 		addAPIResource(groupVersionKind, registerdAPIResources)
 	}

@@ -241,20 +241,20 @@ var (
 	}
 
 	customResourceDefinitionList = []string{
-		"CustomResourceDefinition/alamedascalersCRD.yaml",
-		"CustomResourceDefinition/alamedascalersV2CRD.yaml",
+		//"CustomResourceDefinition/alamedascalersV1Alapha1CRD.yaml",
+		"CustomResourceDefinition/alamedascalersV1Alapha2CRD.yaml",
 		"CustomResourceDefinition/alamedarecommendationsCRD.yaml",
 		"CustomResourceDefinition/alamedanotificationchannels.yaml",
 		"CustomResourceDefinition/alamedanotificationtopics.yaml",
 		"CustomResourceDefinition/alamedadetectionsCRD.yaml",
 	}
 
-	alamedaScalerCRD = []string{
-		"CustomResourceDefinition/alamedascalersCRD.yaml",
+	alamedaScalerV1Alpha1CRD = []string{
+		"CustomResourceDefinition/alamedascalersV1Alapha1CRD.yaml",
 	}
 
-	alamedaScalerCRDV2 = []string{
-		"CustomResourceDefinition/alamedascalersV2CRD.yaml",
+	alamedaScalerV1Alpha2CRD = []string{
+		"CustomResourceDefinition/alamedascalersV1Alapha2CRD.yaml",
 	}
 
 	logPVCList = []string{
@@ -318,6 +318,15 @@ func GetPreloaderResource() *Resource {
 	return &r
 }
 
+/*
+func upgradeScalerFromV1Alpha1ToV1Alpha2(resource *Resource) {
+	v1alpha2Resource, _ := getResourceFromList(alamedaScalerV1Alpha2CRD)
+	(*resource).add(v1alpha2Resource)
+
+	v1alpha1Resource, _ := getResourceFromList(alamedaScalerV1Alpha1CRD)
+	(*resource).delete(v1alpha1Resource)
+}
+*/
 // GetExcutionResource returns resource that needs to be installed for Execution
 func GetExcutionResource() *Resource {
 	r, _ := getResourceFromList(hpaList)
@@ -581,13 +590,7 @@ func (asp *AlamedaServiceParamter) GetInstallResource() *Resource {
 		resource.add(r)
 	}
 
-	if asp.hasToInstallAlamedaAcalerV2() {
-		v2Resource, _ := getResourceFromList(alamedaScalerCRDV2)
-		resource.add(v2Resource)
-
-		defaultResource, _ := getResourceFromList(alamedaScalerCRD)
-		resource.delete(defaultResource)
-	}
+	//aupgradeScalerFromV1Alpha1ToV1Alpha2(&resource)
 
 	return &resource
 }
@@ -767,21 +770,6 @@ func (asp *AlamedaServiceParamter) changeScalerCRDVersion() {
 	if asp.CurrentCRDVersion.ScalerVersion != asp.previousCRDVersion.ScalerVersion {
 		asp.SetCurrentCRDChangeVersionToTrue()
 	}
-}
-
-func (asp *AlamedaServiceParamter) hasToInstallAlamedaAcalerV2() bool {
-
-	alamedaOperatorVersion := util.OriAlamedaOperatorVersion
-	if asp.Version != "" {
-		alamedaOperatorVersion = asp.Version
-	}
-	if asp.AlamedaOperatorSectionSet.Version != "" {
-		alamedaOperatorVersion = asp.AlamedaOperatorSectionSet.Version
-	}
-	if util.StringInSlice(alamedaOperatorVersion, util.V1scalerOperatorVersionList) { //check current operatorVersion used scaler version is scaler V1
-		return false
-	}
-	return true
 }
 
 func sectionUninstallPersistentVolumeClaimSource(pvc []string, storagestruct []v1alpha1.StorageSpec, resourceName string, resourceType v1alpha1.Usage) []string {

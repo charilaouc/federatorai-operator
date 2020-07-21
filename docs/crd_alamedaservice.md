@@ -403,8 +403,8 @@ spec:
 - Field: scalerversion
   - type: string
   - description: Describe the internal version that federatorai-operator install into the cluster.
-  V1 represents [file](../assets/CustomResourceDefinition/alamedascalersCRD.yaml).
-  V2 represents [file](../assets/CustomResourceDefinition/alamedascalersV2CRD.yaml). 
+  V1Alpha1 represents [file](../assets/CustomResourceDefinition/alamedascalersV1Alaph1CRD.yaml).
+  V1Alpha2 represents [file](../assets/CustomResourceDefinition/alamedascalersV1Alaph2CRD.yaml).
 - Field: crdname
   - type: string
   - description: The CRD name of AlamedaScaler installing into the cluster.

@@ -35,21 +35,22 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:ab273034999aacbd2ef947f75dafd21b26b3c09811999ec2cc4f34235e551a25"
+  digest = "1:cec5b986e830d64ab3bdec74e623c057d5e9ea5e123ebd1dac24cfe9665ef928"
   name = "github.com/containers-ai/alameda"
   packages = [
     "operator/api/v1alpha1",
+    "operator/api/v1alpha2",
     "operator/pkg/utils",
     "pkg/consts",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "0f9668af37eeb37a7ceb0381042e6a4b370d994f"
+  revision = "2b8a0787e996891eaf86d0de00cf85c39753c865"
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:e6b1f405e189673f5b5551f529c993570518645c0e4c31fc56bcfbcc7156d4f0"
+  digest = "1:9ddfefe37c39a3dac4ed7b7834f8476761fff3ffe1af573d45025e98fb1955a4"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -72,7 +73,7 @@
     "datahub/keycodes",
   ]
   pruneopts = "NUT"
-  revision = "5fa580d7ea1572e694cb53ee92a545e88300d2f4"
+  revision = "d32a90bbbaab92ad5ae55800c5a0ebb6714d4b99"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -1133,6 +1134,8 @@
   digest = "1:fdf6c6bbb39a27ec36f40aefa6dd3be37475210bbac2a808ddd7cc84715664f8"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
+    ".",
+    "pkg/builder",
     "pkg/cache",
     "pkg/cache/internal",
     "pkg/client",
@@ -1140,6 +1143,7 @@
     "pkg/client/config",
     "pkg/controller",
     "pkg/controller/controllerutil",
+    "pkg/conversion",
     "pkg/event",
     "pkg/handler",
     "pkg/healthz",
@@ -1165,6 +1169,7 @@
     "pkg/source/internal",
     "pkg/webhook",
     "pkg/webhook/admission",
+    "pkg/webhook/conversion",
     "pkg/webhook/internal/certwatcher",
     "pkg/webhook/internal/metrics",
   ]
@@ -1185,6 +1190,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/containers-ai/alameda/operator/api/v1alpha1",
+    "github.com/containers-ai/alameda/operator/api/v1alpha2",
     "github.com/containers-ai/alameda/pkg/utils/kubernetes",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/events",

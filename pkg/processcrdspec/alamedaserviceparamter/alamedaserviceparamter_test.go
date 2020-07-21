@@ -148,11 +148,11 @@ func TestGetInstallResource(t *testing.T) {
 		want: defaultResource,
 	}
 
-	defaultAlamedaScalerCRD, _ := getResourceFromList(alamedaScalerCRD)
-	v2AlamedaScalerCRD, _ := getResourceFromList(alamedaScalerCRDV2)
+	v1alpha1CRD, _ := getResourceFromList(alamedaScalerV1Alpha1CRD)
+	v1alpha2AlamedaScalerCRD, _ := getResourceFromList(alamedaScalerV1Alpha2CRD)
 	t1Want := defaultResource
-	t1Want.add(v2AlamedaScalerCRD)
-	t1Want.delete(defaultAlamedaScalerCRD)
+	t1Want.add(v1alpha2AlamedaScalerCRD)
+	t1Want.delete(v1alpha1CRD)
 	t1 := testCase{
 		have: v1alpha1.AlamedaService{
 			ObjectMeta: metav1.ObjectMeta{Namespace: ns, Name: name},
