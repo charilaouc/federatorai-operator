@@ -36,3 +36,5 @@ spec:
       volumes:
       - name: fedemeter-influxdb{{.VolumeNameSuffixes.Data}}
       - name: fedemeter-influxdb{{.VolumeNameSuffixes.Log}}
+      serviceAccount: fedemeter-influxdb
+      serviceAccountName: fedemeter-influxdb

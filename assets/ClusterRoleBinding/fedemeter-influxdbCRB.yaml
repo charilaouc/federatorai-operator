@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{.NameSpace}}-fedemeter-influxdb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{.NameSpace}}-fedemeter-influxdb
+subjects:
+- kind: ServiceAccount
+  name: fedemeter-influxdb
+  namespace: {{.NameSpace}}
