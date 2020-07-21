@@ -36,6 +36,8 @@ var (
 		"Service/federatorai-dashboard-frontendSV.yaml",
 		"Deployment/federatorai-dashboard-frontendDM.yaml",
 		"Route/federatorai-dashboard-frontendRT.yaml",
+		"ClusterRole/federatorai-dashboard-frontendCR.yaml",
+		"ClusterRoleBinding/federatorai-dashboard-frontendCRB.yaml",
 	}
 
 	backendList = []string{

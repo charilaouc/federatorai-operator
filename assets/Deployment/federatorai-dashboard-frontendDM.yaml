@@ -54,3 +54,5 @@ spec:
       volumes:
       - name:  federatorai-frontend{{.VolumeNameSuffixes.Data}}
       - name:  federatorai-frontend{{.VolumeNameSuffixes.Log}}
+      serviceAccount: federatorai-dashboard-frontend
+      serviceAccountName: federatorai-dashboard-frontend

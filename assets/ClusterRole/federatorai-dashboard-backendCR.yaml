@@ -10,3 +10,9 @@ rules:
   - ""
   resources:
   - namespaces
+- apiGroups:
+  - policy
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
