@@ -292,6 +292,20 @@ get_restapi_route()
     fi
 }
 
+check_previous_alamedascaler()
+{
+    while read version alamedascaler_name alamedascaler_ns
+    do
+        if [ "$version" = "" ] || [ "$alamedascaler_name" = "" ] || [ "$alamedascaler_ns" = "" ]; then
+           continue
+        fi
+
+        if [ "$version" = "autoscaling.containers.ai/v1alpha1" ]; then
+            echo -e "\n$(tput setaf 3)Warning!! Found alamedascaler with previous v1alpha1 version. Name: $alamedascaler_name Namespace: $alamedascaler_ns $(tput sgr 0)"
+        fi
+    done <<< "$(kubectl get alamedascaler --all-namespaces --output jsonpath='{range .items[*]}{"\n"}{.apiVersion}{"\t"}{.metadata.name}{"\t"}{.metadata.namespace}' 2>/dev/null)"
+}
+
 get_recommended_prometheus_url()
 {
     if [[ "$openshift_minor_version" == "11" ]] || [[ "$openshift_minor_version" == "12" ]]; then
@@ -555,7 +569,7 @@ wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 1
 echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully$(tput sgr 0)"
 
 alamedaservice_example="alamedaservice_sample.yaml"
-cr_files=( "alamedascaler.yaml" "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
+cr_files=( "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
 
 echo -e "\nDownloading alameda CR sample files ..."
 if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/federatorai-operator/${tag_number}/example/${alamedaservice_example} -O; then
@@ -568,6 +582,25 @@ do
     if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/alameda/${tag_number}/example/samples/nginx/${file_name} -O; then
         echo -e "\n$(tput setaf 1)Abort, download $file_name sample file failed!!!$(tput sgr 0)"
         exit 3
+    fi
+done
+
+# Three kinds of alamedascaler
+alamedascaler_filename="alamedascaler.yaml"
+src_pool=( "kafka" "nginx" "redis" )
+
+for pool in "${src_pool[@]}"
+do
+    if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/alameda/${tag_number}/example/samples/${pool}/${alamedascaler_filename} -O; then
+        echo -e "\n$(tput setaf 1)Abort, download $alamedascaler_filename sample file from $pool folder failed!!!$(tput sgr 0)"
+        exit 3
+    fi
+    if [ "$pool" = "kafka" ]; then
+        mv $alamedascaler_filename alamedascaler_kafka.yaml
+    elif [ "$pool" = "nginx" ]; then
+        mv $alamedascaler_filename alamedascaler_nginx.yaml
+    else
+        mv $alamedascaler_filename alamedascaler_generic.yaml
     fi
 done
 
@@ -777,6 +810,7 @@ fi
 get_grafana_route $install_namespace
 get_restapi_route $install_namespace
 echo -e "$(tput setaf 6)\nInstall Alameda $tag_number successfully$(tput sgr 0)"
+check_previous_alamedascaler
 leave_prog
 exit 0
 
