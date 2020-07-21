@@ -23,3 +23,9 @@ rules:
   verbs:
   - create
   - get
+- apiGroups:
+    - policy
+  resources:
+    - podsecuritypolicies
+  verbs:
+    - use
