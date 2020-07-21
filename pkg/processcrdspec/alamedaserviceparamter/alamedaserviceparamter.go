@@ -133,7 +133,9 @@ var (
 
 	fedemeterList = []string{
 		"ClusterRoleBinding/fedemeter-apiCRB.yaml",
+		"ClusterRoleBinding/fedemeter-influxdbCRB.yaml",
 		"ClusterRole/fedemeter-apiCR.yaml",
+		"ClusterRole/fedemeter-influxdbCR.yaml",
 		"Deployment/fedemeterDM.yaml",
 		"Service/fedemeterSV.yaml",
 		"ConfigMap/fedemeter-config.yaml",
@@ -141,6 +143,7 @@ var (
 		"StatefulSet/fedemeter-influxdbSS.yaml",
 		"Secret/fedemeter-tls.yaml",
 		"ServiceAccount/fedemeter-apiSA.yaml",
+		"ServiceAccount/fedemeter-influxdbSA.yaml",
 	}
 
 	aiDispatcherList = []string{
