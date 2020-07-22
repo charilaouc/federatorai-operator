@@ -110,6 +110,7 @@ data:
         default_instance_type = "m5.4xlarge"
         default_instance_id = "i-00cd730e045190cad"
         default_zone = "us-west-1a"
+        excluded_namespaces = ["kube-public", "kube-service-catalog", "kube-system", "management-infra", "kube-node-lease", "stackpoint-system", "marketplace", "openshift", "openshift-*"]
         # Watched source
         # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
         [[inputs.datadog.watched_source]]
