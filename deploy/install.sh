@@ -608,7 +608,7 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
         if [ "$openshift_minor_version" = "" ]; then
             #k8s
             default="y"
-            read -r -p "$(tput setaf 127)Do you want to expose Grafana and Rest API services for external access? [default: y]:$(tput sgr 0)" expose_service </dev/tty
+            read -r -p "$(tput setaf 127)Do you want to expose dashboard and REST API services for external access? [default: y]:$(tput sgr 0)" expose_service </dev/tty
             expose_service=${expose_service:-$default}
         fi
 
