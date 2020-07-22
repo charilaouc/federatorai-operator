@@ -302,6 +302,8 @@ scale_down_pods()
 {
     echo -e "\n$(tput setaf 6)Scaling down alameda-ai and alameda-ai-dispatcher ...$(tput sgr 0)"
     original_alameda_ai_replicas="`kubectl get deploy alameda-ai -n $install_namespace -o jsonpath='{.spec.replicas}'`"
+    # Bring down federatorai-operator to prevent it start scale down pods automatically
+    kubectl patch deployment federatorai-operator -n $install_namespace -p '{"spec":{"replicas": 0}}'
     kubectl patch deployment alameda-ai -n $install_namespace -p '{"spec":{"replicas": 0}}'
     kubectl patch deployment alameda-ai-dispatcher -n $install_namespace -p '{"spec":{"replicas": 0}}'
     kubectl patch deployment alameda-recommender -n $install_namespace -p '{"spec":{"replicas": 0}}'
@@ -327,6 +329,11 @@ scale_up_pods()
 
     if [ "`kubectl get deploy alameda-recommender -n $install_namespace -o jsonpath='{.spec.replicas}'`" -eq "0" ]; then
         kubectl patch deployment alameda-recommender -n $install_namespace -p '{"spec":{"replicas": 1}}'
+        do_something="y"
+    fi
+
+    if [ "`kubectl get deploy federatorai-operator -n $install_namespace -o jsonpath='{.spec.replicas}'`" -eq "0" ]; then
+        kubectl patch deployment federatorai-operator -n $install_namespace -p '{"spec":{"replicas": 1}}'
         do_something="y"
     fi
 
