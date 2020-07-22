@@ -28,7 +28,6 @@ var (
 		federatoraiRestList,
 		frontendList,
 		backendList,
-		federatoraiAgentAppList,
 		federatoraiDataAdapterList,
 	}
 
