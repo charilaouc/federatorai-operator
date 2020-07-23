@@ -246,6 +246,7 @@ rules:
   - watch
   - update
   - delete
+  - use
 - apiGroups:
   - notifying.containers.ai
   resources:
