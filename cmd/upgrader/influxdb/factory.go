@@ -5,7 +5,7 @@ import (
 	"github.com/containers-ai/federatorai-operator/pkg/component"
 	"github.com/containers-ai/federatorai-operator/pkg/influxdb"
 	"github.com/containers-ai/federatorai-operator/pkg/processcrdspec/alamedaserviceparamter"
-
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -27,6 +27,12 @@ func newResourceFactoryByAlamedaService(alamedaService federatoraiv1alpha1.Alame
 	}, nil
 }
 
+func (f resourceFactory) getAlamedaInfluxdbSts() *appsv1.StatefulSet {
+	influxdbStsAssets := alamedaserviceparamter.GetAlamedaInfluxdbStatefulSet()
+	influxdbSts := f.c.NewStatefulSet(influxdbStsAssets)
+	return influxdbSts
+}
+
 func (f resourceFactory) getAlamedaInfluxdbService() corev1.Service {
 	influxdbServiceAssets := alamedaserviceparamter.GetAlamedaInfluxdbService()
 	influxdbService := f.c.NewService(influxdbServiceAssets)
@@ -34,11 +40,11 @@ func (f resourceFactory) getAlamedaInfluxdbService() corev1.Service {
 }
 
 func (f resourceFactory) getAlamedaInfluxdbConfig() influxdb.Config {
-	influxdbDeploymentAssets := alamedaserviceparamter.GetAlamedaInfluxdbStatefulSet()
-	influxdbDeployment := f.c.NewStatefulSet(influxdbDeploymentAssets)
+	influxdbStsAssets := alamedaserviceparamter.GetAlamedaInfluxdbStatefulSet()
+	influxdbSts := f.c.NewStatefulSet(influxdbStsAssets)
 	influxdbServiceAssets := alamedaserviceparamter.GetAlamedaInfluxdbService()
 	influxdbService := f.c.NewService(influxdbServiceAssets)
-	influxdbConfig := getInfluxdbConfigFromStatefulSetAndService(*influxdbDeployment, *influxdbService)
+	influxdbConfig := getInfluxdbConfigFromStatefulSetAndService(*influxdbSts, *influxdbService)
 	return influxdbConfig
 }
 

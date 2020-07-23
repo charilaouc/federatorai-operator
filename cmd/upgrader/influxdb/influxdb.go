@@ -40,7 +40,7 @@ var (
 			if err != nil {
 				return errors.Wrap(err, "init k8s client failed")
 			}
-			return upgradeFromKiloToLima()
+			return removeInfluxDeploy()
 		},
 	}
 
@@ -48,7 +48,7 @@ var (
 	kiloDatabasesToDrop = []string{"alameda_cluster_status", "alameda_planning", "alameda_prediction"}
 	// limaNewMeasurements is a map from database name to list of measurements that are created since Lima
 	limaNewMeasurements = map[string][]string{
-		"alameda_cluster_status": []string{
+		"alameda_cluster_status": {
 			"namespace",
 		},
 	}
@@ -88,6 +88,49 @@ func initK8SClient() error {
 		return errors.Wrap(err, "new kubernetes in-cluster client failed")
 	}
 
+	return nil
+}
+
+func removeInfluxDeploy() error {
+	ctx, cancel := context.WithTimeout(context.Background(), upgradeTimeout)
+	defer cancel()
+	alamedaServices, err := listAlamedaServices(ctx)
+	if err != nil {
+		return errors.Wrap(err, "list alamedaservice failed")
+	}
+
+	for _, alamedaService := range alamedaServices {
+		logger = logger.WithValues(
+			"AlamedaService.Namespace", alamedaService.GetNamespace(),
+			"AlamedaService.Name", alamedaService.GetName())
+
+		resourceFactory, err := newResourceFactoryByAlamedaService(alamedaService)
+		if err != nil {
+			return errors.Wrap(err, "get resources template by alamedaservice failed")
+		}
+
+		service := resourceFactory.getAlamedaInfluxdbService()
+		exist, err := isAlamedaInfluxdbServiceExist(ctx, service)
+		if err != nil {
+			return errors.Wrap(err, "check if AlamedaInfluxdb service exists failed")
+		} else if !exist {
+			logger.Info("AlamedaInfluxdb Service not exist, skip upgradtion.")
+			continue
+		}
+
+		influxdbSts := resourceFactory.getAlamedaInfluxdbSts()
+		instance := appsv1.Deployment{}
+		err = k8sClient.Get(ctx, client.ObjectKey{
+			Namespace: influxdbSts.GetNamespace(),
+			Name:      influxdbSts.GetName(),
+		}, &instance)
+		if err == nil {
+			logger.Info("Influxdb deploy found and start deleting.")
+			return k8sClient.Delete(ctx, &instance)
+		} else if err != nil && !k8serrors.IsNotFound(err) {
+			return errors.Wrap(err, "get alameda influxdb deploy failed")
+		}
+	}
 	return nil
 }
 
