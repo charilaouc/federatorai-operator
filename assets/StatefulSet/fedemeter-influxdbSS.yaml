@@ -31,7 +31,7 @@ spec:
 #    memory: "1000Mi"
         volumeMounts:
         - mountPath: /var/lib/influxdb
-          name: influxdb{{.VolumeNameSuffixes.Data}}
+          name: fedemeter-influxdb{{.VolumeNameSuffixes.Data}}
           subPath: influxdb
       {{if .NodeSelector}}
       nodeSelector:
