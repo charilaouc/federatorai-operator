@@ -1563,11 +1563,11 @@ var fileDescriptor_cd8d84d7a87cec7d = []byte{
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConn
+var _ grpc.ClientConnInterface
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
+const _ = grpc.SupportPackageIsVersion6
 
 // OperatorServiceClient is the client API for OperatorService service.
 //
@@ -1586,10 +1586,10 @@ type OperatorServiceClient interface {
 }
 
 type operatorServiceClient struct {
-	cc *grpc.ClientConn
+	cc grpc.ClientConnInterface
 }
 
-func NewOperatorServiceClient(cc *grpc.ClientConn) OperatorServiceClient {
+func NewOperatorServiceClient(cc grpc.ClientConnInterface) OperatorServiceClient {
 	return &operatorServiceClient{cc}
 }
 

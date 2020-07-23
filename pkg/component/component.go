@@ -21,7 +21,7 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 
-	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/v1alpha1"
+	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/autoscaling/v1alpha1"
 	federatoraiv1alpha1 "github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/assets"
 	"github.com/containers-ai/federatorai-operator/pkg/lib/resourceread"

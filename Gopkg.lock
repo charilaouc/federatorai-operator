@@ -34,24 +34,22 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:6cfb97deb6733c4c686045a9a3c690a76a764c30c1fe08597219f70c13531574"
+  branch = "4.2-meemaw"
+  digest = "1:9d35e380bbd8d93dbc980ebe84d9fe340948b299ad9bbfff729b8cf49cbe13fe"
   name = "github.com/containers-ai/alameda"
   packages = [
-    "operator/api",
-    "operator/api/v1alpha1",
-    "operator/api/validate",
+    "operator/api/autoscaling/v1alpha1",
     "operator/pkg/utils",
     "pkg/consts",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "370fbf66e80cf812af0a208f158b2879195153f5"
+  revision = "38eb2351ecbb3091adfdf93d273394e0b21d3f10"
 
 [[projects]]
   branch = "4.2-meemaw"
-  digest = "1:dc9df731632bce7d93c3ff183ae16c26bd5b7b754a6c7cf782bf437ce67c6b14"
+  digest = "1:94da634e9b5c237bc1e89d278c18a7994d8dae9bcabce061e5d45bf9fc58e578"
   name = "github.com/containers-ai/api"
   packages = [
     "alameda_api/v1alpha1/datahub",
@@ -74,7 +72,7 @@
     "datahub/keycodes",
   ]
   pruneopts = "NT"
-  revision = "b889c9fe50a8d942ffd83355e648e9d59c87b543"
+  revision = "4f5ed2498d7c83e18114391451276cbbe40ff2a5"
 
 [[projects]]
   digest = "1:221a3d12fab137988ce057aabf120f77bc90e6e6a3ae6e5805f8be4534bd8024"
@@ -750,7 +748,7 @@
   revision = "6af8c5fc6601ab6b41cd32742a65ce2f5bd9db57"
 
 [[projects]]
-  digest = "1:d2c237dc4281b21718395454f2e51e246e17ab620d807609e2eb4d67686e1348"
+  digest = "1:f73f399d343673916516a7c6864fbdb8d83b972f27afb4171509b98ccdc4ff95"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -787,8 +785,8 @@
     "tap",
   ]
   pruneopts = "NT"
-  revision = "501c41df7f472c740d0674ff27122f3f48c80ce7"
-  version = "v1.21.1"
+  revision = "f495f5b15ae7ccda3b38c53a1bfcde4c1a58a2bc"
+  version = "v1.27.1"
 
 [[projects]]
   digest = "1:1b91ae0dc69a41d4c2ed23ea5cffb721ea63f5037ca4b81e6d6771fbb8f45129"
@@ -1131,8 +1129,6 @@
   digest = "1:fdf6c6bbb39a27ec36f40aefa6dd3be37475210bbac2a808ddd7cc84715664f8"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
-    ".",
-    "pkg/builder",
     "pkg/cache",
     "pkg/cache/internal",
     "pkg/client",
@@ -1140,7 +1136,6 @@
     "pkg/client/config",
     "pkg/controller",
     "pkg/controller/controllerutil",
-    "pkg/conversion",
     "pkg/event",
     "pkg/handler",
     "pkg/healthz",
@@ -1166,7 +1161,6 @@
     "pkg/source/internal",
     "pkg/webhook",
     "pkg/webhook/admission",
-    "pkg/webhook/conversion",
     "pkg/webhook/internal/certwatcher",
     "pkg/webhook/internal/metrics",
   ]
@@ -1186,7 +1180,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/containers-ai/alameda/operator/api/v1alpha1",
+    "github.com/containers-ai/alameda/operator/api/autoscaling/v1alpha1",
     "github.com/containers-ai/alameda/pkg/utils/kubernetes",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub",
     "github.com/containers-ai/api/alameda_api/v1alpha1/datahub/events",
