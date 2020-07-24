@@ -21,6 +21,9 @@ data:
         logfile_rotation_interval = "1d"
         logfile_rotation_max_archives = 7
         logfile_rotation_max_size = "100MB"
+        ## Query will retry if some metrics hasn't returned yet.
+        max_retry = 2
+        retry_interval = "15s"
         quiet = false
         hostname = ""
         omit_hostname = false
@@ -106,7 +109,7 @@ data:
         ## Set default cloud information ifneeded
         enable_set_default_cloud_info_if_empty = true
         default_provider = "aws"
-        default_region = "us-west1"
+        default_region = "us-west-1"
         default_instance_type = "m5.4xlarge"
         default_instance_id = "i-00cd730e045190cad"
         default_zone = "us-west-1a"
