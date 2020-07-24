@@ -15,8 +15,6 @@ spec:
     plural: alamedascalers
     singular: alamedascaler
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
       description: AlamedaScaler is the Schema for the alamedascalers API
