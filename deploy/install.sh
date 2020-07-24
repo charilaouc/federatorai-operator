@@ -22,6 +22,7 @@
 #   -s followed by storage_type
 #   -l followed by log_size
 #   -d followed by data_size
+#   -i followed by influxdb_size
 #   -c followed by storage_class
 #   -x followed by expose_service (y or n)
 #################################################################################################################
@@ -70,7 +71,7 @@ webhook_reminder()
 {
     if [ "$openshift_minor_version" != "" ]; then
         echo -e "\n========================================"
-        echo -e "$(tput setaf 9)Note!$(tput setaf 10) Below $(tput setaf 9)two admission plugins $(tput setaf 10)needed to be enabled on $(tput setaf 9)every master nodes $(tput setaf 10)to let VPA Execution and Email Notifier working properly."
+        echo -e "$(tput setaf 9)Note!$(tput setaf 10) The following $(tput setaf 9)two admission plugins $(tput setaf 10)need to be enabled on $(tput setaf 9)each master node $(tput setaf 10)to make VPA Execution and Email Notification work properly."
         echo -e "$(tput setaf 6)1. ValidatingAdmissionWebhook 2. MutatingAdmissionWebhook$(tput sgr 0)"
         echo -e "Steps: (On every master nodes)"
         echo -e "A. Edit /etc/origin/master/master-config.yaml"
@@ -316,6 +317,9 @@ while getopts "t:n:e:p:s:l:d:c:x:" o; do
         l)
             l_arg=${OPTARG}
             ;;
+        i)
+            i_arg=${OPTARG}
+            ;;
         d)
             d_arg=${OPTARG}
             ;;
@@ -339,6 +343,7 @@ done
 [ "${s_arg}" = "persistent" ] && [ "${l_arg}" = "" ] && silent_mode_disabled="y"
 [ "${s_arg}" = "persistent" ] && [ "${d_arg}" = "" ] && silent_mode_disabled="y"
 [ "${s_arg}" = "persistent" ] && [ "${c_arg}" = "" ] && silent_mode_disabled="y"
+[ "${s_arg}" = "persistent" ] && [ "${i_arg}" = "" ] && silent_mode_disabled="y"
 
 [ "${t_arg}" != "" ] && tag_number="${t_arg}"
 [ "${n_arg}" != "" ] && install_namespace="${n_arg}"
@@ -346,6 +351,7 @@ done
 [ "${p_arg}" != "" ] && prometheus_address="${p_arg}"
 [ "${s_arg}" != "" ] && storage_type="${s_arg}"
 [ "${l_arg}" != "" ] && log_size="${l_arg}"
+[ "${i_arg}" != "" ] && influxdb_size="${i_arg}"
 [ "${d_arg}" != "" ] && data_size="${d_arg}"
 [ "${c_arg}" != "" ] && storage_class="${c_arg}"
 [ "${x_arg}" != "" ] && expose_service="${x_arg}"
@@ -414,6 +420,7 @@ else
     echo "prometheus_address=$prometheus_address"
     echo "storage_type=$storage_type"
     echo "log_size=$log_size"
+    echo "influxdb_size=$influxdb_size"
     echo "data_size=$data_size"
     echo "storage_class=$storage_class"
     if [ "$openshift_minor_version" = "" ]; then
@@ -568,6 +575,7 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
         prometheus_address=""
         storage_type=""
         log_size=""
+        influxdb_size=""
         data_size=""
         storage_class=""
         expose_service=""
@@ -598,6 +606,9 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
             default="10"
             read -r -p "$(tput setaf 127)Specify data storage size [e.g., 10 for 10GB, default: 10]: $(tput sgr 0)" data_size </dev/tty
             data_size=${data_size:-$default}
+            default="100"
+            read -r -p "$(tput setaf 127)Specify InfluxDB storage size [e.g., 100 for 100GB, default: 100]: $(tput sgr 0)" influxdb_size </dev/tty
+            influxdb_size=${influxdb_size:-$default}
 
             while [[ "$storage_class" == "" ]]
             do
@@ -624,6 +635,7 @@ if [ "$silent_mode_disabled" = "y" ] && [ "$need_upgrade" != "y" ];then
         if [[ "$storage_type" == "persistent" ]]; then
             echo "log storage size = $log_size GB"
             echo "data storage size = $data_size GB"
+            echo "InfluxDB storage size = $influxdb_size GB"
             echo "storage class name = $storage_class"
         fi
         if [ "$openshift_minor_version" = "" ]; then
@@ -718,11 +730,6 @@ __EOF__
       requests:
         cpu: 500m
         memory: 500Mi
-  alamedaInfluxdb:
-    resources:
-      requests:
-        cpu: 500m
-        memory: 500Mi
   alamedaOperator:
     resources:
       requests:
@@ -738,6 +745,37 @@ __EOF__
       requests:
         cpu: 500m
         memory: 500Mi
+__EOF__
+    fi
+    if [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ] && [ "$storage_type" = "persistent" ]; then
+        cat >> ${alamedaservice_example} << __EOF__
+  alamedaInfluxdb:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+    storages:
+    - usage: data
+      type: pvc
+      size: ${influxdb_size}Gi
+      class: ${storage_class}
+__EOF__
+    elif [ "${ENABLE_RESOURCE_REQUIREMENT}" = "y" ] && [ "$storage_type" = "ephemeral" ]; then
+        cat >> ${alamedaservice_example} << __EOF__
+  alamedaInfluxdb:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 500Mi
+__EOF__
+    elif [ "${ENABLE_RESOURCE_REQUIREMENT}" != "y" ] && [ "$storage_type" = "persistent" ]; then
+        cat >> ${alamedaservice_example} << __EOF__
+  alamedaInfluxdb:
+    storages:
+    - usage: data
+      type: pvc
+      size: ${influxdb_size}Gi
+      class: ${storage_class}
 __EOF__
     fi
 
