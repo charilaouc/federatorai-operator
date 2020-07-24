@@ -252,6 +252,7 @@ var (
 
 	logPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml",
+		"PersistentVolumeClaim/fedemeter-influxdb-log.yaml",
 		"PersistentVolumeClaim/my-alameda-grafana-log.yaml",
 		"PersistentVolumeClaim/alameda-ai-log.yaml",
 		"PersistentVolumeClaim/alameda-operator-log.yaml",
@@ -275,6 +276,7 @@ var (
 
 	dataPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml",
+		"PersistentVolumeClaim/fedemeter-influxdb-data.yaml",
 		"PersistentVolumeClaim/my-alameda-grafana-data.yaml",
 		"PersistentVolumeClaim/alameda-ai-data.yaml",
 		"PersistentVolumeClaim/alameda-operator-data.yaml",
