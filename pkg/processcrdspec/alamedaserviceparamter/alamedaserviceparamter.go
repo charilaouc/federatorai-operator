@@ -244,6 +244,7 @@ var (
 
 	logPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml",
+		"PersistentVolumeClaim/fedemeter-influxdb-log.yaml",
 		"PersistentVolumeClaim/alameda-ai-log.yaml",
 		"PersistentVolumeClaim/alameda-operator-log.yaml",
 		"PersistentVolumeClaim/alameda-datahub-log.yaml",
@@ -266,6 +267,7 @@ var (
 
 	dataPVCList = []string{
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml",
+		"PersistentVolumeClaim/fedemeter-influxdb-data.yaml",
 		"PersistentVolumeClaim/alameda-ai-data.yaml",
 		"PersistentVolumeClaim/alameda-operator-data.yaml",
 		"PersistentVolumeClaim/alameda-datahub-data.yaml",
@@ -580,6 +582,9 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 		pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(
+		pvc, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-influxdb-log.yaml", v1alpha1.Log)
+	pvc = sectionUninstallPersistentVolumeClaimSource(
 		pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
 	pvc = sectionUninstallPersistentVolumeClaimSource(
@@ -636,6 +641,8 @@ func (asp *AlamedaServiceParamter) GetUninstallPersistentVolumeClaimSource() *Re
 
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
+	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-influxdb-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
 	pvc = sectionUninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
@@ -715,6 +722,8 @@ func (asp *AlamedaServiceParamter) getInstallPersistentVolumeClaimSource() []str
 
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-log.yaml", v1alpha1.Log)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-influxdb-log.yaml", v1alpha1.Log)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-log.yaml", v1alpha1.Log)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
@@ -757,6 +766,8 @@ func (asp *AlamedaServiceParamter) getInstallPersistentVolumeClaimSource() []str
 
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.InfluxdbSectionSet.Storages,
 		"PersistentVolumeClaim/my-alameda-influxdb-data.yaml", v1alpha1.Data)
+	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaFedemeterInfluxdbSectionSet.Storages,
+		"PersistentVolumeClaim/fedemeter-influxdb-data.yaml", v1alpha1.Data)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaAISectionSet.Storages,
 		"PersistentVolumeClaim/alameda-ai-data.yaml", v1alpha1.Data)
 	pvc = sectioninstallPersistentVolumeClaimSource(pvc, asp.AlamedaOperatorSectionSet.Storages,
