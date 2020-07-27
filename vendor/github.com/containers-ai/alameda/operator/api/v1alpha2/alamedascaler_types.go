@@ -85,6 +85,8 @@ type ConsumerGroup struct {
 	Name      string         `json:"name"`
 	Kind      ControllerKind `json:"kind"`
 	Topic     string         `json:"topic"`
+	// +optional
+	GroupId *string `json:"groupId"`
 }
 
 type KafkaHPAParameters struct {
