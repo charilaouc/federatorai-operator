@@ -221,7 +221,7 @@ wait_for_cluster_status_data_ready()
     sleep_interval="20"
     for i in $(seq 1 $repeat_count)
     do
-        kubectl exec $influxdb_pod_name -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_cluster_status -execute "select * from pod" 2>/dev/null |grep -q "nginx-app"
+        kubectl exec $influxdb_pod_name -n $install_namespace -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_cluster_status -execute "select * from pod" 2>/dev/null |grep -q "nginx-app"
         if [ "$?" != 0 ]; then
             echo "Not ready, keep retrying cluster status..."
             sleep $sleep_interval
