@@ -108,6 +108,6 @@ type ExecutionConfig struct {
 
 func NewDefaultExecutionConfig() ExecutionConfig {
 	return ExecutionConfig{
-		EnabledVPA: true,
+		EnabledVPA: false,
 	}
 }

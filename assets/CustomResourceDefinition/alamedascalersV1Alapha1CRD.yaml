@@ -178,9 +178,6 @@ spec:
                   - ""
                   - hpa
                   - N/A
-                  {{if .Execution.EnabledVPA}}
-                  - vpa
-                  {{end}}
                   type: string
               type: object
             selector:

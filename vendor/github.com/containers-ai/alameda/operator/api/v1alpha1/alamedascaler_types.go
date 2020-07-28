@@ -115,48 +115,7 @@ var (
 	}
 )
 
-type TriggerThreshold struct {
-	// +kubebuilder:validation:Pattern=^\d*[1-9]+\d*%$|^\d*[1-9]+\d*\.\d*%$|^\d*\.\d*[1-9]+\d*%$
-	CPU string `json:"cpu,omitempty" protobuf:"bytes,1,name=cpu"`
-	// +kubebuilder:validation:Pattern=^\d*[1-9]+\d*%$|^\d*[1-9]+\d*\.\d*%$|^\d*\.\d*[1-9]+\d*%$
-	Memory string `json:"memory,omitempty" protobuf:"bytes,2,name=memory"`
-}
-
-const (
-	DefaultTriggerThresholdCPUPercentage    = "10%"
-	DefaultTriggerThresholdMemoryPercentage = "10%"
-)
-
-func NewDefaultTriggerThreshold() TriggerThreshold {
-
-	return TriggerThreshold{
-		CPU:    DefaultTriggerThresholdCPUPercentage,
-		Memory: DefaultTriggerThresholdMemoryPercentage,
-	}
-}
-
-type ExecutionStrategy struct {
-	// +kubebuilder:validation:Pattern=^\d*[1-9]+\d*(%?$)$|^\d*[1-9]+\d*\.\d*(%?$)$|^\d*\.\d*[1-9]+\d*(%?$)$
-	MaxUnavailable   string                       `json:"maxUnavailable,omitempty" protobuf:"bytes,1,name=max_unavailable"`
-	TriggerThreshold *TriggerThreshold            `json:"triggerThreshold,omitempty" protobuf:"bytes,2,name=trigger_threshold"`
-	Resources        *corev1.ResourceRequirements `json:"resources,omitempty" protobuf:"bytes,3,name=resources"`
-}
-
-const (
-	DefaultMaxUnavailablePercentage = "25%"
-)
-
-func NewDefaultExecutionStrategy() ExecutionStrategy {
-
-	triggerThreshold := NewDefaultTriggerThreshold()
-
-	return ExecutionStrategy{
-		MaxUnavailable:   DefaultMaxUnavailablePercentage,
-		TriggerThreshold: &triggerThreshold,
-	}
-}
-
-// +kubebuilder:validation:Enum="";vpa;hpa;N/A
+// +kubebuilder:validation:Enum="";hpa;N/A
 type ScalingToolType string
 
 const (
@@ -166,10 +125,9 @@ const (
 )
 
 type ScalingToolSpec struct {
-	Type              ScalingToolType    `json:"type,omitempty" protobuf:"bytes,1,name=type"`
-	MinReplicas       *int32             `json:"minReplicas,omitempty" protobuf:"bytes,2,opt,name=min_replicas"`
-	MaxReplicas       *int32             `json:"maxReplicas,omitempty" protobuf:"bytes,3,opt,name=max_replicas"`
-	ExecutionStrategy *ExecutionStrategy `json:"executionStrategy,omitempty" protobuf:"bytes,4,name=execution_strategy"`
+	Type        ScalingToolType `json:"type,omitempty" protobuf:"bytes,1,name=type"`
+	MinReplicas *int32          `json:"minReplicas,omitempty" protobuf:"bytes,2,opt,name=min_replicas"`
+	MaxReplicas *int32          `json:"maxReplicas,omitempty" protobuf:"bytes,3,opt,name=max_replicas"`
 }
 
 // +kubebuilder:validation:Enum="";default;kafka
@@ -352,84 +310,6 @@ func (as *AlamedaScaler) GetMonitoredPods() []*AlamedaPod {
 	return pods
 }
 
-func (as *AlamedaScaler) GetLabelMapToSetToAlamedaRecommendationLabel() map[string]string {
-	m := make(map[string]string)
-	m["alamedascaler"] = fmt.Sprintf("%s.%s", as.GetName(), as.GetNamespace())
-	return m
-}
-
-func (as *AlamedaScaler) GetRequestCPUMilliCores() string {
-
-	cpuMilliCores := ""
-
-	executionStrategy := as.Spec.ScalingTool.ExecutionStrategy
-	if executionStrategy != nil {
-		if executionStrategy.Resources != nil {
-			if executionStrategy.Resources.Requests != nil {
-				if executionStrategy.Resources.Requests.Cpu() != nil {
-					cpuMilliCores = fmt.Sprintf("%d", executionStrategy.Resources.Requests.Cpu().MilliValue())
-				}
-			}
-		}
-	}
-
-	return cpuMilliCores
-}
-
-func (as *AlamedaScaler) GetRequestMemoryBytes() string {
-
-	memoryBytes := ""
-
-	executionStrategy := as.Spec.ScalingTool.ExecutionStrategy
-	if executionStrategy != nil {
-		if executionStrategy.Resources != nil {
-			if executionStrategy.Resources.Requests != nil {
-				if executionStrategy.Resources.Requests.Memory() != nil {
-					memoryBytes = fmt.Sprintf("%d", executionStrategy.Resources.Requests.Memory().Value())
-				}
-			}
-		}
-	}
-
-	return memoryBytes
-}
-
-func (as *AlamedaScaler) GetLimitCPUMilliCores() string {
-
-	cpuMilliCores := ""
-
-	executionStrategy := as.Spec.ScalingTool.ExecutionStrategy
-	if executionStrategy != nil {
-		if executionStrategy.Resources != nil {
-			if executionStrategy.Resources.Limits != nil {
-				if executionStrategy.Resources.Limits.Cpu() != nil {
-					cpuMilliCores = fmt.Sprintf("%d", executionStrategy.Resources.Limits.Cpu().MilliValue())
-				}
-			}
-		}
-	}
-
-	return cpuMilliCores
-}
-
-func (as *AlamedaScaler) GetLimitMemoryBytes() string {
-
-	memoryBytes := ""
-
-	executionStrategy := as.Spec.ScalingTool.ExecutionStrategy
-	if executionStrategy != nil {
-		if executionStrategy.Resources != nil {
-			if executionStrategy.Resources.Limits != nil {
-				if executionStrategy.Resources.Limits.Memory() != nil {
-					memoryBytes = fmt.Sprintf("%d", executionStrategy.Resources.Limits.Memory().Value())
-				}
-			}
-		}
-	}
-
-	return memoryBytes
-}
-
 func (as *AlamedaScaler) IsEnableExecution() bool {
 	if as.Spec.EnableExecution == nil || *as.Spec.EnableExecution == false {
 		return false
@@ -500,35 +380,6 @@ func (as *AlamedaScaler) setDefaultScalingTool() {
 	if as.Spec.ScalingTool.Type == "" {
 		as.Spec.ScalingTool.Type = ScalingToolTypeDefault
 	}
-
-	if as.Spec.ScalingTool.Type == ScalingToolTypeVPA {
-		if as.Spec.ScalingTool.ExecutionStrategy == nil {
-			as.setDefaultExecutionStrategy()
-		}
-		if as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "" || as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0" || as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable == "0%" {
-			as.Spec.ScalingTool.ExecutionStrategy.MaxUnavailable = DefaultMaxUnavailablePercentage
-		}
-
-		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold == nil {
-			as.setDefaultTriggerThreshold()
-		}
-		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.CPU == "" {
-			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.CPU = DefaultTriggerThresholdCPUPercentage
-		}
-		if as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.Memory == "" {
-			as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold.Memory = DefaultTriggerThresholdMemoryPercentage
-		}
-	}
-}
-
-func (as *AlamedaScaler) setDefaultExecutionStrategy() {
-	defaultExecutionStrategy := NewDefaultExecutionStrategy()
-	as.Spec.ScalingTool.ExecutionStrategy = &defaultExecutionStrategy
-}
-
-func (as *AlamedaScaler) setDefaultTriggerThreshold() {
-	defaultTriggerThreshold := NewDefaultTriggerThreshold()
-	as.Spec.ScalingTool.ExecutionStrategy.TriggerThreshold = &defaultTriggerThreshold
 }
 
 // +kubebuilder:object:root=true

@@ -11,7 +11,7 @@ import (
 
 var (
 	defaultInstallLists = [][]string{
-		[]string{
+		{
 			"ClusterRole/aggregate-alameda-admin-edit-alamedaCR.yaml",
 		},
 		customResourceDefinitionList,
@@ -496,7 +496,7 @@ func NewAlamedaServiceParamter(instance *v1alpha1.AlamedaService) *AlamedaServic
 		Platform:                            instance.Spec.Platform,
 		EnableExecution:                     instance.Spec.EnableExecution,
 		EnableGUI:                           instance.Spec.EnableGUI,
-		EnableVPA:                           *instance.Spec.EnableVPA,
+		EnableVPA:                           false,
 		EnableGPU:                           *instance.Spec.EnableGPU,
 		EnableDispatcher:                    *instance.Spec.EnableDispatcher,
 		EnableAgentApp:                      instance.Spec.EnableAgentApp,

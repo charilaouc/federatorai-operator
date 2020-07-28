@@ -35,18 +35,17 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:4d02ab2f2e60cb4fe27dba496f44865dae565a399609f7abce4b9673550d63cc"
+  digest = "1:6f23faf9b858a0157b3709d262e7dce8d797c891f9a19254b5a648c9d022d2ae"
   name = "github.com/containers-ai/alameda"
   packages = [
     "operator/api/v1alpha1",
     "operator/api/v1alpha2",
-    "operator/pkg/utils",
     "pkg/consts",
     "pkg/utils/kubernetes",
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "f5764a05f3ee578275e6cb2ebab236d727c03474"
+  revision = "da2cf465f4f448de4bfdda59ef0bb32981878e7a"
 
 [[projects]]
   branch = "4.3-husky"
@@ -406,8 +405,6 @@
   digest = "1:608f4cddd743c352714ad1503efc106ca2c691ec3ab59dfa9218bebaa489235a"
   name = "github.com/openshift/api"
   packages = [
-    "apps",
-    "apps/v1",
     "route",
     "route/v1",
     "security",
