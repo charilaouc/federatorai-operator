@@ -56,12 +56,6 @@ spec:
           value: "{{.Kafka.TLS.Enabled}}"
         - name: ALAMEDA_OPERATOR_KAFKA_TLS_INSECURESKIPVERIFY
           value: "{{.Kafka.TLS.InsecureSkipVerify}}"
-        - name: ALAMEDA_OPERATOR_PROMETHEUS_URL
-          value: "{{.Prometheus.Address}}"
-        - name: ALAMEDA_OPERATOR_PROMETHEUS_BEARERTOKENFILE
-          value: "{{.Prometheus.BearerTokenFile}}"
-        - name: ALAMEDA_OPERATOR_PROMETHEUS_TLSCONFIG_INSECURESKIPVERIFY
-          value: "{{.Prometheus.TLS.InsecureSkipVerify}}"
         readinessProbe:
           exec:
             command:
