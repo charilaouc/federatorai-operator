@@ -84,7 +84,7 @@ help:
 
 .PHONY: osdk-check
 osdk-check:
-	export SDK_VERSION="v0.18.2"; \
+	export SDK_VERSION="v0.19.0"; \
 	if [ "`./operator-sdk version 2>&1 | cut -d\\" -f 2`" != "$${SDK_VERSION}" ]; then \
 	    curl -L https://github.com/operator-framework/operator-sdk/releases/download/$${SDK_VERSION}/operator-sdk-$${SDK_VERSION}-x86_64-linux-gnu > ./operator-sdk; \
 	    chmod 755 ./operator-sdk; \

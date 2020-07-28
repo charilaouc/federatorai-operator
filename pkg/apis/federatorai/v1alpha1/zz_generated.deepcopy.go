@@ -134,7 +134,6 @@ func (in *AlamedaServiceSpec) DeepCopyInto(out *AlamedaServiceSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	in.Resources.DeepCopyInto(&out.Resources)
 	if in.ServiceExposures != nil {
 		in, out := &in.ServiceExposures, &out.ServiceExposures
 		*out = make([]ServiceExposureSpec, len(*in))
@@ -146,6 +145,7 @@ func (in *AlamedaServiceSpec) DeepCopyInto(out *AlamedaServiceSpec) {
 	in.Kafka.DeepCopyInto(&out.Kafka)
 	out.Nginx = in.Nginx
 	in.ClusterAutoScaler.DeepCopyInto(&out.ClusterAutoScaler)
+	in.Resources.DeepCopyInto(&out.Resources)
 	in.InfluxdbSectionSet.DeepCopyInto(&out.InfluxdbSectionSet)
 	in.AlamedaAISectionSet.DeepCopyInto(&out.AlamedaAISectionSet)
 	in.AlamedaOperatorSectionSet.DeepCopyInto(&out.AlamedaOperatorSectionSet)
