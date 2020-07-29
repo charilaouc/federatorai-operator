@@ -16,38 +16,6 @@ __EOF__
     exit 1
 }
 
-patch_alamedaservice()
-{
-    alamedaservice_yaml_name="alamedaservice_patch.yaml"
-    echo -e "\n$(tput setaf 3)Patching alamedaservice ...$(tput sgr 0)"
-
-    cluster_uid=`kubectl get cm cluster-info -n default -o jsonpath='{.metadata.uid}'`
-    if [ "$cluster_uid" = "" ]; then
-        echo -e "\n$(tput setaf 1)Error! Failed to get cluster uid.$(tput sgr 0)"
-        exit 8
-    fi
-
-    kubectl get alamedaservice $alamedaservice_name -n $install_namespace -o jsonpath='{.spec.federatoraiDataAdapter}'|grep -q "CLUSTER_NAME"
-    if [ "$?" != "0" ]; then
-
-        cat > $file_folder/${alamedaservice_yaml_name} << __EOF__
-spec:
-  federatoraiDataAdapter:
-    env:
-      - name: CLUSTER_NAME
-        value: ${cluster_uid}
-__EOF__
-
-        kubectl patch alamedaservice $alamedaservice_name -n $install_namespace --type merge --patch "$(cat $file_folder/${alamedaservice_yaml_name})"
-        if [ "$?" != "0" ];then
-            echo -e "\n$(tput setaf 1)Error! Failed to patch alamedaservice $alamedaservice_name.$(tput sgr 0)"
-            exit 8
-        fi
-        wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 5
-
-    fi
-    echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
-}
 
 patch_data_adapter_secret()
 {
@@ -79,13 +47,123 @@ patch_data_adapter_secret()
     echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
 }
 
-patch_data_adapter_configmap()
+add_alamedascaler_for_kafka()
 {
-    if [ "$configure_kafka" != "y" ] && [ "$configure_general" != "y" ]; then
-        echo -e "\n$(tput setaf 3)Warning! no kafka nor general application setting will be patching.$(tput sgr 0)"
+    if [ "$configure_kafka" != "y" ]; then
+        echo -e "\n$(tput setaf 3)Skipping Kafka alamedascaler setting...$(tput sgr 0)"
+        return
+    fi
+    echo -e "\n$(tput setaf 3)Adding alamedascaler for Kafka...$(tput sgr 0)"
+
+    index=0
+    count=$(./jq -r '.dataAdapterConfigmapForKafka | length' $json_file)
+    while [[ $index -lt $count ]]; do
+        yaml_name="alamedascaler-kafka-${index}.yaml"
+        scaler_name="alamedascaler-kafka-${index}"
+
+        clusterName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .clusterName' $json_file)
+        enableExecution=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .enableExecution' $json_file)
+        kafkaExporterNamespace=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaExporterNamespace' $json_file)
+        kafkaConsumerGroupKind=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupKind' $json_file)
+        kafkaConsumerGroupName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupName' $json_file)
+        kafkaConsumerGroupNamespace=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupNamespace' $json_file)
+        kafkaTopicName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaTopicName' $json_file)
+        kafkaConsumerGroupId=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupId' $json_file)
+        kafkaConsumerMinimumReplica=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMinimumReplica' $json_file)
+        kafkaConsumerMaximumReplica=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMaximumReplica' $json_file)
+
+        cat > $file_folder/$yaml_name << __EOF__
+apiVersion: autoscaling.containers.ai/v1alpha2
+kind: AlamedaScaler
+metadata:
+  name: ${scaler_name}
+  namespace: ${kafkaConsumerGroupNamespace}
+spec:
+  clusterName: ${clusterName}
+  controllers:
+    - type: kafka
+      enableExecution: ${enableExecution}
+      scaling: hpa
+      kafka:
+        exporterNamespace: ${kafkaExporterNamespace}
+        consumerGroup:
+          namespace: ${kafkaConsumerGroupNamespace}
+          name: ${kafkaConsumerGroupName}
+          kind: ${kafkaConsumerGroupKind}
+          topic: ${kafkaTopicName}
+          groupId: ${kafkaConsumerGroupId}
+        hpaParameters:
+          maxReplicas: ${kafkaConsumerMaximumReplica}
+          minReplicas: ${kafkaConsumerMinimumReplica}
+__EOF__
+        kubectl apply -f $file_folder/$yaml_name
+        if [ "$?" != "0" ]; then
+            echo -e "\n$(tput setaf 1)Error! Failed to apply Kafka alamedascaler file $file_folder/$yaml_name $(tput sgr 0)"
+            exit 1
+        fi
+        ((index = index + 1))
+    done
+
+    echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
+}
+
+add_alamedascaler_for_generic_app()
+{
+    if [ "$configure_general" != "y" ]; then
+        echo -e "\n$(tput setaf 3)Skipping generic application alamedascaler setting....$(tput sgr 0)"
         return
     fi
 
+    echo -e "\n$(tput setaf 3)Adding alamedascaler for generic applications...$(tput sgr 0)"
+
+    index=0
+    count=$(./jq -r '.dataAdapterConfigmapForGeneralApplication | length' $json_file)
+    while [[ $index -lt $count ]]; do
+        yaml_name="alamedascaler-generic-${index}.yaml"
+        scaler_name="alamedascaler-generic-${index}"
+
+        clusterName=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .clusterName' $json_file)
+        enableExecution=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .enableExecution' $json_file)
+        genericTargetKind=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetKind' $json_file)
+        genericTargetName=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetName' $json_file)
+        genericTargetNamespace=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetNamespace' $json_file)
+        minReplicas=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .minReplicas' $json_file)
+        maxReplicas=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .maxReplicas' $json_file)
+
+        cat > $file_folder/$yaml_name << __EOF__
+apiVersion: autoscaling.containers.ai/v1alpha2
+kind: AlamedaScaler
+metadata:
+  name: ${scaler_name}
+  namespace: ${genericTargetNamespace}
+spec:
+  clusterName: ${clusterName}
+  controllers:
+    - type: generic
+      enableExecution: ${enableExecution}
+      scaling: hpa
+      generic:
+        target:
+          namespace: ${genericTargetNamespace}
+          name: ${genericTargetName}
+          kind: ${genericTargetKind}
+        hpaParameters:
+          maxReplicas: ${minReplicas}
+          minReplicas: ${maxReplicas}
+__EOF__
+        kubectl apply -f $file_folder/$yaml_name
+        if [ "$?" != "0" ]; then
+            echo -e "\n$(tput setaf 1)Error! Failed to apply generic alamedascaler file $file_folder/$yaml_name $(tput sgr 0)"
+            exit 1
+        fi
+        ((index = index + 1))
+    done
+
+    echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
+}
+
+patch_data_adapter_configmap()
+{
     echo -e "\n$(tput setaf 3)Patching Federator.ai data adapter configmap...$(tput sgr 0)"
     configmap_name="federatorai-data-adapter-config"
     configmap_yaml_name="adapter-configmap.yaml"
@@ -102,139 +180,11 @@ patch_data_adapter_configmap()
     if [ "$configure_general" = "y" ]; then
         # Enable GUI for now, after datadog release. These line must be removed
         sed -i "s|enable_general_dashboard =.*|enable_general_dashboard = true|g" $file_folder/$configmap_yaml_name
-
-        index=0
-        count=$(./jq -r '.dataAdapterConfigmapForGeneralApplication | length' $json_file)
-
-        while [[ $index -lt $count ]]; do
-            generalApplicationName=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .generalApplicationName' $json_file)
-            generalApplicationNamespace=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .generalApplicationNamespace' $json_file)
-            minReplicas=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .minReplicas' $json_file)
-            maxReplicas=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .maxReplicas' $json_file)
-
-            cat >> $file_folder/$configmap_yaml_name << __EOF__
-      [[inputs.datadog]]
-        urls = ["\$DATADOG_QUERY_URL"]
-        api_key = "\$DATADOG_API_KEY"
-        application_key = "\$DATADOG_APPLICATION_KEY"
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "\$CLUSTER_NAME"
-        ## Cloud metric has 5 minutes to 10 minutes delay
-        cloud_metric_delay_interval = "30m0s"
-        ## Set default cloud information ifneeded
-        enable_set_default_cloud_info_if_empty = true
-        default_provider = "aws"
-        default_region = "us-west1"
-        default_instance_type = "m5.4xlarge"
-        default_instance_id = "i-00cd730e045190cad"
-        default_zone = "us-west-1a"
-        # Watched source
-        # TOML format reference: https://github.com/influxdata/toml/blob/master/README.md
-        [[inputs.datadog.watched_source]]
-          namespace = "${generalApplicationNamespace}"
-          application = "${generalApplicationName}"
-          min_replicas = ${minReplicas} # monitored_application_min_replicas
-          max_replicas = ${maxReplicas} # monitored_application_max_replicas
-          [[inputs.datadog.watched_source.watched_metrics]]
-            name="kubernetes.cpu.usage.total"
-            metric_type="CPU_MILLICORES_USAGE"
-          [[inputs.datadog.watched_source.watched_metrics]]
-            name="kubernetes.memory.usage"
-            metric_type="MEMORY_BYTES_USAGE"
-
-      [[inputs.alameda_datahub_query]]
-        url = "\$DATAHUB_URL"
-        port = "\$DATAHUB_PORT"
-        ##The recommendation query range, unit: minutes
-        recommendation_interval = 5
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "\$CLUSTER_NAME"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "${generalApplicationName}"
-          namespace = "${generalApplicationNamespace}"
-          measurement = "controller"
-          scope = "prediction"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "${generalApplicationName}"
-          namespace = "${generalApplicationNamespace}"
-          measurement = "controller"
-          scope = "recommendation"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "${generalApplicationName}"
-          namespace = "${generalApplicationNamespace}"
-          measurement = "controller"
-          scope = "planning"
-
-__EOF__
-            ((index = index + 1))
-        done
     fi
 
     if [ "$configure_kafka" = "y" ]; then
         # Enable GUI for now, after datadog release. These line must be removed
         sed -i "s|enable_kafka_dashboard =.*|enable_kafka_dashboard = true|g" $file_folder/$configmap_yaml_name
-
-        index=0
-        count=$(./jq -r '.dataAdapterConfigmapForKafka | length' $json_file)
-
-        while [[ $index -lt $count ]]; do
-            kafkaConsumerDeploymentName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerDeploymentName' $json_file)
-            kafkaConsumerDeploymentNamespace=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerDeploymentNamespace' $json_file)
-            kafkaConsumerMinimumReplica=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMinimumReplica' $json_file)
-            kafkaConsumerMaximumReplica=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMaximumReplica' $json_file)
-            kafkaConsumerGroupName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupName' $json_file)
-            kafkaConsumerGroupNamespace=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupNamespace' $json_file)
-            kafkaTopicName=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaTopicName' $json_file)
-            kafkaTopicNamespace=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaTopicNamespace' $json_file)
-
-            cat >> $file_folder/$configmap_yaml_name << __EOF__
-      [[inputs.datadog_application_aware]]
-        urls = ["\$DATADOG_QUERY_URL"]
-        api_key = "\$DATADOG_API_KEY"
-        application_key = "\$DATADOG_APPLICATION_KEY"
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "\$CLUSTER_NAME"
-
-        [inputs.datadog_application_aware.watched_kafka_consumer]
-          application = "${kafkaConsumerDeploymentName}"
-          namespace = "${kafkaConsumerDeploymentNamespace}"
-          min_replicas = ${kafkaConsumerMinimumReplica}
-          max_replicas = ${kafkaConsumerMaximumReplica}
-          topics = ["${kafkaTopicName}"]
-          consumer_groups = ["${kafkaConsumerGroupName}"]
-
-      [[inputs.alameda_datahub_query]]
-        url = "\$DATAHUB_URL"
-        port = "\$DATAHUB_PORT"
-        ##The recommendation query range, unit: minutes
-        recommendation_interval = 5
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "\$CLUSTER_NAME"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "${kafkaConsumerGroupName}"
-          namespace = "${kafkaConsumerGroupNamespace}"
-          measurement = "kafka_consumer_group"
-          scope = "recommendation"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "${kafkaConsumerGroupName}"
-          namespace = "${kafkaConsumerGroupNamespace}"
-          measurement = "kafka_consumer_group_current_offset"
-          scope = "prediction"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "${kafkaTopicName}"
-          namespace = "${kafkaTopicNamespace}"
-          measurement = "kafka_topic_partition_current_offset"
-          scope = "prediction"
-
-__EOF__
-            ((index = index + 1))
-        done
     fi
 
     kubectl apply -n $install_namespace -f $file_folder/$configmap_yaml_name
@@ -322,7 +272,7 @@ get_datadog_key()
 get_kafka_info()
 {
     default="y"
-    read -r -p "$(tput setaf 3)Do you want to configure configmap for kafka? [default: $default]: $(tput sgr 0): " configure_kafka </dev/tty
+    read -r -p "$(tput setaf 3)Do you want to configure alamedascaler for kafka? [default: $default]: $(tput sgr 0): " configure_kafka </dev/tty
     configure_kafka=${configure_kafka:-$default}
 
     if [ "$configure_kafka" != "y" ]; then
@@ -334,21 +284,29 @@ get_kafka_info()
     while [[ "$next_set" = "y" ]]
     do
         echo -e "\nGetting Kafka info... No.$((index+1))"
-        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerDeploymentName' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer deployment name [$default]: $(tput sgr 0)" kafkaConsumerDeploymentName </dev/tty
-        kafkaConsumerDeploymentName=${kafkaConsumerDeploymentName:-$default}
 
-        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerDeploymentNamespace' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer deployment namespace [$default]: $(tput sgr 0)" kafkaConsumerDeploymentNamespace </dev/tty
-        kafkaConsumerDeploymentNamespace=${kafkaConsumerDeploymentNamespace:-$default}
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .clusterName' $json_file | sed 's:null::g')
+        echo -e "\nYou can use command \"kubectl get cm cluster-info -n <namespace> --template={{.metadata.uid}}\" to get cluster name"
+        echo -e "Where '<namespace>' is either 'default' or 'kube-public' or 'kube-service-catalog'."
+        echo -e "If multiple cluster-info exist, pick either one would work as long as you always use the same one to configure Datadog Agent/Cluster Agent/WPA and other data source agents."
+        read -r -p "$(tput setaf 6)Input cluster name [$default]: $(tput sgr 0)" clusterName </dev/tty
+        clusterName=${clusterName:-$default}
 
-        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMinimumReplica' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer minimum replica number [$default]: $(tput sgr 0)" kafkaConsumerMinimumReplica </dev/tty
-        kafkaConsumerMinimumReplica=${kafkaConsumerMinimumReplica:-$default}
+        ## For 4.3-husky, set enableExecution = 'y' due to WPA
+        enableExecution="y"
 
-        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMaximumReplica' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer maximum replica number [$default]: $(tput sgr 0)" kafkaConsumerMaximumReplica </dev/tty
-        kafkaConsumerMaximumReplica=${kafkaConsumerMaximumReplica:-$default}
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaExporterNamespace' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input Kafka exporter namespace [$default]: $(tput sgr 0)" kafkaExporterNamespace </dev/tty
+        kafkaExporterNamespace=${kafkaExporterNamespace:-$default}
+
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupKind' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input Kafka consumer group kind (Deployment/DeploymentConfig/StatefulSet) [$default]: $(tput sgr 0)" kafkaConsumerGroupKind </dev/tty
+        kafkaConsumerGroupKind=${kafkaConsumerGroupKind:-$default}
+
+        if [ "$kafkaConsumerGroupKind" != "Deployment" ] && [ "$kafkaConsumerGroupKind" != "DeploymentConfig" ] && [ "$kafkaConsumerGroupKind" != "StatefulSet" ]; then
+            echo -e "\n$(tput setaf 1)Error! Kafka consumer group kind must be one of them (Deployment/DeploymentConfig/StatefulSet).$(tput sgr 0)"
+            exit 7
+        fi
 
         default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupName' $json_file | sed 's:null::g')
         read -r -p "$(tput setaf 6)Input Kafka consumer group name [$default]: $(tput sgr 0)" kafkaConsumerGroupName </dev/tty
@@ -362,23 +320,46 @@ get_kafka_info()
         read -r -p "$(tput setaf 6)Input Kafka consumer topic name [$default]: $(tput sgr 0)" kafkaTopicName </dev/tty
         kafkaTopicName=${kafkaTopicName:-$default}
 
-        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaTopicNamespace' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer topic namespace [$default]: $(tput sgr 0)" kafkaTopicNamespace </dev/tty
-        kafkaTopicNamespace=${kafkaTopicNamespace:-$default}
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupId' $json_file | sed 's:null::g')
+        echo -e "\nYou can use Kafka command-line tool 'kafka-consumer-group.sh' (download separately or enter into a broker pod, in /bin directory) to list consumer groups."
+        echo -e "e.g.: \"/bin/kafka-consumer-groups.sh --bootstrap-server <kafka-bootstrap-service>:9092 --describe --all-groups --members\""
+        echo -e "The first column of output is the 'kafkaConsumerGroupId'."
+        read -r -p "$(tput setaf 6)Input Kafka consumer group id [$default]: $(tput sgr 0)" kafkaConsumerGroupId </dev/tty
+        kafkaConsumerGroupId=${kafkaConsumerGroupId:-$default}
 
-        if [ "$kafkaConsumerDeploymentName" = "" ] || [ "$kafkaConsumerDeploymentNamespace" = "" ] || [ "$kafkaConsumerMinimumReplica" = "" ] || [ "$kafkaConsumerMaximumReplica" = "" ] || [ "$kafkaConsumerGroupName" = "" ] || [ "$kafkaConsumerGroupNamespace" = "" ] || [ "$kafkaTopicName" = "" ] || [ "$kafkaTopicNamespace" = "" ]; then
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMinimumReplica' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input Kafka consumer minimum replica number [$default]: $(tput sgr 0)" kafkaConsumerMinimumReplica </dev/tty
+        kafkaConsumerMinimumReplica=${kafkaConsumerMinimumReplica:-$default}
+
+        case $kafkaConsumerMinimumReplica in
+            ''|*[!0-9]*) echo -e "\n$(tput setaf 1)Error! Kafka consumer minimum replicas number needs to be integer.$(tput sgr 0)" && exit;;
+            *) ;;
+        esac
+
+        default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerMaximumReplica' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input Kafka consumer maximum replica number [$default]: $(tput sgr 0)" kafkaConsumerMaximumReplica </dev/tty
+        kafkaConsumerMaximumReplica=${kafkaConsumerMaximumReplica:-$default}
+
+        case $kafkaConsumerMaximumReplica in
+            ''|*[!0-9]*) echo -e "\n$(tput setaf 1)Error! Kafka consumer maximum replicas number needs to be integer.$(tput sgr 0)" && exit;;
+            *) ;;
+        esac
+
+        if [ "$clusterName" = "" ] || [ "$enableExecution" = "" ] || [ "$kafkaExporterNamespace" = "" ] || [ "$kafkaConsumerGroupKind" = "" ] || [ "$kafkaConsumerMinimumReplica" = "" ] || [ "$kafkaConsumerMaximumReplica" = "" ] || [ "$kafkaConsumerGroupName" = "" ] || [ "$kafkaConsumerGroupNamespace" = "" ] || [ "$kafkaTopicName" = "" ] || [ "$kafkaConsumerGroupId" = "" ]; then
             echo -e "\n$(tput setaf 1)Error! Kafka info can't be empty.$(tput sgr 0)"
             exit 7
         fi
 
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerDeploymentName="%s"' $index $kafkaConsumerDeploymentName) <<<$configStr )
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerDeploymentNamespace="%s"' $index $kafkaConsumerDeploymentNamespace) <<<$configStr )
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerMinimumReplica="%s"' $index $kafkaConsumerMinimumReplica) <<<$configStr )
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerMaximumReplica="%s"' $index $kafkaConsumerMaximumReplica) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].clusterName="%s"' $index $clusterName) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].enableExecution="%s"' $index $enableExecution) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaExporterNamespace="%s"' $index $kafkaExporterNamespace) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerGroupKind="%s"' $index $kafkaConsumerGroupKind) <<<$configStr )
         configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerGroupName="%s"' $index $kafkaConsumerGroupName) <<<$configStr )
         configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerGroupNamespace="%s"' $index $kafkaConsumerGroupNamespace) <<<$configStr )
         configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaTopicName="%s"' $index $kafkaTopicName) <<<$configStr )
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaTopicNamespace="%s"' $index $kafkaTopicNamespace) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerGroupId="%s"' $index $kafkaConsumerGroupId) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerMinimumReplica="%s"' $index $kafkaConsumerMinimumReplica) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForKafka[%s].kafkaConsumerMaximumReplica="%s"' $index $kafkaConsumerMaximumReplica) <<<$configStr )
         ./jq -r '.' <<< $configStr > $json_file
         ((index = index + 1))
         echo ""
@@ -402,7 +383,7 @@ get_kafka_info()
 get_general_application_info()
 {
     default="y"
-    read -r -p "$(tput setaf 3)Do you want to configure configmap for general application? [default: $default]: $(tput sgr 0): " configure_general </dev/tty
+    read -r -p "$(tput setaf 3)Do you want to configure alamedascaler for generic application? [default: $default]: $(tput sgr 0): " configure_general </dev/tty
     configure_general=${configure_general:-$default}
 
     if [ "$configure_general" != "y" ]; then
@@ -411,33 +392,65 @@ get_general_application_info()
 
     index=0
     next_set="y"
-    echo -e "$(tput setaf 127)\nNote!! Use Deployment/DeploymentConfig/Statefulset name as application name.$(tput sgr 0)"
+
     while [[ "$next_set" = "y" ]]
     do
-        echo -e "\nGetting general application info... No.$((index+1))"
-        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .generalApplicationName' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input application name [$default]: $(tput sgr 0)" generalApplicationName </dev/tty
-        generalApplicationName=${generalApplicationName:-$default}
+        echo -e "\nGetting generic application info... No.$((index+1))"
+        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .clusterName' $json_file | sed 's:null::g')
+        echo -e "\nYou can use command \"kubectl get cm cluster-info -n <namespace> --template={{.metadata.uid}}\" to get cluster name"
+        echo -e "Where '<namespace>' is either 'default' or 'kube-public' or 'kube-service-catalog'."
+        echo -e "If multiple cluster-info exist, pick either one would work as long as you always use the same one to configure Datadog Agent/Cluster Agent/WPA and other data source agents."
+        read -r -p "$(tput setaf 6)Input cluster name [$default]: $(tput sgr 0)" clusterName </dev/tty
+        clusterName=${clusterName:-$default}
 
-        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .generalApplicationNamespace' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input application namespace [$default]: $(tput sgr 0)" generalApplicationNamespace </dev/tty
-        generalApplicationNamespace=${generalApplicationNamespace:-$default}
+        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetKind' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input target app kind (Deployment/DeploymentConfig/StatefulSet)[$default]: $(tput sgr 0)" genericTargetKind </dev/tty
+        genericTargetKind=${genericTargetKind:-$default}
+
+        if [ "$genericTargetKind" != "Deployment" ] && [ "$genericTargetKind" != "DeploymentConfig" ] && [ "$genericTargetKind" != "StatefulSet" ]; then
+            echo -e "\n$(tput setaf 1)Error! Target app kind must be one of them (Deployment/DeploymentConfig/StatefulSet).$(tput sgr 0)"
+            exit 7
+        fi
+
+        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetName' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input Deployment/DeploymentConfig/StatefulSet name [$default]: $(tput sgr 0)" genericTargetName </dev/tty
+        genericTargetName=${genericTargetName:-$default}
+
+        default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .genericTargetNamespace' $json_file | sed 's:null::g')
+        read -r -p "$(tput setaf 6)Input target app namespace [$default]: $(tput sgr 0)" genericTargetNamespace </dev/tty
+        genericTargetNamespace=${genericTargetNamespace:-$default}
+
+        ## For 4.3-husky, set enableExecution = 'y' due to WPA
+        enableExecution="y"
 
         default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .minReplicas' $json_file | sed 's:null::g')
         read -r -p "$(tput setaf 6)Input minimum replicas number [$default]: $(tput sgr 0)" minReplicas </dev/tty
         minReplicas=${minReplicas:-$default}
 
+        case $minReplicas in
+            ''|*[!0-9]*) echo -e "\n$(tput setaf 1)Error! Minimum replicas number needs to be integer.$(tput sgr 0)" && exit;;
+            *) ;;
+        esac
+
         default=$(./jq -r '.dataAdapterConfigmapForGeneralApplication['$index'] | .maxReplicas' $json_file | sed 's:null::g')
         read -r -p "$(tput setaf 6)Input maximum replicas number [$default]: $(tput sgr 0)" maxReplicas </dev/tty
         maxReplicas=${maxReplicas:-$default}
 
-        if [ "$generalApplicationName" = "" ] || [ "$generalApplicationNamespace" = "" ] || [ "$minReplicas" = "" ] || [ "$maxReplicas" = "" ]; then
+        case $maxReplicas in
+            ''|*[!0-9]*) echo -e "\n$(tput setaf 1)Error! Maximum replicas number needs to be integer.$(tput sgr 0)" && exit;;
+            *) ;;
+        esac
+
+        if [ "$clusterName" = "" ] || [ "$genericTargetKind" = "" ] || [ "$genericTargetName" = "" ] || [ "$genericTargetNamespace" = "" ] || [ "$enableExecution" = "" ] || [ "$minReplicas" = "" ] || [ "$maxReplicas" = "" ]; then
             echo -e "\n$(tput setaf 1)Error! Application info can't be empty.$(tput sgr 0)"
             exit 7
         fi
 
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].generalApplicationName="%s"' $index $generalApplicationName) <<<$configStr )
-        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].generalApplicationNamespace="%s"' $index $generalApplicationNamespace) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].clusterName="%s"' $index $clusterName) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].enableExecution="%s"' $index $enableExecution) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].genericTargetKind="%s"' $index $genericTargetKind) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].genericTargetName="%s"' $index $genericTargetName) <<<$configStr )
+        configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].genericTargetNamespace="%s"' $index $genericTargetNamespace) <<<$configStr )
         configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].minReplicas="%s"' $index $minReplicas) <<<$configStr )
         configStr=$( ./jq -c $(printf '.dataAdapterConfigmapForGeneralApplication[%s].maxReplicas="%s"' $index $maxReplicas) <<<$configStr )
         ./jq -r '.' <<< $configStr > $json_file
@@ -471,6 +484,7 @@ get_alamedaservice_full_version()
 
 restart_data_adapter_pod()
 {
+    echo -e "\n$(tput setaf 3)Restarting Federator.ai data adapter...$(tput sgr 0)"
     adapter_pod_name=`kubectl get pods -n $install_namespace -o name |grep "federatorai-data-adapter-"|cut -d '/' -f2`
     if [ "$adapter_pod_name" = "" ]; then
         echo -e "\n$(tput setaf 1)Error, failed to get Federator.ai data adapter pod name!$(tput sgr 0)"
@@ -482,6 +496,7 @@ restart_data_adapter_pod()
         exit 8
     fi
     wait_until_pods_ready $max_wait_pods_ready_time 30 $install_namespace 5
+    echo -e "\n$(tput setaf 3)...Done.$(tput sgr 0)"
 }
 
 check_version()
@@ -551,20 +566,25 @@ prepare_env()
   },
   "dataAdapterConfigmapForKafka": [
     {
-      "kafkaConsumerDeploymentName": "",
-      "kafkaConsumerDeploymentNamespace": "",
-      "kafkaConsumerMinimumReplica": "",
-      "kafkaConsumerMaximumReplica": "",
+      "clusterName": "",
+      "enableExecution": "",
+      "kafkaExporterNamespace": "",
+      "kafkaConsumerGroupKind": "",
       "kafkaConsumerGroupName": "",
       "kafkaConsumerGroupNamespace": "",
       "kafkaTopicName": "",
-      "kafkaTopicNamespace": ""
+      "kafkaConsumerGroupId": "",
+      "kafkaConsumerMinimumReplica": "",
+      "kafkaConsumerMaximumReplica": ""
     }
   ],
   "dataAdapterConfigmapForGeneralApplication": [
     {
-      "generalApplicationName": "",
-      "generalApplicationNamespace": "",
+      "clusterName": "",
+      "enableExecution": "",
+      "genericTargetKind": "",
+      "genericTargetName": "",
+      "genericTargetNamespace": "",
       "minReplicas": "",
       "maxReplicas": ""
     }
@@ -661,11 +681,11 @@ get_general_application_info
 
 get_kafka_info
 
-patch_alamedaservice
-
 patch_data_adapter_secret
 
 patch_data_adapter_configmap
+add_alamedascaler_for_generic_app
+add_alamedascaler_for_kafka
 
 restart_data_adapter_pod
 
