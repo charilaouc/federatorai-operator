@@ -33,38 +33,228 @@ data:
         period = "1m"
         granularity = "1m"
         drop_original = true
-        namedrop = ["federatorai.*"]
+        namedrop = ["federatorai.*", "federatorai_*"]
 
-      #[[aggregators.federatorai]]
-      #  period = "1m"
-      #  drop_original = true
-      #  namepass = ["kafka_topic_partition_current_offset","kafka_consumer_group_current_offset","kafka_consumer_group_lag"]
+      [[aggregators.federatorai]]
+        drop_original = true
+        namepass = ["federatorai_*_future"]
 
-      #  [[aggregators.federatorai.metric]]
-      #      measurement_name = "kafka_topic_partition_current_offset"
-      #      expression = "sum(delta(kafka_topic_partition_current_offset[1m]))by(consumer_group,topic,namespace)"
-      #      fields = ["value"]
-      #  [[aggregators.federatorai.metric]]
-      #      measurement_name = "kafka_consumer_group_current_offset"
-      #      expression = "sum(delta(kafka_consumer_group_current_offset[1m]))by(consumer_group,topic,namespace)"
-      #      fields = ["value"]
-      #  [[aggregators.federatorai.metric]]
-      #      measurement_name = "kafka_consumer_group_lag"
-      #      expression = "sum(kafka_consumer_group_lag)by(namespace,consumer_group,topic)"
-      #      fields = ["value"]
+        ## Node ##
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.node.avg"
+            expression = "avg(avg_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node_future"
+            fields = ["value"]
 
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.node.min"
+            expression = "min(min_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node_future"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.node.max"
+            expression = "max(max_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node_future"
+            fields = ["value"]
+
+        ## Namespace ##
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.namespace.avg"
+            expression = "avg(avg_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace_future"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.namespace.min"
+            expression = "min(min_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace_future"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.namespace.max"
+            expression = "max(max_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace_future"
+            fields = ["value"]
+
+        ## Controller ##
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.controller.avg"
+            expression = "avg(avg_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller_future"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.controller.min"
+            expression = "min(min_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller_future"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.controller.max"
+            expression = "max(max_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller_future"
+            fields = ["value"]
+
+      ## This plugin is for future 24 hours/7 days/30 days prediction
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
-        ##The recommendation query range, unit: minutes
-        recommendation_interval = 5
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
+        query_start_time_offset = "0m"
+        query_end_time_offset = "720h" #Support s(second),m(minute),h(hour)
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
         cluster_name = "$CLUSTER_NAME"
 
+        ### Prediction ###
+
+        ## Node ##
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
 
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "prediction"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "prediction"
+
+      ## This plugin is for future 1 hour/6 hours/24 hours planning
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "24h"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Planning ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "planning"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "planning"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "planning"
+
+      ## All non-recommendation type metric will use past time, we gather all non-recommendation type metric together.
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "-1m"
+        query_end_time_offset = "0m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Prediction ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "prediction"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "prediction"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "prediction"
+
+        ## Application-aware - Kafka ##
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "<kafka_consumer_group_name>"
+          namespace = "<kafka_consumer_group_namespace>"
+          measurement = "kafka_consumer_group_current_offset"
+          scope = "prediction"
+
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "<kafka_topic_name>"
+          namespace = "<kafka_topic_namespace>"
+          measurement = "kafka_topic_partition_current_offset"
+          scope = "prediction"
+
+        ### Fedemeter ###
+
+        ## Cost Analysis - Recommended Provider Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "recommendation_jeri"
+          scope = "fedemeter"
+
+        ## Cost Analysis - Current Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "calculation_price_instance"
+          scope = "fedemeter"
+
+        ## Cost Allocation - Application Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_app"
+          scope = "fedemeter"
+
+        ## Cost Allocation - Namespace Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_namespace"
+          scope = "fedemeter"
+
+        ## Cost Allocation - Application Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_app"
+          scope = "fedemeter"
+
+        ## Cost Allocation - Namespace Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_namespace"
+          scope = "fedemeter"
+
+      ## All recommendation type metric will use future time, we gather all recommendation type metric together.
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "1m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
+
+        ## Controller
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "recommendation"
+
+        ## Application-aware - Kafka
+        [[inputs.alameda_datahub_query.watched_source]]
+          name = "<kafka_consumer_group_name>"
+          namespace = "<kafka_consumer_group_namespace>"
+          measurement = "kafka_consumer_group"
+          scope = "recommendation"
 
       [[outputs.datahub]]
         url = "$DATAHUB_URL"
@@ -85,7 +275,7 @@ data:
         enable_kafka_dashboard = false
         enable_general_dashboard = false
 
-        # This pattern support federatorai.integration.status, federatorai.recommendation and federator.predictoin.*
+        # This pattern support federatorai.integration.status, federatorai.recommendation and federatorai.prediction.*
         [[outputs.datadog.integration_metrics]]
           name="federatorai.*"
           aggregation_type="raw"
@@ -103,7 +293,6 @@ data:
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
-        ## If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
         ## Cloud metric has 5 minutes to 10 minutes delay
         cloud_metric_delay_interval = "30m0s"
@@ -129,69 +318,30 @@ data:
             name="kubernetes.memory.usage"
             metric_type="MEMORY_BYTES_USAGE"
 
-      [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
-        ##The recommendation query range, unit: minutes
-        recommendation_interval = 5
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "$CLUSTER_NAME"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "prediction"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "recommendation"
-
-        [[inputs.alameda_datahub_query.watched_source]] #General Application config
-          name = "<general_application_name>"
-          namespace = "<general_application_namespace>"
-          measurement = "controller"
-          scope = "planning"
-
       [[inputs.datadog_application_aware]]
         urls = ["$DATADOG_QUERY_URL"]
         api_key = "$DATADOG_API_KEY"
         application_key = "$DATADOG_APPLICATION_KEY"
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
         cluster_name = "$CLUSTER_NAME"
 
-        [inputs.datadog_application_aware.watched_kafka_consumer]
-          application = ""
+        [[inputs.datadog_application_aware.watched_source]]
           namespace = ""
+          application = ""
+          category="kafka"
+          service=""
           min_replicas = 0
           max_replicas = 0
-          topics = ["<kafka_topic_name>"]
-          consumer_groups = ["<kafka_consumer_group_name>"]
-
-      [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
-        ##The recommendation query range, unit: minutes
-        recommendation_interval = 5
-        # If we keep CLUSTER_NAME value empty, the agent will get k8s cluster name automatically.
-        cluster_name = "$CLUSTER_NAME"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "<kafka_consumer_group_name>"
-          namespace = "<kafka_consumer_group_namespace>"
-          measurement = "kafka_consumer_group"
-          scope = "recommendation"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "<kafka_consumer_group_name>"
-          namespace = "<kafka_consumer_group_namespace>"
-          measurement = "kafka_consumer_group_current_offset"
-          scope = "prediction"
-
-        [[inputs.alameda_datahub_query.watched_source]]
-          name = "<kafka_topic_name>"
-          namespace = "<kafka_topic_namespace>"
-          measurement = "kafka_topic_partition_current_offset"
-          scope = "prediction"
+          [[inputs.datadog_application_aware.watched_source.watched_metrics]]
+            name="kafka.broker_offset"
+            [inputs.datadog_application_aware.watched_source.watched_metrics.scope]
+              topic = "<kafka_topic_name>"
+          [[inputs.datadog_application_aware.watched_source.watched_metrics]]
+            name="kafka.consumer_offset"
+            [inputs.datadog_application_aware.watched_source.watched_metrics.scope]
+              topic = "<kafka_topic_name>"
+              consumer_group = "<kafka_consumer_group_name>"
+          [[inputs.datadog_application_aware.watched_source.watched_metrics]]
+            name="kafka.consumer_lag"
+            [inputs.datadog_application_aware.watched_source.watched_metrics.scope]
+              topic = "<kafka_topic_name>"
+              consumer_group = "<kafka_consumer_group_name>"
