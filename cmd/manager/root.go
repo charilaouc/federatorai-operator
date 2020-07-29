@@ -181,6 +181,11 @@ func execute() {
 
 	ctx := context.TODO()
 
+	if os.Getenv(k8sutil.PodNameEnvVar) == "" {
+		if hostname, err := os.Hostname(); err == nil {
+			os.Setenv(k8sutil.PodNameEnvVar, hostname)
+		}
+	}
 	// Become the leader before proceeding
 	err = leader.Become(ctx, "federatorai-operator-lock")
 	if err != nil {
