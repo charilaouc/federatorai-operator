@@ -27,6 +27,7 @@ data:
         quiet = false
         hostname = ""
         omit_hostname = false
+        alamedascaler_enable = true
 
       [[aggregators.basicstats]]
         period = "1m"
