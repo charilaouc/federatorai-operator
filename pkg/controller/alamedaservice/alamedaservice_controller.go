@@ -558,7 +558,15 @@ func (r *ReconcileAlamedaService) newComponentConfig(namespace corev1.Namespace,
 		return nil, errors.Wrap(err, "parse Prometheus url failed")
 	} else {
 		prometheusConfig.Host = prometheusURL.Hostname()
-		prometheusConfig.Port = prometheusURL.Port()
+		if prometheusURL.Port() != "" {
+			prometheusConfig.Port = prometheusURL.Port()
+		} else {
+			if prometheusURL.Scheme == "http" {
+				prometheusConfig.Port = "80"
+			} else if prometheusURL.Scheme == "https" {
+				prometheusConfig.Port = "443"
+			}
+		}
 		prometheusConfig.Protocol = prometheusURL.Scheme
 	}
 
