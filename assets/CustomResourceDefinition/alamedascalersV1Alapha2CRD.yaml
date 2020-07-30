@@ -128,7 +128,6 @@ spec:
               type: array
           required:
           - clusterName
-          - controllers
           type: object
         status:
           description: AlamedaScalerStatus defines the observed state of AlamedaScaler
