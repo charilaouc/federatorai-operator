@@ -309,7 +309,7 @@ get_kafka_info()
         fi
 
         default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupName' $json_file | sed 's:null::g')
-        read -r -p "$(tput setaf 6)Input Kafka consumer group name [$default]: $(tput sgr 0)" kafkaConsumerGroupName </dev/tty
+        read -r -p "$(tput setaf 6)Input Kafka consumer group kind name [$default]: $(tput sgr 0)" kafkaConsumerGroupName </dev/tty
         kafkaConsumerGroupName=${kafkaConsumerGroupName:-$default}
 
         default=$(./jq -r '.dataAdapterConfigmapForKafka['$index'] | .kafkaConsumerGroupNamespace' $json_file | sed 's:null::g')
