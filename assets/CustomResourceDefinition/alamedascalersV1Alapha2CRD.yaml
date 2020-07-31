@@ -114,7 +114,7 @@ spec:
                   scaling:
                     enum:
                     - hpa
-                    - predicitOnly
+                    - predictOnly
                     type: string
                   type:
                     enum:

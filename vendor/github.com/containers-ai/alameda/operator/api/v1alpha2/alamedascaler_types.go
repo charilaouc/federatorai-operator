@@ -31,11 +31,11 @@ const (
 	KafkaTarget   TargetType = "kafka"
 )
 
-// +kubebuilder:validation:Enum=hpa;predicitOnly
+// +kubebuilder:validation:Enum=hpa;predictOnly
 type ScalingType string
 
 const (
-	NonScaling ScalingType = "predicitOnly"
+	NonScaling ScalingType = "predictOnly"
 	HPAScaling ScalingType = "hpa"
 )
 
@@ -116,8 +116,9 @@ type Controller struct {
 
 // AlamedaScalerSpec defines the desired state of AlamedaScaler
 type AlamedaScalerSpec struct {
-	ClusterName string       `json:"clusterName"`
-	Controllers []Controller `json:"controllers"`
+	ClusterName string `json:"clusterName"`
+	// +optional
+	Controllers []Controller `json:"controllers,omitempty"`
 }
 
 // AlamedaScalerStatus defines the observed state of AlamedaScaler
