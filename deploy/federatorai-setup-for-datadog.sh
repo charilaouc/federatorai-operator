@@ -77,7 +77,7 @@ apiVersion: autoscaling.containers.ai/v1alpha2
 kind: AlamedaScaler
 metadata:
   name: ${scaler_name}
-  namespace: ${kafkaConsumerGroupNamespace}
+  namespace: ${install_namespace}
 spec:
   clusterName: ${clusterName}
   controllers:
@@ -135,7 +135,7 @@ apiVersion: autoscaling.containers.ai/v1alpha2
 kind: AlamedaScaler
 metadata:
   name: ${scaler_name}
-  namespace: ${genericTargetNamespace}
+  namespace: ${install_namespace}
 spec:
   clusterName: ${clusterName}
   controllers:
