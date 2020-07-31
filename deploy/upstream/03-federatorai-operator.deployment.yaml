@@ -30,6 +30,7 @@ spec:
           - federatorai-operator
           args:
           - "upgrade"
+          - --type
           - "influxdb"
           volumeMounts:
           - mountPath: /var/log/alameda

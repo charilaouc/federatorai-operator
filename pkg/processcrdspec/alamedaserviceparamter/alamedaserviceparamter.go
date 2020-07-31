@@ -3,7 +3,7 @@ package alamedaserviceparamter
 import (
 	"strings"
 
-	"github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
+	"github.com/containers-ai/federatorai-operator/api/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/util"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -453,7 +453,7 @@ func NewAlamedaServiceParamter(
 	asp := &AlamedaServiceParamter{
 		NameSpace:                           instance.Namespace,
 		SelfDriving:                         instance.Spec.SelfDriving,
-		Platform:                            instance.Spec.Platform,
+		Platform:                            string(instance.Spec.Platform),
 		EnableExecution:                     instance.Spec.EnableExecution,
 		EnableVPA:                           *instance.Spec.EnableVPA,
 		EnableGPU:                           *instance.Spec.EnableGPU,

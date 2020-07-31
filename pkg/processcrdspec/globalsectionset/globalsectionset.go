@@ -3,7 +3,7 @@ package globalsectionset
 import (
 	"strings"
 
-	"github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
+	"github.com/containers-ai/federatorai-operator/api/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/processcrdspec/alamedaserviceparamter"
 	"github.com/containers-ai/federatorai-operator/pkg/util"
 	appsv1 "k8s.io/api/apps/v1"

@@ -1,0 +1,10 @@
+domain: containers.ai
+layout: go.kubebuilder.io/v2
+repo: github.com/containers-ai/federatorai-operator
+resources:
+- group: federatorai
+  kind: AlamedaService
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  go.operator-sdk.io/v2-alpha: {}

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
+	"github.com/containers-ai/federatorai-operator/api/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/consts"
 	"github.com/pkg/errors"
 

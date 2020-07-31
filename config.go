@@ -1,7 +1,7 @@
-package operator
+package main
 
 import (
-	"github.com/containers-ai/federatorai-operator/pkg/log"
+	fedOperatorLog "github.com/containers-ai/federatorai-operator/pkg/log"
 	"github.com/containers-ai/federatorai-operator/pkg/protocol/grpc"
 )
 
@@ -16,10 +16,10 @@ func NewDefaultRequirementsConfig() RequirementsConfig {
 
 // Config encapsultes configuration of federatorai operator
 type Config struct {
-	Requirements RequirementsConfig `mapstructure:"requirements"`
-	Metrics      MetricsConfig      `mapstructure:"metrics"`
-	Log          log.Config         `mapstructure:"log"`
-	GRPC         grpc.Config        `mapstructure:"grpc"`
+	Requirements RequirementsConfig    `mapstructure:"requirements"`
+	Metrics      MetricsConfig         `mapstructure:"metrics"`
+	Log          fedOperatorLog.Config `mapstructure:"log"`
+	GRPC         grpc.Config           `mapstructure:"grpc"`
 }
 
 // NewDefaultConfig creates operator default configuration
@@ -27,7 +27,7 @@ func NewDefaultConfig() Config {
 	return Config{
 		Requirements: NewDefaultRequirementsConfig(),
 		Metrics:      NewDefaultMetricsConfig(),
-		Log:          log.NewDefaultConfig(),
+		Log:          fedOperatorLog.NewDefaultConfig(),
 		GRPC:         grpc.NewDefaultConfig(),
 	}
 }

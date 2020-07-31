@@ -22,7 +22,7 @@ import (
 	"github.com/pkg/errors"
 
 	autoscaling_v1alpha1 "github.com/containers-ai/alameda/operator/api/v1alpha1"
-	federatoraiv1alpha1 "github.com/containers-ai/federatorai-operator/pkg/apis/federatorai/v1alpha1"
+	federatoraiv1alpha1 "github.com/containers-ai/federatorai-operator/api/v1alpha1"
 	"github.com/containers-ai/federatorai-operator/pkg/assets"
 	"github.com/containers-ai/federatorai-operator/pkg/lib/resourceread"
 	routev1 "github.com/openshift/api/route/v1"
@@ -84,7 +84,7 @@ func NewComponentConfig(
 	)
 
 	c := ComponentConfig{
-		Platform:                 alamedaService.Spec.Platform,
+		Platform:                 string(alamedaService.Spec.Platform),
 		NameSpace:                defaultNamespace,
 		PodSecurityPolicyGroup:   defaultPodSecurityPolicyGroup,
 		PodSecurityPolicyVersion: defaultPodSecurityPolicyVersion,
