@@ -174,8 +174,6 @@ patch_data_adapter_configmap()
     fi
 
     sed -i "s|namespace:.*|namespace: $install_namespace|g" $file_folder/$configmap_yaml_name
-    # Delete every line after # anchor
-    sed -i '/# anchor/,$d' $file_folder/$configmap_yaml_name
 
     if [ "$configure_general" = "y" ]; then
         # Enable GUI for now, after datadog release. These line must be removed
