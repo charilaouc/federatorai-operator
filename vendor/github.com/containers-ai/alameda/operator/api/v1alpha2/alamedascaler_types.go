@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"github.com/containers-ai/alameda/datahub/pkg/entities"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,9 +41,9 @@ const (
 )
 
 // Raw value stored in datahub
-var ScalingTypeMap = map[ScalingType]string{
-	NonScaling: "NONE",
-	HPAScaling: "HPA",
+var ScalingTypeMap = map[ScalingType]entities.ScalingTool{
+	NonScaling: entities.None,
+	HPAScaling: entities.HPA,
 }
 
 // +kubebuilder:validation:Enum=Deployment;StatefulSet;DeploymentConfig
@@ -55,10 +56,10 @@ const (
 )
 
 // Raw value stored in datahub
-var ControllerKindMap = map[ControllerKind]string{
-	DeploymentController:       "DEPLOYMENT",
-	StatefulSetController:      "STATEFULSET",
-	DeploymentConfigController: "DEPLOYMENTCONFIG",
+var ControllerKindMap = map[ControllerKind]entities.Kind{
+	DeploymentController:       entities.Deployment,
+	StatefulSetController:      entities.StatefulSet,
+	DeploymentConfigController: entities.DeploymentConfig,
 }
 
 type Target struct {
