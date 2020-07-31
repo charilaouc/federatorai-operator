@@ -148,8 +148,8 @@ spec:
           name: ${genericTargetName}
           kind: ${genericTargetKind}
         hpaParameters:
-          maxReplicas: ${minReplicas}
-          minReplicas: ${maxReplicas}
+          maxReplicas: ${maxReplicas}
+          minReplicas: ${minReplicas}
 __EOF__
         kubectl apply -f $file_folder/$yaml_name
         if [ "$?" != "0" ]; then
