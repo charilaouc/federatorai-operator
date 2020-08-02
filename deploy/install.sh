@@ -398,7 +398,7 @@ done
 [ "${s_arg}" = "persistent" ] && [ "${c_arg}" = "" ] && silent_mode_disabled="y"
 [ "${s_arg}" = "persistent" ] && [ "${i_arg}" = "" ] && silent_mode_disabled="y"
 
-[ "${t_arg}" != "" ] && tag_number="${t_arg}"
+[ "${t_arg}" != "" ] && specified_tag_number="${t_arg}"
 [ "${n_arg}" != "" ] && install_namespace="${n_arg}"
 #[ "${e_arg}" != "" ] && enable_execution="${e_arg}"
 [ "${p_arg}" != "" ] && prometheus_address="${p_arg}"
@@ -440,9 +440,13 @@ if [ "$silent_mode_disabled" = "y" ];then
     do
         # init variables
         install_namespace=""
-        tag_number=""
-
-        read -r -p "$(tput setaf 2)Please input Federator.ai Operator tag:$(tput sgr 0) " tag_number </dev/tty
+        # Check if tag number is specified
+        if [ "$specified_tag_number" = "" ]; then
+            tag_number=""
+            read -r -p "$(tput setaf 2)Please input Federator.ai Operator tag:$(tput sgr 0) " tag_number </dev/tty
+        else
+            tag_number=$specified_tag_number
+        fi
 
         if [ "$need_upgrade" = "y" ];then
             echo -e "\n$(tput setaf 11)Previous build with tag$(tput setaf 1) $previous_tag $(tput setaf 11)detected in namespace$(tput setaf 1) $previous_alameda_namespace$(tput sgr 0)"
@@ -467,7 +471,7 @@ if [ "$silent_mode_disabled" = "y" ];then
     done
 else
     echo -e "\n----------------------------------------"
-    echo "tag_number=$tag_number"
+    echo "tag_number=$specified_tag_number"
     echo "install_namespace=$install_namespace"
     #echo "enable_execution=$enable_execution"
     echo "prometheus_address=$prometheus_address"
