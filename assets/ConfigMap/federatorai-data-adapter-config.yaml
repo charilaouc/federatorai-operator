@@ -33,8 +33,8 @@ data:
         period = "1m"
         granularity = "1m"
         drop_original = true
-        namedrop = ["federatorai.*", "federatorai_*"]
-
+        namedrop = ["federatorai.*", "federatorai_*","top_container_*","node_pod_phase_count"]
+ 
       [[aggregators.federatorai]]
         drop_original = true
         namepass = ["federatorai_*_future"]
