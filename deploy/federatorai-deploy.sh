@@ -70,8 +70,18 @@ if [ "$enable_private_repo" = "y" ]; then
     export RELATED_IMAGE_URL_PREFIX=$repo_url
 fi
 
-echo -e "\n$(tput setaf 6)Executing install.sh ...$(tput sgr 0)"
-bash install.sh -t $tag_number
+while [ "$run_installation" != "y" ] && [ "$run_installation" != "n" ]
+do
+    default="y"
+    read -r -p "$(tput setaf 2)Do you want to lunch Federator.ai installation script? [default: $default]: $(tput sgr 0)" run_installation </dev/tty
+    run_installation=${run_installation:-$default}
+    run_installation=$(echo "$run_installation" | tr '[:upper:]' '[:lower:]')
+done
+
+if [ "$run_installation" = "y" ]; then
+    echo -e "\n$(tput setaf 6)Executing install.sh ...$(tput sgr 0)"
+    bash install.sh -t $tag_number
+fi
 
 leave_prog
 
