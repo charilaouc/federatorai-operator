@@ -245,7 +245,6 @@ var (
 	customResourceDefinitionList = []string{
 		//"CustomResourceDefinition/alamedascalersV1Alapha1CRD.yaml",
 		"CustomResourceDefinition/alamedascalersV1Alapha2CRD.yaml",
-		"CustomResourceDefinition/alamedarecommendationsCRD.yaml",
 		"CustomResourceDefinition/alamedanotificationchannels.yaml",
 		"CustomResourceDefinition/alamedanotificationtopics.yaml",
 		"CustomResourceDefinition/alamedadetectionsCRD.yaml",
