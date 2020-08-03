@@ -105,9 +105,15 @@ data:
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
-            measurement_name = "federatorai.prediction.namespace.cost_pct"
-            expression = "sum(sum_over_time(federatorai_prediction_namespace_cost_pct[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
-            origin_information_from = "federatorai_prediction_namespace_cost_pct"
+            measurement_name = "federatorai.cost_analysis.namespace.cost"
+            expression = "sum(sum_over_time(federatorai_cost_analysis_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
+            origin_information_from = "federatorai_cost_analysis_namespace_cost"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.recommendation.instance"
+            expression = "sum(sum_over_time(federatorai_recommendation_instance[1m]))by(kube_cluster,country,time_interval,instance_type,provider,region,pricing_option,display_name,ondemand_instance_master_num,reserved_instance_master_num,ondemand_instance_worker_num,reserved_instance_worker_num,spot_instance_master_num,spot_instance_worker_num)"
+            origin_information_from = "federatorai_recommendation_instance"
             fields = ["value"]
 
         #[[aggregators.federatorai.metric]]
@@ -159,20 +165,6 @@ data:
           scope = "prediction"
           granularity = "3600"
 
-        ### Fedemeter ###
-
-        ## Cost Allocation - Application Prediction Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_app"
-          scope = "fedemeter"
-          granularity = "3600"
-
-        ## Cost Allocation - Namespace Prediction Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_namespace"
-          scope = "fedemeter"
-          granularity = "3600"
-
       ## This plugin is for future 7 days prediction
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
@@ -204,20 +196,6 @@ data:
           namespace = "<general_application_namespace>"
           measurement = "controller"
           scope = "prediction"
-          granularity = "21600"
-
-        ### Fedemeter ###
-
-        ## Cost Allocation - Application Prediction Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_app"
-          scope = "fedemeter"
-          granularity = "21600"
-
-        ## Cost Allocation - Namespace Prediction Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_namespace"
-          scope = "fedemeter"
           granularity = "21600"
 
       ## This plugin is for future 30 days prediction
@@ -255,9 +233,9 @@ data:
 
         ### Fedemeter ###
 
-        ## Cost Allocation - Application Prediction Cost
+        ## Cost Analysis - Recommended Provider Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_app"
+          measurement = "recommendation_jeri"
           scope = "fedemeter"
           granularity = "86400"
 
@@ -422,21 +400,9 @@ data:
 
         ### Fedemeter ###
 
-        ## Cost Analysis - Recommended Provider Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "recommendation_jeri"
-          scope = "fedemeter"
-          granularity = "3600"
-
         ## Cost Analysis - Current Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "calculation_price_instance"
-          scope = "fedemeter"
-          granularity = "3600"
-
-        ## Cost Allocation - Application Historical Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_history_cost_app"
           scope = "fedemeter"
           granularity = "3600"
 
@@ -445,80 +411,6 @@ data:
           measurement = "resource_history_cost_namespace"
           scope = "fedemeter"
           granularity = "3600"
-
-      ## This plugin is for past 6 hours fedemeter metrics
-      [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
-        query_start_time_offset = "-6h"
-        query_end_time_offset = "0m"
-        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
-        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
-        use_query_timestamp = true
-        cluster_name = "$CLUSTER_NAME"
-
-        ### Fedemeter ###
-
-        ## Cost Analysis - Recommended Provider Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "recommendation_jeri"
-          scope = "fedemeter"
-          granularity = "21600"
-
-        ## Cost Analysis - Current Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "calculation_price_instance"
-          scope = "fedemeter"
-          granularity = "21600"
-
-        ## Cost Allocation - Application Historical Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_history_cost_app"
-          scope = "fedemeter"
-          granularity = "21600"
-
-        ## Cost Allocation - Namespace Historical Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_history_cost_namespace"
-          scope = "fedemeter"
-          granularity = "21600"
-
-      ## This plugin is for past 24 hours fedemeter metrics
-      [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
-        query_start_time_offset = "-24h"
-        query_end_time_offset = "0m"
-        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
-        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
-        use_query_timestamp = true
-        cluster_name = "$CLUSTER_NAME"
-
-        ### Fedemeter ###
-
-        ## Cost Analysis - Recommended Provider Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "recommendation_jeri"
-          scope = "fedemeter"
-          granularity = "86400"
-
-        ## Cost Analysis - Current Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "calculation_price_instance"
-          scope = "fedemeter"
-          granularity = "86400"
-
-        ## Cost Allocation - Application Historical Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_history_cost_app"
-          scope = "fedemeter"
-          granularity = "21600"
-
-        ## Cost Allocation - Namespace Historical Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_history_cost_namespace"
-          scope = "fedemeter"
-          granularity = "21600"
 
       ## All recommendation type metric will use future time, we gather all recommendation type metric together.
       [[inputs.alameda_datahub_query]]
