@@ -34,69 +34,193 @@ data:
         granularity = "1m"
         drop_original = true
         namedrop = ["federatorai.*", "federatorai_*","top_container_*","node_pod_phase_count"]
- 
+
       [[aggregators.federatorai]]
         drop_original = true
-        namepass = ["federatorai_*_future"]
+        ##namepass = ["kafka_topic_partition_current_offset","kafka_consumer_group_current_offset","kafka_consumer_group_lag","federatorai.*.future"]
+        namepass = ["federatorai_*"]
 
         ## Node ##
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.node.avg"
-            expression = "avg(avg_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_node_future"
+            expression = "avg(avg_over_time(federatorai_prediction_node[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.node.min"
-            expression = "min(min_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_node_future"
+            expression = "min(min_over_time(federatorai_prediction_node[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.node.max"
-            expression = "max(max_over_time(federatorai_prediction_node_future[1m]))by(kube_cluster,host,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_node_future"
+            expression = "max(max_over_time(federatorai_prediction_node[1m]))by(kube_cluster,host,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_node"
             fields = ["value"]
 
         ## Namespace ##
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.namespace.avg"
-            expression = "avg(avg_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_namespace_future"
+            expression = "avg(avg_over_time(federatorai_prediction_namespace[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.namespace.min"
-            expression = "min(min_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_namespace_future"
+            expression = "min(min_over_time(federatorai_prediction_namespace[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.namespace.max"
-            expression = "max(max_over_time(federatorai_prediction_namespace_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
-            origin_information_from = "federatorai_prediction_namespace_future"
+            expression = "max(max_over_time(federatorai_prediction_namespace[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric)"
+            origin_information_from = "federatorai_prediction_namespace"
             fields = ["value"]
 
         ## Controller ##
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.controller.avg"
-            expression = "avg(avg_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
-            origin_information_from = "federatorai_prediction_controller_future"
+            expression = "avg(avg_over_time(federatorai_prediction_controller[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.controller.min"
-            expression = "min(min_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
-            origin_information_from = "federatorai_prediction_controller_future"
+            expression = "min(min_over_time(federatorai_prediction_controller[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.controller.max"
-            expression = "max(max_over_time(federatorai_prediction_controller_future[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
-            origin_information_from = "federatorai_prediction_controller_future"
+            expression = "max(max_over_time(federatorai_prediction_controller[1m]))by(kube_cluster,kube_namespace,prediction_window,source_metric,kube_deployment,kube_stateful_set,oshift_deployment_config)"
+            origin_information_from = "federatorai_prediction_controller"
             fields = ["value"]
 
-      ## This plugin is for future 24 hours/7 days/30 days prediction
+        ## Fedemeter ##
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.namespace.cost"
+            expression = "sum(sum_over_time(federatorai_prediction_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
+            origin_information_from = "federatorai_prediction_namespace_cost"
+            fields = ["value"]
+
+        [[aggregators.federatorai.metric]]
+            measurement_name = "federatorai.prediction.namespace.cost_pct"
+            expression = "sum(sum_over_time(federatorai_prediction_namespace_cost_pct[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
+            origin_information_from = "federatorai_prediction_namespace_cost_pct"
+            fields = ["value"]
+
+        #[[aggregators.federatorai.metric]]
+        #    measurement_name = "kafka_topic_partition_current_offset"
+        #    expression = "sum(delta(kafka_topic_partition_current_offset[1m]))by(consumer_group,topic,namespace)"
+        #    origin_information_from = "kafka_topic_partition_current_offset"
+        #    fields = ["value"]
+        #[[aggregators.federatorai.metric]]
+        #    measurement_name = "kafka_consumer_group_current_offset"
+        #    expression = "sum(delta(kafka_consumer_group_current_offset[1m]))by(consumer_group,topic,namespace)"
+        #    origin_information_from = "kafka_consumer_group_current_offset"
+        #    fields = ["value"]
+        #[[aggregators.federatorai.metric]]
+        #    measurement_name = "kafka_consumer_group_lag"
+        #    expression = "sum(kafka_consumer_group_lag)by(namespace,consumer_group,topic)"
+        #    origin_information_from = "kafka_consumer_group_lag"
+        #    fields = ["value"]
+
+      ## This plugin is for future 24 hours prediction
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "24h" #Support s(second),m(minute),h(hour)
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Prediction ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "prediction"
+          granularity = "3600"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "prediction"
+          granularity = "3600"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "prediction"
+          granularity = "3600"
+
+        ### Fedemeter ###
+
+        ## Cost Allocation - Application Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_app"
+          scope = "fedemeter"
+          granularity = "3600"
+
+        ## Cost Allocation - Namespace Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_namespace"
+          scope = "fedemeter"
+          granularity = "3600"
+
+      ## This plugin is for future 7 days prediction
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "168h" #Support s(second),m(minute),h(hour)
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Prediction ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "prediction"
+          granularity = "21600"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "prediction"
+          granularity = "21600"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "prediction"
+          granularity = "21600"
+
+        ### Fedemeter ###
+
+        ## Cost Allocation - Application Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_app"
+          scope = "fedemeter"
+          granularity = "21600"
+
+        ## Cost Allocation - Namespace Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_namespace"
+          scope = "fedemeter"
+          granularity = "21600"
+
+      ## This plugin is for future 30 days prediction
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
@@ -113,11 +237,13 @@ data:
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
+          granularity = "86400"
 
         ## Namespace ##
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "prediction"
+          granularity = "86400"
 
         ## Controller ##
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
@@ -125,8 +251,89 @@ data:
           namespace = "<general_application_namespace>"
           measurement = "controller"
           scope = "prediction"
+          granularity = "86400"
 
-      ## This plugin is for future 1 hour/6 hours/24 hours planning
+        ### Fedemeter ###
+
+        ## Cost Allocation - Application Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_app"
+          scope = "fedemeter"
+          granularity = "86400"
+
+        ## Cost Allocation - Namespace Prediction Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_prediction_cost_namespace"
+          scope = "fedemeter"
+          granularity = "86400"
+
+      ## This plugin is for future 1 hour planning
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "1h"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Planning ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "planning"
+          granularity = "3600"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "planning"
+          granularity = "3600"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "planning"
+          granularity = "3600"
+
+      ## This plugin is for future 6 hours planning
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "0m"
+        query_end_time_offset = "6h"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = false
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Planning ###
+
+        ## Node ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "node"
+          scope = "planning"
+          granularity = "21600"
+
+        ## Namespace ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          measurement = "namespace"
+          scope = "planning"
+          granularity = "21600"
+
+        ## Controller ##
+        [[inputs.alameda_datahub_query.watched_source]] #General Application config
+          name = "<general_application_name>"
+          namespace = "<general_application_namespace>"
+          measurement = "controller"
+          scope = "planning"
+          granularity = "21600"
+
+      ## This plugin is for future 24 hours planning
       [[inputs.alameda_datahub_query]]
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
@@ -143,11 +350,13 @@ data:
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "planning"
+          granularity = "86400"
 
         ## Namespace ##
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "planning"
+          granularity = "86400"
 
         ## Controller ##
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
@@ -155,6 +364,7 @@ data:
           namespace = "<general_application_namespace>"
           measurement = "controller"
           scope = "planning"
+          granularity = "86400"
 
       ## All non-recommendation type metric will use past time, we gather all non-recommendation type metric together.
       [[inputs.alameda_datahub_query]]
@@ -199,37 +409,116 @@ data:
           measurement = "kafka_topic_partition_current_offset"
           scope = "prediction"
 
+      ## This plugin is for past 1 hour fedemeter metrics
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "-1h"
+        query_end_time_offset = "0m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
+
         ### Fedemeter ###
 
         ## Cost Analysis - Recommended Provider Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "recommendation_jeri"
           scope = "fedemeter"
+          granularity = "3600"
 
         ## Cost Analysis - Current Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "calculation_price_instance"
           scope = "fedemeter"
+          granularity = "3600"
 
         ## Cost Allocation - Application Historical Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "resource_history_cost_app"
           scope = "fedemeter"
+          granularity = "3600"
 
         ## Cost Allocation - Namespace Historical Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "resource_history_cost_namespace"
           scope = "fedemeter"
+          granularity = "3600"
 
-        ## Cost Allocation - Application Prediction Cost
-        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_app"
-          scope = "fedemeter"
+      ## This plugin is for past 6 hours fedemeter metrics
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "-6h"
+        query_end_time_offset = "0m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
 
-        ## Cost Allocation - Namespace Prediction Cost
+        ### Fedemeter ###
+
+        ## Cost Analysis - Recommended Provider Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
-          measurement = "resource_prediction_cost_namespace"
+          measurement = "recommendation_jeri"
           scope = "fedemeter"
+          granularity = "21600"
+
+        ## Cost Analysis - Current Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "calculation_price_instance"
+          scope = "fedemeter"
+          granularity = "21600"
+
+        ## Cost Allocation - Application Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_app"
+          scope = "fedemeter"
+          granularity = "21600"
+
+        ## Cost Allocation - Namespace Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_namespace"
+          scope = "fedemeter"
+          granularity = "21600"
+
+      ## This plugin is for past 24 hours fedemeter metrics
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "-24h"
+        query_end_time_offset = "0m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Fedemeter ###
+
+        ## Cost Analysis - Recommended Provider Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "recommendation_jeri"
+          scope = "fedemeter"
+          granularity = "86400"
+
+        ## Cost Analysis - Current Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "calculation_price_instance"
+          scope = "fedemeter"
+          granularity = "86400"
+
+        ## Cost Allocation - Application Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_app"
+          scope = "fedemeter"
+          granularity = "21600"
+
+        ## Cost Allocation - Namespace Historical Cost
+        [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+          measurement = "resource_history_cost_namespace"
+          scope = "fedemeter"
+          granularity = "21600"
 
       ## All recommendation type metric will use future time, we gather all recommendation type metric together.
       [[inputs.alameda_datahub_query]]
