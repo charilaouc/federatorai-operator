@@ -452,7 +452,7 @@ data:
         application_key = "$DATADOG_APPLICATION_KEY"
         User-Agent = "Federator.ai/4.2"
         kafka_dashboards = ["/etc/telegraf/dashboards/datadog/kafka/overview.json"]
-        general_dashboards = ["/etc/telegraf/dashboards/datadog/kubernetes/application-overview.json"]
+        general_dashboards = ["/etc/telegraf/dashboards/datadog/kubernetes/application-overview.json", "/etc/telegraf/dashboards/datadog/kubernetes/cluster-overview.json", "/etc/telegraf/dashboards/datadog/cost/cost-analysis-overview.json"]
         enable_kafka_dashboard = false
         enable_general_dashboard = false
 
