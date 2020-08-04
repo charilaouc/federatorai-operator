@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.gpu',
   syntax='proto3',
   serialized_options=b'Z=github.com/containers-ai/api/alameda_api/v1alpha1/datahub/gpu',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n*alameda_api/v1alpha1/datahub/gpu/gpu.proto\x12)containersai.alameda.v1alpha1.datahub.gpu\x1a\x31\x61lameda_api/v1alpha1/datahub/common/metrics.proto\x1a,alameda_api/v1alpha1/datahub/gpu/types.proto\x1a\x34\x61lameda_api/v1alpha1/datahub/predictions/types.proto\"\xad\x01\n\x03Gpu\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12H\n\x08metadata\x18\x03 \x01(\x0b\x32\x36.containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata\x12@\n\x04spec\x18\x04 \x01(\x0b\x32\x32.containersai.alameda.v1alpha1.datahub.gpu.GpuSpec\"\xc0\x01\n\tGpuMetric\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12H\n\x08metadata\x18\x03 \x01(\x0b\x32\x36.containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata\x12M\n\x0bmetric_data\x18\x04 \x03(\x0b\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricData\"\x94\x03\n\rGpuPrediction\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12H\n\x08metadata\x18\x03 \x01(\x0b\x32\x36.containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata\x12Y\n\x12predicted_raw_data\x18\x04 \x03(\x0b\x32=.containersai.alameda.v1alpha1.datahub.predictions.MetricData\x12`\n\x19predicted_upperbound_data\x18\x05 \x03(\x0b\x32=.containersai.alameda.v1alpha1.datahub.predictions.MetricData\x12`\n\x19predicted_lowerbound_data\x18\x06 \x03(\x0b\x32=.containersai.alameda.v1alpha1.datahub.predictions.MetricDataB?Z=github.com/containers-ai/api/alameda_api/v1alpha1/datahub/gpub\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_metrics__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_gpu_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_predictions_dot_types__pb2.DESCRIPTOR,])
@@ -34,6 +35,7 @@ _GPU = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='name', full_name='containersai.alameda.v1alpha1.datahub.gpu.Gpu.name', index=0,
@@ -41,28 +43,28 @@ _GPU = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='uuid', full_name='containersai.alameda.v1alpha1.datahub.gpu.Gpu.uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metadata', full_name='containersai.alameda.v1alpha1.datahub.gpu.Gpu.metadata', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='spec', full_name='containersai.alameda.v1alpha1.datahub.gpu.Gpu.spec', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -86,6 +88,7 @@ _GPUMETRIC = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='name', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetric.name', index=0,
@@ -93,28 +96,28 @@ _GPUMETRIC = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='uuid', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetric.uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metadata', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetric.metadata', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_data', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetric.metric_data', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -138,6 +141,7 @@ _GPUPREDICTION = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='name', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.name', index=0,
@@ -145,42 +149,42 @@ _GPUPREDICTION = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='uuid', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metadata', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.metadata', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='predicted_raw_data', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.predicted_raw_data', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='predicted_upperbound_data', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.predicted_upperbound_data', index=4,
       number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='predicted_lowerbound_data', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuPrediction.predicted_lowerbound_data', index=5,
       number=6, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

@@ -22,6 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.data',
   syntax='proto3',
   serialized_options=b'Z>github.com/containers-ai/api/alameda_api/v1alpha1/datahub/data',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n0alameda_api/v1alpha1/datahub/data/services.proto\x12*containersai.alameda.v1alpha1.datahub.data\x1a,alameda_api/v1alpha1/datahub/data/data.proto\x1a-alameda_api/v1alpha1/datahub/data/types.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\x1a\x17google/rpc/status.proto\"\xad\x01\n\x10WriteDataRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12I\n\nwrite_data\x18\x02 \x03(\x0b\x32\x35.containersai.alameda.v1alpha1.datahub.data.WriteData\"\xaa\x01\n\x0fReadDataRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12G\n\tread_data\x18\x02 \x03(\x0b\x32\x34.containersai.alameda.v1alpha1.datahub.data.ReadData\"v\n\x10ReadDataResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12>\n\x04\x64\x61ta\x18\x02 \x01(\x0b\x32\x30.containersai.alameda.v1alpha1.datahub.data.Data\"\xb0\x01\n\x11\x44\x65leteDataRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12K\n\x0b\x64\x65lete_data\x18\x02 \x03(\x0b\x32\x36.containersai.alameda.v1alpha1.datahub.data.DeleteDataB@Z>github.com/containers-ai/api/alameda_api/v1alpha1/datahub/datab\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_data_dot_data__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_data_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -35,6 +36,7 @@ _WRITEDATAREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.data.WriteDataRequest.schema_meta', index=0,
@@ -42,14 +44,14 @@ _WRITEDATAREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='write_data', full_name='containersai.alameda.v1alpha1.datahub.data.WriteDataRequest.write_data', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -73,6 +75,7 @@ _READDATAREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.data.ReadDataRequest.schema_meta', index=0,
@@ -80,14 +83,14 @@ _READDATAREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='read_data', full_name='containersai.alameda.v1alpha1.datahub.data.ReadDataRequest.read_data', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -111,6 +114,7 @@ _READDATARESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.data.ReadDataResponse.status', index=0,
@@ -118,14 +122,14 @@ _READDATARESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='data', full_name='containersai.alameda.v1alpha1.datahub.data.ReadDataResponse.data', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -149,6 +153,7 @@ _DELETEDATAREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.data.DeleteDataRequest.schema_meta', index=0,
@@ -156,14 +161,14 @@ _DELETEDATAREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='delete_data', full_name='containersai.alameda.v1alpha1.datahub.data.DeleteDataRequest.delete_data', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

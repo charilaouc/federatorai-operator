@@ -25,6 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.metrics',
   syntax='proto3',
   serialized_options=b'ZAgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/metrics',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n3alameda_api/v1alpha1/datahub/metrics/services.proto\x12-containersai.alameda.v1alpha1.datahub.metrics\x1a\x31\x61lameda_api/v1alpha1/datahub/common/metrics.proto\x1a\x31\x61lameda_api/v1alpha1/datahub/common/queries.proto\x1a\x32\x61lameda_api/v1alpha1/datahub/metrics/metrics.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/metrics/types.proto\x1a\x35\x61lameda_api/v1alpha1/datahub/resources/metadata.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\x1a\x17google/rpc/status.proto\"|\n\x17\x43reatePodMetricsRequest\x12M\n\x0bpod_metrics\x18\x01 \x03(\x0b\x32\x38.containersai.alameda.v1alpha1.datahub.metrics.PodMetric\x12\x12\n\nrate_range\x18\x02 \x01(\x04\"}\n\x1e\x43reateControllerMetricsRequest\x12[\n\x12\x63ontroller_metrics\x18\x01 \x03(\x0b\x32?.containersai.alameda.v1alpha1.datahub.metrics.ControllerMetric\"\x80\x01\n\x1f\x43reateApplicationMetricsRequest\x12]\n\x13\x61pplication_metrics\x18\x01 \x03(\x0b\x32@.containersai.alameda.v1alpha1.datahub.metrics.ApplicationMetric\"z\n\x1d\x43reateNamespaceMetricsRequest\x12Y\n\x11namespace_metrics\x18\x01 \x03(\x0b\x32>.containersai.alameda.v1alpha1.datahub.metrics.NamespaceMetric\"k\n\x18\x43reateNodeMetricsRequest\x12O\n\x0cnode_metrics\x18\x01 \x03(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.metrics.NodeMetric\"t\n\x1b\x43reateClusterMetricsRequest\x12U\n\x0f\x63luster_metrics\x18\x01 \x03(\x0b\x32<.containersai.alameda.v1alpha1.datahub.metrics.ClusterMetric\"\xa4\x02\n\x15ListPodMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\x12\x12\n\nrate_range\x18\x04 \x01(\x04\"\x8b\x01\n\x16ListPodMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12M\n\x0bpod_metrics\x18\x02 \x03(\x0b\x32\x38.containersai.alameda.v1alpha1.datahub.metrics.PodMetric\"\xdc\x02\n\x1cListControllerMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\x12\x43\n\x04kind\x18\x04 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\"\xa0\x01\n\x1dListControllerMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12[\n\x12\x63ontroller_metrics\x18\x02 \x03(\x0b\x32?.containersai.alameda.v1alpha1.datahub.metrics.ControllerMetric\"\x98\x02\n\x1dListApplicationMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\"\xa3\x01\n\x1eListApplicationMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12]\n\x13\x61pplication_metrics\x18\x02 \x03(\x0b\x32@.containersai.alameda.v1alpha1.datahub.metrics.ApplicationMetric\"\x96\x02\n\x1bListNamespaceMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\"\x9d\x01\n\x1cListNamespaceMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12Y\n\x11namespace_metrics\x18\x02 \x03(\x0b\x32>.containersai.alameda.v1alpha1.datahub.metrics.NamespaceMetric\"\x91\x02\n\x16ListNodeMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\"\x8e\x01\n\x17ListNodeMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12O\n\x0cnode_metrics\x18\x02 \x03(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.metrics.NodeMetric\"\x94\x02\n\x19ListClusterMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\"\x97\x01\n\x1aListClusterMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12U\n\x0f\x63luster_metrics\x18\x02 \x03(\x0b\x32<.containersai.alameda.v1alpha1.datahub.metrics.ClusterMetric\"\xb3\x01\n\x14\x43reateMetricsRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12K\n\x07metrics\x18\x02 \x03(\x0b\x32:.containersai.alameda.v1alpha1.datahub.metrics.WriteMetric\"\x8b\x02\n\x12ListMetricsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12N\n\x0bschema_meta\x18\x02 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12N\n\x0cmetric_types\x18\x03 \x03(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\"\x81\x01\n\x13ListMetricsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12\x46\n\x07metrics\x18\x02 \x01(\x0b\x32\x35.containersai.alameda.v1alpha1.datahub.metrics.MetricBCZAgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/metricsb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_metrics__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_queries__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_metrics_dot_metrics__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_metrics_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_resources_dot_metadata__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -38,6 +39,7 @@ _CREATEPODMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='pod_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreatePodMetricsRequest.pod_metrics', index=0,
@@ -45,14 +47,14 @@ _CREATEPODMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='rate_range', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreatePodMetricsRequest.rate_range', index=1,
       number=2, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -76,6 +78,7 @@ _CREATECONTROLLERMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='controller_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateControllerMetricsRequest.controller_metrics', index=0,
@@ -83,7 +86,7 @@ _CREATECONTROLLERMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -107,6 +110,7 @@ _CREATEAPPLICATIONMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='application_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateApplicationMetricsRequest.application_metrics', index=0,
@@ -114,7 +118,7 @@ _CREATEAPPLICATIONMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -138,6 +142,7 @@ _CREATENAMESPACEMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='namespace_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateNamespaceMetricsRequest.namespace_metrics', index=0,
@@ -145,7 +150,7 @@ _CREATENAMESPACEMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -169,6 +174,7 @@ _CREATENODEMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='node_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateNodeMetricsRequest.node_metrics', index=0,
@@ -176,7 +182,7 @@ _CREATENODEMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -200,6 +206,7 @@ _CREATECLUSTERMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='cluster_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateClusterMetricsRequest.cluster_metrics', index=0,
@@ -207,7 +214,7 @@ _CREATECLUSTERMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -231,6 +238,7 @@ _LISTPODMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsRequest.query_condition', index=0,
@@ -238,28 +246,28 @@ _LISTPODMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='rate_range', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsRequest.rate_range', index=3,
       number=4, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -283,6 +291,7 @@ _LISTPODMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsResponse.status', index=0,
@@ -290,14 +299,14 @@ _LISTPODMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='pod_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListPodMetricsResponse.pod_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -321,6 +330,7 @@ _LISTCONTROLLERMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsRequest.query_condition', index=0,
@@ -328,28 +338,28 @@ _LISTCONTROLLERMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsRequest.kind', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -373,6 +383,7 @@ _LISTCONTROLLERMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsResponse.status', index=0,
@@ -380,14 +391,14 @@ _LISTCONTROLLERMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='controller_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListControllerMetricsResponse.controller_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -411,6 +422,7 @@ _LISTAPPLICATIONMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListApplicationMetricsRequest.query_condition', index=0,
@@ -418,21 +430,21 @@ _LISTAPPLICATIONMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListApplicationMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListApplicationMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -456,6 +468,7 @@ _LISTAPPLICATIONMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListApplicationMetricsResponse.status', index=0,
@@ -463,14 +476,14 @@ _LISTAPPLICATIONMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='application_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListApplicationMetricsResponse.application_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -494,6 +507,7 @@ _LISTNAMESPACEMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNamespaceMetricsRequest.query_condition', index=0,
@@ -501,21 +515,21 @@ _LISTNAMESPACEMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNamespaceMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNamespaceMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -539,6 +553,7 @@ _LISTNAMESPACEMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNamespaceMetricsResponse.status', index=0,
@@ -546,14 +561,14 @@ _LISTNAMESPACEMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='namespace_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNamespaceMetricsResponse.namespace_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -577,6 +592,7 @@ _LISTNODEMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNodeMetricsRequest.query_condition', index=0,
@@ -584,21 +600,21 @@ _LISTNODEMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNodeMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNodeMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -622,6 +638,7 @@ _LISTNODEMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNodeMetricsResponse.status', index=0,
@@ -629,14 +646,14 @@ _LISTNODEMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='node_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListNodeMetricsResponse.node_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -660,6 +677,7 @@ _LISTCLUSTERMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListClusterMetricsRequest.query_condition', index=0,
@@ -667,21 +685,21 @@ _LISTCLUSTERMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListClusterMetricsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListClusterMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -705,6 +723,7 @@ _LISTCLUSTERMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListClusterMetricsResponse.status', index=0,
@@ -712,14 +731,14 @@ _LISTCLUSTERMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='cluster_metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListClusterMetricsResponse.cluster_metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -743,6 +762,7 @@ _CREATEMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateMetricsRequest.schema_meta', index=0,
@@ -750,14 +770,14 @@ _CREATEMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.CreateMetricsRequest.metrics', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -781,6 +801,7 @@ _LISTMETRICSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListMetricsRequest.query_condition', index=0,
@@ -788,21 +809,21 @@ _LISTMETRICSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListMetricsRequest.schema_meta', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_types', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListMetricsRequest.metric_types', index=2,
       number=3, type=14, cpp_type=8, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -826,6 +847,7 @@ _LISTMETRICSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListMetricsResponse.status', index=0,
@@ -833,14 +855,14 @@ _LISTMETRICSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metrics', full_name='containersai.alameda.v1alpha1.datahub.metrics.ListMetricsResponse.metrics', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

@@ -19,6 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.common',
   syntax='proto3',
   serialized_options=b'Z#github.com/containers-ai/api/common',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n\x15\x63ommon/policies.proto\x12\x13\x63ontainersai.common*T\n\x14RecommendationPolicy\x12#\n\x1fRECOMMENDATION_POLICY_UNDEFINED\x10\x00\x12\n\n\x06STABLE\x10\x01\x12\x0b\n\x07\x43OMPACT\x10\x02\x42%Z#github.com/containers-ai/api/commonb\x06proto3'
 )
 
@@ -27,19 +28,23 @@ _RECOMMENDATIONPOLICY = _descriptor.EnumDescriptor(
   full_name='containersai.common.RecommendationPolicy',
   filename=None,
   file=DESCRIPTOR,
+  create_key=_descriptor._internal_create_key,
   values=[
     _descriptor.EnumValueDescriptor(
       name='RECOMMENDATION_POLICY_UNDEFINED', index=0, number=0,
       serialized_options=None,
-      type=None),
+      type=None,
+      create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
       name='STABLE', index=1, number=1,
       serialized_options=None,
-      type=None),
+      type=None,
+      create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
       name='COMPACT', index=2, number=2,
       serialized_options=None,
-      type=None),
+      type=None,
+      create_key=_descriptor._internal_create_key),
   ],
   containing_type=None,
   serialized_options=None,

@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.datahub.keycodes',
   syntax='proto3',
   serialized_options=b'Z-github.com/containers-ai/api/datahub/keycodes',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n\x1f\x64\x61tahub/keycodes/services.proto\x12\x1d\x63ontainersai.datahub.keycodes\x1a\x1f\x64\x61tahub/keycodes/keycodes.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x17google/rpc/status.proto\"$\n\x11\x41\x64\x64KeycodeRequest\x12\x0f\n\x07keycode\x18\x01 \x01(\t\"q\n\x12\x41\x64\x64KeycodeResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12\x37\n\x07keycode\x18\x02 \x01(\x0b\x32&.containersai.datahub.keycodes.Keycode\"\'\n\x13ListKeycodesRequest\x12\x10\n\x08keycodes\x18\x01 \x03(\t\"\xad\x01\n\x14ListKeycodesResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12\x38\n\x08keycodes\x18\x02 \x03(\x0b\x32&.containersai.datahub.keycodes.Keycode\x12\x37\n\x07summary\x18\x03 \x01(\x0b\x32&.containersai.datahub.keycodes.Keycode\"\'\n\x14\x44\x65leteKeycodeRequest\x12\x0f\n\x07keycode\x18\x01 \x01(\t\"T\n GenerateRegistrationDataResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\"/\n\x1f\x41\x63tivateRegistrationDataRequest\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t2\xc6\x04\n\x0fKeycodesService\x12s\n\nAddKeycode\x12\x30.containersai.datahub.keycodes.AddKeycodeRequest\x1a\x31.containersai.datahub.keycodes.AddKeycodeResponse\"\x00\x12y\n\x0cListKeycodes\x12\x32.containersai.datahub.keycodes.ListKeycodesRequest\x1a\x33.containersai.datahub.keycodes.ListKeycodesResponse\"\x00\x12Z\n\rDeleteKeycode\x12\x33.containersai.datahub.keycodes.DeleteKeycodeRequest\x1a\x12.google.rpc.Status\"\x00\x12u\n\x18GenerateRegistrationData\x12\x16.google.protobuf.Empty\x1a?.containersai.datahub.keycodes.GenerateRegistrationDataResponse\"\x00\x12p\n\x18\x41\x63tivateRegistrationData\x12>.containersai.datahub.keycodes.ActivateRegistrationDataRequest\x1a\x12.google.rpc.Status\"\x00\x42/Z-github.com/containers-ai/api/datahub/keycodesb\x06proto3'
   ,
   dependencies=[datahub_dot_keycodes_dot_keycodes__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -34,6 +35,7 @@ _ADDKEYCODEREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='keycode', full_name='containersai.datahub.keycodes.AddKeycodeRequest.keycode', index=0,
@@ -41,7 +43,7 @@ _ADDKEYCODEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -65,6 +67,7 @@ _ADDKEYCODERESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.datahub.keycodes.AddKeycodeResponse.status', index=0,
@@ -72,14 +75,14 @@ _ADDKEYCODERESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='keycode', full_name='containersai.datahub.keycodes.AddKeycodeResponse.keycode', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -103,6 +106,7 @@ _LISTKEYCODESREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='keycodes', full_name='containersai.datahub.keycodes.ListKeycodesRequest.keycodes', index=0,
@@ -110,7 +114,7 @@ _LISTKEYCODESREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -134,6 +138,7 @@ _LISTKEYCODESRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.datahub.keycodes.ListKeycodesResponse.status', index=0,
@@ -141,21 +146,21 @@ _LISTKEYCODESRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='keycodes', full_name='containersai.datahub.keycodes.ListKeycodesResponse.keycodes', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='summary', full_name='containersai.datahub.keycodes.ListKeycodesResponse.summary', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -179,6 +184,7 @@ _DELETEKEYCODEREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='keycode', full_name='containersai.datahub.keycodes.DeleteKeycodeRequest.keycode', index=0,
@@ -186,7 +192,7 @@ _DELETEKEYCODEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -210,6 +216,7 @@ _GENERATEREGISTRATIONDATARESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.datahub.keycodes.GenerateRegistrationDataResponse.status', index=0,
@@ -217,14 +224,14 @@ _GENERATEREGISTRATIONDATARESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='data', full_name='containersai.datahub.keycodes.GenerateRegistrationDataResponse.data', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -248,6 +255,7 @@ _ACTIVATEREGISTRATIONDATAREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='data', full_name='containersai.datahub.keycodes.ActivateRegistrationDataRequest.data', index=0,
@@ -255,7 +263,7 @@ _ACTIVATEREGISTRATIONDATAREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -345,6 +353,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
+  create_key=_descriptor._internal_create_key,
   serialized_start=700,
   serialized_end=1282,
   methods=[
@@ -356,6 +365,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
     input_type=_ADDKEYCODEREQUEST,
     output_type=_ADDKEYCODERESPONSE,
     serialized_options=None,
+    create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='ListKeycodes',
@@ -365,6 +375,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
     input_type=_LISTKEYCODESREQUEST,
     output_type=_LISTKEYCODESRESPONSE,
     serialized_options=None,
+    create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='DeleteKeycode',
@@ -374,6 +385,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
     input_type=_DELETEKEYCODEREQUEST,
     output_type=google_dot_rpc_dot_status__pb2._STATUS,
     serialized_options=None,
+    create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='GenerateRegistrationData',
@@ -383,6 +395,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
     input_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
     output_type=_GENERATEREGISTRATIONDATARESPONSE,
     serialized_options=None,
+    create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='ActivateRegistrationData',
@@ -392,6 +405,7 @@ _KEYCODESSERVICE = _descriptor.ServiceDescriptor(
     input_type=_ACTIVATEREGISTRATIONDATAREQUEST,
     output_type=google_dot_rpc_dot_status__pb2._STATUS,
     serialized_options=None,
+    create_key=_descriptor._internal_create_key,
   ),
 ])
 _sym_db.RegisterServiceDescriptor(_KEYCODESSERVICE)

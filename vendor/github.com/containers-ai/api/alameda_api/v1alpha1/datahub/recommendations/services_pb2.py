@@ -24,6 +24,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.recommendations',
   syntax='proto3',
   serialized_options=b'ZIgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/recommendations',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n;alameda_api/v1alpha1/datahub/recommendations/services.proto\x12\x35\x63ontainersai.alameda.v1alpha1.datahub.recommendations\x1a\x31\x61lameda_api/v1alpha1/datahub/common/queries.proto\x1a\x42\x61lameda_api/v1alpha1/datahub/recommendations/recommendations.proto\x1a\x38\x61lameda_api/v1alpha1/datahub/recommendations/types.proto\x1a\x35\x61lameda_api/v1alpha1/datahub/resources/metadata.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\x1a\x17google/rpc/status.proto\"\x9d\x01\n\x1f\x43reatePodRecommendationsRequest\x12\x65\n\x13pod_recommendations\x18\x01 \x03(\x0b\x32H.containersai.alameda.v1alpha1.datahub.recommendations.PodRecommendation\x12\x13\n\x0bgranularity\x18\x02 \x01(\x03\"\x9d\x01\n&CreateControllerRecommendationsRequest\x12s\n\x1a\x63ontroller_recommendations\x18\x01 \x03(\x0b\x32O.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendation\"\xa0\x01\n\'CreateApplicationRecommendationsRequest\x12u\n\x1b\x61pplication_recommendations\x18\x01 \x03(\x0b\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ApplicationRecommendation\"\x9a\x01\n%CreateNamespaceRecommendationsRequest\x12q\n\x19namespace_recommendations\x18\x01 \x03(\x0b\x32N.containersai.alameda.v1alpha1.datahub.recommendations.NamespaceRecommendation\"\x8b\x01\n CreateNodeRecommendationsRequest\x12g\n\x14node_recommendations\x18\x01 \x03(\x0b\x32I.containersai.alameda.v1alpha1.datahub.recommendations.NodeRecommendation\"\x94\x01\n#CreateClusterRecommendationsRequest\x12m\n\x17\x63luster_recommendations\x18\x01 \x03(\x0b\x32L.containersai.alameda.v1alpha1.datahub.recommendations.ClusterRecommendation\"\xa2\x02\n\x1dListPodRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12\x13\n\x0bgranularity\x18\x04 \x01(\x03\"\xab\x01\n\x1eListPodRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12\x65\n\x13pod_recommendations\x18\x02 \x03(\x0b\x32H.containersai.alameda.v1alpha1.datahub.recommendations.PodRecommendation\"\x80\x03\n$ListControllerRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12j\n\x10recommended_type\x18\x04 \x01(\x0e\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendedType\"\xc0\x01\n%ListControllerRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12s\n\x1a\x63ontroller_recommendations\x18\x02 \x03(\x0b\x32O.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendation\"\x81\x03\n%ListApplicationRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12j\n\x10recommended_type\x18\x04 \x01(\x0e\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendedType\"\xc3\x01\n&ListApplicationRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12u\n\x1b\x61pplication_recommendations\x18\x02 \x03(\x0b\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ApplicationRecommendation\"\xff\x02\n#ListNamespaceRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12j\n\x10recommended_type\x18\x04 \x01(\x0e\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendedType\"\xbd\x01\n$ListNamespaceRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12q\n\x19namespace_recommendations\x18\x02 \x03(\x0b\x32N.containersai.alameda.v1alpha1.datahub.recommendations.NamespaceRecommendation\"\xfa\x02\n\x1eListNodeRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12j\n\x10recommended_type\x18\x04 \x01(\x0e\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendedType\"\xae\x01\n\x1fListNodeRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12g\n\x14node_recommendations\x18\x02 \x03(\x0b\x32I.containersai.alameda.v1alpha1.datahub.recommendations.NodeRecommendation\"\xfd\x02\n!ListClusterRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12P\n\x0bobject_meta\x18\x02 \x03(\x0b\x32;.containersai.alameda.v1alpha1.datahub.resources.ObjectMeta\x12\x43\n\x04kind\x18\x03 \x01(\x0e\x32\x35.containersai.alameda.v1alpha1.datahub.resources.Kind\x12j\n\x10recommended_type\x18\x04 \x01(\x0e\x32P.containersai.alameda.v1alpha1.datahub.recommendations.ControllerRecommendedType\"\xb7\x01\n\"ListClusterRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12m\n\x17\x63luster_recommendations\x18\x02 \x03(\x0b\x32L.containersai.alameda.v1alpha1.datahub.recommendations.ClusterRecommendation\"\xd3\x01\n\x1c\x43reateRecommendationsRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12\x63\n\x0frecommendations\x18\x02 \x03(\x0b\x32J.containersai.alameda.v1alpha1.datahub.recommendations.WriteRecommendation\"\xc3\x01\n\x1aListRecommendationsRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\x12N\n\x0bschema_meta\x18\x02 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\"\xa1\x01\n\x1bListRecommendationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12^\n\x0frecommendations\x18\x02 \x01(\x0b\x32\x45.containersai.alameda.v1alpha1.datahub.recommendations.RecommendationBKZIgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/recommendationsb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_queries__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_recommendations_dot_recommendations__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_recommendations_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_resources_dot_metadata__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -37,6 +38,7 @@ _CREATEPODRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='pod_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreatePodRecommendationsRequest.pod_recommendations', index=0,
@@ -44,14 +46,14 @@ _CREATEPODRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='granularity', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreatePodRecommendationsRequest.granularity', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -75,6 +77,7 @@ _CREATECONTROLLERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='controller_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateControllerRecommendationsRequest.controller_recommendations', index=0,
@@ -82,7 +85,7 @@ _CREATECONTROLLERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -106,6 +109,7 @@ _CREATEAPPLICATIONRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='application_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateApplicationRecommendationsRequest.application_recommendations', index=0,
@@ -113,7 +117,7 @@ _CREATEAPPLICATIONRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -137,6 +141,7 @@ _CREATENAMESPACERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='namespace_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateNamespaceRecommendationsRequest.namespace_recommendations', index=0,
@@ -144,7 +149,7 @@ _CREATENAMESPACERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -168,6 +173,7 @@ _CREATENODERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='node_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateNodeRecommendationsRequest.node_recommendations', index=0,
@@ -175,7 +181,7 @@ _CREATENODERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -199,6 +205,7 @@ _CREATECLUSTERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='cluster_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateClusterRecommendationsRequest.cluster_recommendations', index=0,
@@ -206,7 +213,7 @@ _CREATECLUSTERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -230,6 +237,7 @@ _LISTPODRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsRequest.query_condition', index=0,
@@ -237,28 +245,28 @@ _LISTPODRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='granularity', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsRequest.granularity', index=3,
       number=4, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -282,6 +290,7 @@ _LISTPODRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsResponse.status', index=0,
@@ -289,14 +298,14 @@ _LISTPODRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='pod_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListPodRecommendationsResponse.pod_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -320,6 +329,7 @@ _LISTCONTROLLERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsRequest.query_condition', index=0,
@@ -327,28 +337,28 @@ _LISTCONTROLLERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommended_type', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsRequest.recommended_type', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -372,6 +382,7 @@ _LISTCONTROLLERRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsResponse.status', index=0,
@@ -379,14 +390,14 @@ _LISTCONTROLLERRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='controller_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListControllerRecommendationsResponse.controller_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -410,6 +421,7 @@ _LISTAPPLICATIONRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsRequest.query_condition', index=0,
@@ -417,28 +429,28 @@ _LISTAPPLICATIONRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommended_type', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsRequest.recommended_type', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -462,6 +474,7 @@ _LISTAPPLICATIONRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsResponse.status', index=0,
@@ -469,14 +482,14 @@ _LISTAPPLICATIONRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='application_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListApplicationRecommendationsResponse.application_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -500,6 +513,7 @@ _LISTNAMESPACERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsRequest.query_condition', index=0,
@@ -507,28 +521,28 @@ _LISTNAMESPACERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommended_type', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsRequest.recommended_type', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -552,6 +566,7 @@ _LISTNAMESPACERECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsResponse.status', index=0,
@@ -559,14 +574,14 @@ _LISTNAMESPACERECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='namespace_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNamespaceRecommendationsResponse.namespace_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -590,6 +605,7 @@ _LISTNODERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsRequest.query_condition', index=0,
@@ -597,28 +613,28 @@ _LISTNODERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommended_type', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsRequest.recommended_type', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -642,6 +658,7 @@ _LISTNODERECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsResponse.status', index=0,
@@ -649,14 +666,14 @@ _LISTNODERECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='node_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListNodeRecommendationsResponse.node_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -680,6 +697,7 @@ _LISTCLUSTERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsRequest.query_condition', index=0,
@@ -687,28 +705,28 @@ _LISTCLUSTERRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='object_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsRequest.object_meta', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='kind', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsRequest.kind', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommended_type', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsRequest.recommended_type', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -732,6 +750,7 @@ _LISTCLUSTERRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsResponse.status', index=0,
@@ -739,14 +758,14 @@ _LISTCLUSTERRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='cluster_recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListClusterRecommendationsResponse.cluster_recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -770,6 +789,7 @@ _CREATERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateRecommendationsRequest.schema_meta', index=0,
@@ -777,14 +797,14 @@ _CREATERECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.CreateRecommendationsRequest.recommendations', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -808,6 +828,7 @@ _LISTRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListRecommendationsRequest.query_condition', index=0,
@@ -815,14 +836,14 @@ _LISTRECOMMENDATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListRecommendationsRequest.schema_meta', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -846,6 +867,7 @@ _LISTRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListRecommendationsResponse.status', index=0,
@@ -853,14 +875,14 @@ _LISTRECOMMENDATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='recommendations', full_name='containersai.alameda.v1alpha1.datahub.recommendations.ListRecommendationsResponse.recommendations', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

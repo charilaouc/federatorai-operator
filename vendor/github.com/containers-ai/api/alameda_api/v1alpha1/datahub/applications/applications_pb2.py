@@ -20,6 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.applications',
   syntax='proto3',
   serialized_options=b'ZFgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/applications',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n<alameda_api/v1alpha1/datahub/applications/applications.proto\x12\x32\x63ontainersai.alameda.v1alpha1.datahub.applications\x1a\x31\x61lameda_api/v1alpha1/datahub/common/queries.proto\x1a\x31\x61lameda_api/v1alpha1/datahub/common/rawdata.proto\"t\n\x10WriteApplication\x12\x13\n\x0bmeasurement\x18\x01 \x01(\t\x12K\n\nwrite_data\x18\x02 \x01(\x0b\x32\x37.containersai.alameda.v1alpha1.datahub.common.WriteData\"x\n\x0fReadApplication\x12\x13\n\x0bmeasurement\x18\x01 \x01(\t\x12P\n\x0fwhere_condition\x18\x02 \x03(\x0b\x32\x37.containersai.alameda.v1alpha1.datahub.common.Condition\"z\n\x11\x44\x65leteApplication\x12\x13\n\x0bmeasurement\x18\x01 \x01(\t\x12P\n\x0fwhere_condition\x18\x02 \x03(\x0b\x32\x37.containersai.alameda.v1alpha1.datahub.common.ConditionBHZFgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/applicationsb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_queries__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_rawdata__pb2.DESCRIPTOR,])
@@ -33,6 +34,7 @@ _WRITEAPPLICATION = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='measurement', full_name='containersai.alameda.v1alpha1.datahub.applications.WriteApplication.measurement', index=0,
@@ -40,14 +42,14 @@ _WRITEAPPLICATION = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='write_data', full_name='containersai.alameda.v1alpha1.datahub.applications.WriteApplication.write_data', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -71,6 +73,7 @@ _READAPPLICATION = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='measurement', full_name='containersai.alameda.v1alpha1.datahub.applications.ReadApplication.measurement', index=0,
@@ -78,14 +81,14 @@ _READAPPLICATION = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='where_condition', full_name='containersai.alameda.v1alpha1.datahub.applications.ReadApplication.where_condition', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -109,6 +112,7 @@ _DELETEAPPLICATION = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='measurement', full_name='containersai.alameda.v1alpha1.datahub.applications.DeleteApplication.measurement', index=0,
@@ -116,14 +120,14 @@ _DELETEAPPLICATION = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='where_condition', full_name='containersai.alameda.v1alpha1.datahub.applications.DeleteApplication.where_condition', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

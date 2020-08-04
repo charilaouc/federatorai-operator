@@ -19,6 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.schemas',
   syntax='proto3',
   serialized_options=b'ZAgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/schemas',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n2alameda_api/v1alpha1/datahub/schemas/schemas.proto\x12-containersai.alameda.v1alpha1.datahub.schemas\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\"\xaa\x01\n\x06Schema\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12P\n\x0cmeasurements\x18\x02 \x03(\x0b\x32:.containersai.alameda.v1alpha1.datahub.schemas.MeasurementBCZAgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/schemasb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,])
@@ -32,6 +33,7 @@ _SCHEMA = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.schemas.Schema.schema_meta', index=0,
@@ -39,14 +41,14 @@ _SCHEMA = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='measurements', full_name='containersai.alameda.v1alpha1.datahub.schemas.Schema.measurements', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

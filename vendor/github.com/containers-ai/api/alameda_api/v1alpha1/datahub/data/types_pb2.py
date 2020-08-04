@@ -22,6 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.data',
   syntax='proto3',
   serialized_options=b'Z>github.com/containers-ai/api/alameda_api/v1alpha1/datahub/data',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n-alameda_api/v1alpha1/datahub/data/types.proto\x12*containersai.alameda.v1alpha1.datahub.data\x1a\x31\x61lameda_api/v1alpha1/datahub/common/metrics.proto\x1a\x31\x61lameda_api/v1alpha1/datahub/common/rawdata.proto\x1a/alameda_api/v1alpha1/datahub/common/types.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\"\x9c\x01\n\x04\x44\x61ta\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12\x44\n\x07rawdata\x18\x02 \x03(\x0b\x32\x33.containersai.alameda.v1alpha1.datahub.data.Rawdata\"\xe2\x02\n\x07Rawdata\x12\x13\n\x0bmeasurement\x18\x01 \x01(\t\x12M\n\x0bmetric_type\x18\x02 \x01(\x0e\x32\x38.containersai.alameda.v1alpha1.datahub.common.MetricType\x12Y\n\x11resource_boundary\x18\x03 \x01(\x0e\x32>.containersai.alameda.v1alpha1.datahub.common.ResourceBoundary\x12S\n\x0eresource_quota\x18\x04 \x01(\x0e\x32;.containersai.alameda.v1alpha1.datahub.common.ResourceQuota\x12\x43\n\x06groups\x18\x05 \x03(\x0b\x32\x33.containersai.alameda.v1alpha1.datahub.common.GroupB@Z>github.com/containers-ai/api/alameda_api/v1alpha1/datahub/datab\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_metrics__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_rawdata__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,])
@@ -35,6 +36,7 @@ _DATA = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.data.Data.schema_meta', index=0,
@@ -42,14 +44,14 @@ _DATA = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='rawdata', full_name='containersai.alameda.v1alpha1.datahub.data.Data.rawdata', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -73,6 +75,7 @@ _RAWDATA = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='measurement', full_name='containersai.alameda.v1alpha1.datahub.data.Rawdata.measurement', index=0,
@@ -80,35 +83,35 @@ _RAWDATA = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='metric_type', full_name='containersai.alameda.v1alpha1.datahub.data.Rawdata.metric_type', index=1,
       number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='resource_boundary', full_name='containersai.alameda.v1alpha1.datahub.data.Rawdata.resource_boundary', index=2,
       number=3, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='resource_quota', full_name='containersai.alameda.v1alpha1.datahub.data.Rawdata.resource_quota', index=3,
       number=4, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='groups', full_name='containersai.alameda.v1alpha1.datahub.data.Rawdata.groups', index=4,
       number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

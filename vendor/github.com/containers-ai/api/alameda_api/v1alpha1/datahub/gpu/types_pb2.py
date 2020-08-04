@@ -18,6 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.gpu',
   syntax='proto3',
   serialized_options=b'Z=github.com/containers-ai/api/alameda_api/v1alpha1/datahub/gpu',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n,alameda_api/v1alpha1/datahub/gpu/types.proto\x12)containersai.alameda.v1alpha1.datahub.gpu\"P\n\x0bGpuMetadata\x12\x0c\n\x04host\x18\x01 \x01(\t\x12\x10\n\x08instance\x18\x02 \x01(\t\x12\x0b\n\x03job\x18\x03 \x01(\t\x12\x14\n\x0cminor_number\x18\x04 \x01(\t\"\x1f\n\x07GpuSpec\x12\x14\n\x0cmemory_total\x18\x01 \x01(\x02\x42?Z=github.com/containers-ai/api/alameda_api/v1alpha1/datahub/gpub\x06proto3'
 )
 
@@ -30,6 +31,7 @@ _GPUMETADATA = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='host', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata.host', index=0,
@@ -37,28 +39,28 @@ _GPUMETADATA = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='instance', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata.instance', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='job', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata.job', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='minor_number', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuMetadata.minor_number', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -82,6 +84,7 @@ _GPUSPEC = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='memory_total', full_name='containersai.alameda.v1alpha1.datahub.gpu.GpuSpec.memory_total', index=0,
@@ -89,7 +92,7 @@ _GPUSPEC = _descriptor.Descriptor(
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

@@ -20,6 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.licenses',
   syntax='proto3',
   serialized_options=b'ZBgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/licenses',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n4alameda_api/v1alpha1/datahub/licenses/services.proto\x12.containersai.alameda.v1alpha1.datahub.licenses\x1a\x34\x61lameda_api/v1alpha1/datahub/licenses/licenses.proto\x1a\x17google/rpc/status.proto\"\x82\x01\n\x12GetLicenseResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12H\n\x07license\x18\x02 \x01(\x0b\x32\x37.containersai.alameda.v1alpha1.datahub.licenses.LicenseBDZBgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/licensesb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_licenses_dot_licenses__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -33,6 +34,7 @@ _GETLICENSERESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.licenses.GetLicenseResponse.status', index=0,
@@ -40,14 +42,14 @@ _GETLICENSERESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='license', full_name='containersai.alameda.v1alpha1.datahub.licenses.GetLicenseResponse.license', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

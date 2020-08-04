@@ -5,7 +5,7 @@ go 1.13
 require (
 	cloud.google.com/go v0.56.0 // indirect
 	github.com/containers-ai/alameda v0.9.168-0.20200714074612-47b570672d31
-	github.com/containers-ai/api v4.2.790-0.20200714053606-32a93688cdee+incompatible
+	github.com/containers-ai/api v4.2.790-0.20200802143522-a83d2a3dbcb5+incompatible
 	github.com/coreos/prometheus-operator v0.39.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v0.1.0

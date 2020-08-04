@@ -18,6 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.licenses',
   syntax='proto3',
   serialized_options=b'ZBgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/licenses',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n4alameda_api/v1alpha1/datahub/licenses/licenses.proto\x12.containersai.alameda.v1alpha1.datahub.licenses\"\x18\n\x07License\x12\r\n\x05Valid\x18\x01 \x01(\x08\x42\x44ZBgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/licensesb\x06proto3'
 )
 
@@ -30,6 +31,7 @@ _LICENSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='Valid', full_name='containersai.alameda.v1alpha1.datahub.licenses.License.Valid', index=0,
@@ -37,7 +39,7 @@ _LICENSE = _descriptor.Descriptor(
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.scores',
   syntax='proto3',
   serialized_options=b'Z@github.com/containers-ai/api/alameda_api/v1alpha1/datahub/scores',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n2alameda_api/v1alpha1/datahub/scores/services.proto\x12,containersai.alameda.v1alpha1.datahub.scores\x1a\x31\x61lameda_api/v1alpha1/datahub/common/queries.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/scores/scores.proto\x1a\x17google/rpc/status.proto\"}\n$ListSimulatedSchedulingScoresRequest\x12U\n\x0fquery_condition\x18\x01 \x01(\x0b\x32<.containersai.alameda.v1alpha1.datahub.common.QueryCondition\"\xa3\x01\n%ListSimulatedSchedulingScoresResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12V\n\x06scores\x18\x02 \x03(\x0b\x32\x46.containersai.alameda.v1alpha1.datahub.scores.SimulatedSchedulingScore\"\x80\x01\n&CreateSimulatedSchedulingScoresRequest\x12V\n\x06scores\x18\x01 \x03(\x0b\x32\x46.containersai.alameda.v1alpha1.datahub.scores.SimulatedSchedulingScoreBBZ@github.com/containers-ai/api/alameda_api/v1alpha1/datahub/scoresb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_common_dot_queries__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_scores_dot_scores__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -34,6 +35,7 @@ _LISTSIMULATEDSCHEDULINGSCORESREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='query_condition', full_name='containersai.alameda.v1alpha1.datahub.scores.ListSimulatedSchedulingScoresRequest.query_condition', index=0,
@@ -41,7 +43,7 @@ _LISTSIMULATEDSCHEDULINGSCORESREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -65,6 +67,7 @@ _LISTSIMULATEDSCHEDULINGSCORESRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.scores.ListSimulatedSchedulingScoresResponse.status', index=0,
@@ -72,14 +75,14 @@ _LISTSIMULATEDSCHEDULINGSCORESRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='scores', full_name='containersai.alameda.v1alpha1.datahub.scores.ListSimulatedSchedulingScoresResponse.scores', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -103,6 +106,7 @@ _CREATESIMULATEDSCHEDULINGSCORESREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='scores', full_name='containersai.alameda.v1alpha1.datahub.scores.CreateSimulatedSchedulingScoresRequest.scores', index=0,
@@ -110,7 +114,7 @@ _CREATESIMULATEDSCHEDULINGSCORESREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],

@@ -22,6 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='containersai.alameda.v1alpha1.datahub.applications',
   syntax='proto3',
   serialized_options=b'ZFgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/applications',
+  create_key=_descriptor._internal_create_key,
   serialized_pb=b'\n8alameda_api/v1alpha1/datahub/applications/services.proto\x12\x32\x63ontainersai.alameda.v1alpha1.datahub.applications\x1a<alameda_api/v1alpha1/datahub/applications/applications.proto\x1a\x35\x61lameda_api/v1alpha1/datahub/applications/types.proto\x1a\x30\x61lameda_api/v1alpha1/datahub/schemas/types.proto\x1a\x17google/rpc/status.proto\"\xc7\x01\n\x19\x43reateApplicationsRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12Z\n\x0c\x61pplications\x18\x02 \x03(\x0b\x32\x44.containersai.alameda.v1alpha1.datahub.applications.WriteApplication\"\xc4\x01\n\x17ListApplicationsRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12Y\n\x0c\x61pplications\x18\x02 \x03(\x0b\x32\x43.containersai.alameda.v1alpha1.datahub.applications.ReadApplication\"\x95\x01\n\x18ListApplicationsResponse\x12\"\n\x06status\x18\x01 \x01(\x0b\x32\x12.google.rpc.Status\x12U\n\x0c\x61pplications\x18\x02 \x01(\x0b\x32?.containersai.alameda.v1alpha1.datahub.applications.Application\"\xc8\x01\n\x19\x44\x65leteApplicationsRequest\x12N\n\x0bschema_meta\x18\x01 \x01(\x0b\x32\x39.containersai.alameda.v1alpha1.datahub.schemas.SchemaMeta\x12[\n\x0c\x61pplications\x18\x02 \x03(\x0b\x32\x45.containersai.alameda.v1alpha1.datahub.applications.DeleteApplicationBHZFgithub.com/containers-ai/api/alameda_api/v1alpha1/datahub/applicationsb\x06proto3'
   ,
   dependencies=[alameda__api_dot_v1alpha1_dot_datahub_dot_applications_dot_applications__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_applications_dot_types__pb2.DESCRIPTOR,alameda__api_dot_v1alpha1_dot_datahub_dot_schemas_dot_types__pb2.DESCRIPTOR,google_dot_rpc_dot_status__pb2.DESCRIPTOR,])
@@ -35,6 +36,7 @@ _CREATEAPPLICATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.applications.CreateApplicationsRequest.schema_meta', index=0,
@@ -42,14 +44,14 @@ _CREATEAPPLICATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='applications', full_name='containersai.alameda.v1alpha1.datahub.applications.CreateApplicationsRequest.applications', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -73,6 +75,7 @@ _LISTAPPLICATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.applications.ListApplicationsRequest.schema_meta', index=0,
@@ -80,14 +83,14 @@ _LISTAPPLICATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='applications', full_name='containersai.alameda.v1alpha1.datahub.applications.ListApplicationsRequest.applications', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -111,6 +114,7 @@ _LISTAPPLICATIONSRESPONSE = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='status', full_name='containersai.alameda.v1alpha1.datahub.applications.ListApplicationsResponse.status', index=0,
@@ -118,14 +122,14 @@ _LISTAPPLICATIONSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='applications', full_name='containersai.alameda.v1alpha1.datahub.applications.ListApplicationsResponse.applications', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -149,6 +153,7 @@ _DELETEAPPLICATIONSREQUEST = _descriptor.Descriptor(
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
+  create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
       name='schema_meta', full_name='containersai.alameda.v1alpha1.datahub.applications.DeleteApplicationsRequest.schema_meta', index=0,
@@ -156,14 +161,14 @@ _DELETEAPPLICATIONSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='applications', full_name='containersai.alameda.v1alpha1.datahub.applications.DeleteApplicationsRequest.applications', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
