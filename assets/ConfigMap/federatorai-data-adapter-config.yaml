@@ -417,7 +417,7 @@ data:
         url = "$DATAHUB_URL"
         port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
-        query_end_time_offset = "1m"
+        query_end_time_offset = "3m"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
         # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
         use_query_timestamp = true
