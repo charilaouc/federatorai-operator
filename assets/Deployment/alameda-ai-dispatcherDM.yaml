@@ -50,9 +50,10 @@ spec:
               - /usr/local/bin/ai-dispatcher
               - probe
               - --type=liveness
-            initialDelaySeconds: 5
+            initialDelaySeconds: 60
+            failureThreshold: 10
             periodSeconds: 60
-            timeoutSeconds: 5
+            timeoutSeconds: 30
           volumeMounts: 
           - name: alameda-ai-dispatcher-config
             mountPath: /etc/alameda/ai-dispatcher/ai-dispatcher.toml
