@@ -307,6 +307,118 @@ check_previous_alamedascaler()
     done <<< "$(kubectl get alamedascaler --all-namespaces --output jsonpath='{range .items[*]}{"\n"}{.apiVersion}{"\t"}{.metadata.name}{"\t"}{.metadata.namespace}' 2>/dev/null)"
 }
 
+get_datadog_agent_info()
+{
+    while read a b c
+    do
+        dd_namespace=$a
+        dd_key=$b
+        dd_api_secret_name=$c
+    done<<<"$(kubectl get daemonset --all-namespaces -o jsonpath='{range .items[*]}{@.metadata.namespace}{"\t"}{range .spec.template.spec.containers[*]}{.env[?(@.name=="DD_API_KEY")].name}{"\t"}{.env[?(@.name=="DD_API_KEY")].valueFrom.secretKeyRef.name}{"\n"}{end}{"\t"}{end}' 2>/dev/null| grep DD_API_KEY | head -1)"
+
+    if [ "$dd_key" = "" ] || [ "$dd_namespace" = "" ] || [ "$dd_api_secret_name" = "" ]; then
+        return
+    fi
+    dd_api_key="`kubectl get secret -n $dd_namespace $dd_api_secret_name -o jsonpath='{.data.api-key}'`"
+    dd_app_key="`kubectl get secret -n $dd_namespace -o jsonpath='{range .items[*]}{.data.app-key}'`"
+    dd_cluster_name="`kubectl describe ds -n $dd_namespace|grep "DD_TAG"|head -1|awk '{print $2}'|cut -d ':' -f2`"
+}
+
+display_cluster_scaler_file_location()
+{
+    echo -e "You can find $alamedascaler_cluster_filename template file inside $file_folder"
+}
+
+get_cluster_name()
+{
+    cluster_name=`kubectl get cm cluster-info -n default -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
+    if [ "$cluster_name" = "" ];then
+        cluster_name=`kubectl get cm cluster-info -n kube-public -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
+        if [ "$cluster_name" = "" ];then
+            cluster_name=`kubectl get cm cluster-info -n kube-service-catalog’ -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
+        fi
+    fi
+}
+
+setup_cluster_alamedascaler()
+{
+    alamedascaler_cluster_filename="alamedascaler_federatorai.yaml"
+
+    cat > ${alamedascaler_cluster_filename} << __EOF__
+apiVersion: autoscaling.containers.ai/v1alpha2
+kind: AlamedaScaler
+metadata:
+  name: clusterscaler
+  namespace: ${install_namespace}
+spec:
+  clusterName: NeedToBeReplacedByClusterName
+__EOF__
+
+    while [ "$monitor_cluster" != "y" ] && [ "$monitor_cluster" != "n" ]
+    do
+        default="y"
+        read -r -p "$(tput setaf 127)Do you want to monitor this cluster? [default: $default]: $(tput sgr 0)" monitor_cluster </dev/tty
+        monitor_cluster=${monitor_cluster:-$default}
+        monitor_cluster=$(echo "$monitor_cluster" | tr '[:upper:]' '[:lower:]')
+    done
+
+    if [ "monitor_cluster" = "n" ]; then
+        display_cluster_scaler_file_location
+        return
+    fi
+
+    # Get Datadog agent info (User configuration)
+    get_datadog_agent_info
+
+    if [ "$dd_namespace" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Can't find the datadog agent installed namespace.$(tput sgr 0)"
+        display_cluster_scaler_file_location
+        return
+    fi
+
+    if [ "$dd_api_key" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Can't find the datadog agent API key. Please correctly configure the datadog agent API key.$(tput sgr 0)"
+        pass="n"
+    fi
+
+    if [ "$dd_app_key" = "" ]; then
+        echo -e "\n$(tput setaf 1)Error! Can't find the datadog agent APP key. Please correctly configure the datadog agent APP key.$(tput sgr 0)"
+        pass="n"
+    fi
+
+    if [ "$pass" = "n" ]; then
+        display_cluster_scaler_file_location
+        return
+    fi
+
+    if [ "$dd_cluster_name" = "" ]; then
+        get_cluster_name
+        if [ "$cluster_name" = "" ];then
+            # Can't get cluster uid.
+            echo -e "$(tput setaf 3)Warning!! Can't get cluster uid, you need to specify cluster name in $alamedascaler_cluster_filename $(tput sgr 0)"
+            display_cluster_scaler_file_location
+            return
+        fi
+    fi
+
+    if [ "$dd_cluster_name" != "" ]; then
+        echo -e "$(tput setaf 3)Use \"$dd_cluster_name\" as cluster name and DD_TAGS$(tput sgr 0)"
+        sed -i "s|\bclusterName:.*|clusterName: ${dd_cluster_name}|g" $alamedascaler_cluster_filename
+    else
+        if [ "$cluster_name" != "" ]; then
+            echo -e "$(tput setaf 3)Use \"$cluster_name\" as cluster name and DD_TAGS$(tput sgr 0)"
+            sed -i "s|\bclusterName:.*|clusterName: ${cluster_name}|g" $alamedascaler_cluster_filename
+        fi
+    fi
+
+    echo "Applying file $alamedascaler_cluster_filename ..."
+    kubectl apply -f $alamedascaler_cluster_filename
+    if [ "$?" != "0" ];then
+        echo -e "$(tput setaf 3)Warning!! Failed to apply $alamedascaler_cluster_filename $(tput sgr 0)"
+    fi
+    echo "Done"
+}
+
 get_recommended_prometheus_url()
 {
     if [[ "$openshift_minor_version" == "11" ]] || [[ "$openshift_minor_version" == "12" ]]; then
@@ -853,6 +965,7 @@ get_grafana_route $install_namespace
 get_restapi_route $install_namespace
 echo -e "$(tput setaf 6)\nInstall Alameda $tag_number successfully$(tput sgr 0)"
 check_previous_alamedascaler
+setup_cluster_alamedascaler
 leave_prog
 exit 0
 
