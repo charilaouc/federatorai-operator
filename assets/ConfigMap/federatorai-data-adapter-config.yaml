@@ -146,18 +146,21 @@ data:
         ### Prediction ###
 
         ## Node ##
+        # Calculate max/min/avg of node cpu/memory for next 24 hours
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
           granularity = "3600"
 
         ## Namespace ##
+        # Calculate max/min/avg of namespace cpu/memory for next 24 hours
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "prediction"
           granularity = "3600"
 
         ## Controller ##
+        # Calculate max/min/avg of controller cpu/memory for next 24 hours
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -177,18 +180,21 @@ data:
         ### Prediction ###
 
         ## Node ##
+        # Calculate max/min/avg of node cpu/memory for next 7 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
           granularity = "21600"
 
         ## Namespace ##
+        # Calculate max/min/avg of namespace cpu/memory for next 7 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "prediction"
           granularity = "21600"
 
         ## Controller ##
+        # Calculate max/min/avg of controller cpu/memory for next 7 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -208,18 +214,21 @@ data:
         ### Prediction ###
 
         ## Node ##
+        # Calculate max/min/avg of node cpu/memory for next 30 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
           granularity = "86400"
 
         ## Namespace ##
+        # Calculate max/min/avg of namespace cpu/memory for next 30 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "prediction"
           granularity = "86400"
 
         ## Controller ##
+        # Calculate max/min/avg of controller cpu/memory for next 30 days
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -230,6 +239,7 @@ data:
         ### Fedemeter ###
 
         ## Cost Analysis - Recommended Provider Cost
+        # Calculate each provider cost for next 30 days
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "recommendation_jeri"
           scope = "fedemeter"
@@ -237,6 +247,7 @@ data:
 
         ## Cost Allocation - Namespace Prediction Cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
+        # Calculate each namespace total cost for next 30 days
           measurement = "resource_prediction_cost_namespace"
           scope = "fedemeter"
           granularity = "86400"
@@ -253,18 +264,21 @@ data:
         ### Planning ###
 
         ## Node ##
+        # give node recommendation cpu for the next one hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "planning"
           granularity = "3600"
 
         ## Namespace ##
+        # give namespace recommendation cpu for the next one hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "planning"
           granularity = "3600"
 
         ## Controller ##
+        # give controller recommendation cpu for the next one hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -284,18 +298,21 @@ data:
         ### Planning ###
 
         ## Node ##
+        # give node recommendation cpu for the next six hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "planning"
           granularity = "21600"
 
         ## Namespace ##
+        # give namespace recommendation cpu for the next six hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "planning"
           granularity = "21600"
 
         ## Controller ##
+        # give controller recommendation cpu for the next six hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -315,18 +332,21 @@ data:
         ### Planning ###
 
         ## Node ##
+        # give node recommendation cpu for the next twenty-four hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "planning"
           granularity = "86400"
 
         ## Namespace ##
+        # give namespace recommendation cpu for the next twenty-four hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "planning"
           granularity = "86400"
 
         ## Controller ##
+        # give controller recommendation cpu for the next twenty-four hour.
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -346,16 +366,19 @@ data:
         ### Prediction ###
 
         ## Node ##
+        # Send current node cpu/memory prediction
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "node"
           scope = "prediction"
 
         ## Namespace ##
+        # Send current namespace cpu/memory prediction
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           measurement = "namespace"
           scope = "prediction"
 
         ## Controller ##
+        # Send current controller cpu/memory prediction
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -363,12 +386,14 @@ data:
           scope = "prediction"
 
         ## Application-aware - Kafka ##
+        # Send current consumer_group current offset prediction
         [[inputs.alameda_datahub_query.watched_source]]
           name = "<kafka_consumer_group_name>"
           namespace = "<kafka_consumer_group_namespace>"
           measurement = "kafka_consumer_group_current_offset"
           scope = "prediction"
 
+        # Send current topic current offset prediction
         [[inputs.alameda_datahub_query.watched_source]]
           name = "<kafka_topic_name>"
           namespace = "<kafka_topic_namespace>"
@@ -387,12 +412,27 @@ data:
         ### Fedemeter ###
 
         ## Cost Analysis - Current Cost
+        # Send current instance monthly price
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "calculation_price_instance"
           scope = "fedemeter"
           granularity = "3600"
 
+      ## This plugin is for past 24 hours fedemeter metrics
+      [[inputs.alameda_datahub_query]]
+        url = "$DATAHUB_URL"
+        port = "$DATAHUB_PORT"
+        query_start_time_offset = "-24h"
+        query_end_time_offset = "0m"
+        # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
+        # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
+        use_query_timestamp = true
+        cluster_name = "$CLUSTER_NAME"
+
+        ### Fedemeter ###
+
         ## Cost Allocation - Namespace Historical Cost
+        # Summary past 24 hours namespace cost
         [[inputs.alameda_datahub_query.watched_source]] # Cost Analysis config
           measurement = "resource_history_cost_namespace"
           scope = "fedemeter"
@@ -408,6 +448,7 @@ data:
         cluster_name = "$CLUSTER_NAME"
 
         ## Controller
+        # Send the controller recommendation cpu/memory/replicas for next 3 minutes
         [[inputs.alameda_datahub_query.watched_source]] #General Application config
           name = "<general_application_name>"
           namespace = "<general_application_namespace>"
@@ -415,6 +456,7 @@ data:
           scope = "recommendation"
 
         ## Application-aware - Kafka
+        # Send the kafka consumer_group recommendation replicas for next 3 minutes
         [[inputs.alameda_datahub_query.watched_source]]
           name = "<kafka_consumer_group_name>"
           namespace = "<kafka_consumer_group_namespace>"
