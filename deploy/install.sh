@@ -354,6 +354,17 @@ spec:
   clusterName: NeedToBeReplacedByClusterName
 __EOF__
 
+    # Get Datadog agent info (User configuration)
+    get_datadog_agent_info
+
+    if [ "$dd_cluster_name" != "" ]; then
+        kubectl describe alamedascaler --all-namespaces|grep "Cluster Name"|grep -q "$dd_cluster_name"
+        if [ "$?" = "0" ];then
+            # Found at least one alamedascaler. No need to apply alamedascaler for cluster
+            return
+        fi
+    fi
+
     while [ "$monitor_cluster" != "y" ] && [ "$monitor_cluster" != "n" ]
     do
         default="y"
@@ -366,9 +377,6 @@ __EOF__
         display_cluster_scaler_file_location
         return
     fi
-
-    # Get Datadog agent info (User configuration)
-    get_datadog_agent_info
 
     if [ "$dd_namespace" = "" ]; then
         echo -e "\n$(tput setaf 1)Error! Can't find the datadog agent installed namespace.$(tput sgr 0)"
@@ -694,7 +702,7 @@ echo -e "\n$(tput setaf 6)Install Federator.ai operator $tag_number successfully
 alamedaservice_example="alamedaservice_sample.yaml"
 cr_files=( "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
 
-echo -e "\nDownloading alameda CR sample files ..."
+echo -e "\nDownloading Federator.ai CR sample files ..."
 if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/federatorai-operator/${tag_number}/example/${alamedaservice_example} -O; then
     echo -e "\n$(tput setaf 1)Abort, download alamedaservice sample file failed!!!$(tput sgr 0)"
     exit 2
@@ -963,7 +971,7 @@ fi
 
 get_grafana_route $install_namespace
 get_restapi_route $install_namespace
-echo -e "$(tput setaf 6)\nInstall Alameda $tag_number successfully$(tput sgr 0)"
+echo -e "$(tput setaf 6)\nInstall Federator.ai $tag_number successfully$(tput sgr 0)"
 check_previous_alamedascaler
 setup_cluster_alamedascaler
 leave_prog
