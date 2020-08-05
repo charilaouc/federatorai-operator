@@ -28,6 +28,8 @@ data:
         hostname = ""
         omit_hostname = false
         alamedascaler_enable = true
+        datahub_url = "$DATAHUB_URL"
+        datahub_port = "$DATAHUB_PORT"
 
       [[aggregators.basicstats]]
         period = "1m"
@@ -134,8 +136,6 @@ data:
 
       ## This plugin is for future 24 hours prediction
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "24h" #Support s(second),m(minute),h(hour)
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -167,8 +167,6 @@ data:
 
       ## This plugin is for future 7 days prediction
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "168h" #Support s(second),m(minute),h(hour)
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -200,8 +198,6 @@ data:
 
       ## This plugin is for future 30 days prediction
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "720h" #Support s(second),m(minute),h(hour)
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -247,8 +243,6 @@ data:
 
       ## This plugin is for future 1 hour planning
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "1h"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -280,8 +274,6 @@ data:
 
       ## This plugin is for future 6 hours planning
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "6h"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -313,8 +305,6 @@ data:
 
       ## This plugin is for future 24 hours planning
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "24h"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -346,8 +336,6 @@ data:
 
       ## All non-recommendation type metric will use past time, we gather all non-recommendation type metric together.
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "-1m"
         query_end_time_offset = "0m"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -389,8 +377,6 @@ data:
 
       ## This plugin is for past 1 hour fedemeter metrics
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "-1h"
         query_end_time_offset = "0m"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -414,8 +400,6 @@ data:
 
       ## All recommendation type metric will use future time, we gather all recommendation type metric together.
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
         query_start_time_offset = "0m"
         query_end_time_offset = "3m"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
@@ -438,8 +422,6 @@ data:
           scope = "recommendation"
 
       [[outputs.datahub]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
 
       #[[inputs.prometheus_query]]
       #  url = "$PROMETHEUS_URL"
