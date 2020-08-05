@@ -35,34 +35,52 @@ spec:
           description: AlamedaScalerSpec defines the desired state of AlamedaScaler
           properties:
             clusterName:
+              description: target cluster name; the cluster where applications to
+                be managed are running
               type: string
             controllers:
+              description: list of controllers (deployment/deploymentConfig/statefulSet)
+                to be managed
               items:
                 properties:
                   enableExecution:
+                    description: enable Federator.ai autoscaling execution. This flag
+                      is to control the execution by Federator.ai executor. It is
+                      usable only if the application and Federator.ai are running
+                      in the same cluster. In the cases of using Datadog WPA to do
+                      execution or the application is running in a different target
+                      cluster, ‘enableExecution’ is noneffective.
                     type: boolean
                   generic:
+                    description: generic application metadata
                     properties:
                       hpaParameters:
+                        description: HPA autoscaling parameters for generic application
                         properties:
                           maxReplicas:
+                            description: maximum limit of number of replicas
                             format: int32
                             type: integer
                           minReplicas:
+                            description: minimum limit of number of replicas
                             format: int32
                             type: integer
                         type: object
                       target:
+                        description: reference to generic application to be managed
                         properties:
                           kind:
+                            description: controller kind (deployment/deploymentConfig/statefulSet)
                             enum:
                             - Deployment
                             - StatefulSet
                             - DeploymentConfig
                             type: string
                           name:
+                            description: controller name
                             type: string
                           namespace:
+                            description: controller namespace
                             type: string
                         required:
                         - kind
@@ -73,22 +91,31 @@ spec:
                     - target
                     type: object
                   kafka:
+                    description: kafka metadata
                     properties:
                       consumerGroup:
+                        description: reference to kafka consumer group
                         properties:
                           groupId:
+                            description: the name of the consumer group a Kafka consumer
+                              belongs to. It’s the group ID given by Kafka, not the
+                              consumer group deployment name.
                             type: string
                           kind:
+                            description: controller kind of the consumer group
                             enum:
                             - Deployment
                             - StatefulSet
                             - DeploymentConfig
                             type: string
                           name:
+                            description: name of the consumer group
                             type: string
                           namespace:
+                            description: namespace of the consumer group
                             type: string
                           topic:
+                            description: topic name that the consumer group subscribed
                             type: string
                         required:
                         - kind
@@ -97,13 +124,18 @@ spec:
                         - topic
                         type: object
                       exporterNamespace:
+                        description: namespace of kafka broker; namespace of the metrics
+                          service where kafka metrics are read from
                         type: string
                       hpaParameters:
+                        description: HPA autoscaling parameters for kafka
                         properties:
                           maxReplicas:
+                            description: maximum limit of number of replicas
                             format: int32
                             type: integer
                           minReplicas:
+                            description: minimum limit of number of replicas
                             format: int32
                             type: integer
                         type: object
@@ -112,11 +144,13 @@ spec:
                     - exporterNamespace
                     type: object
                   scaling:
+                    description: scaling methods (hpa, predictionOnly)
                     enum:
                     - hpa
                     - predictOnly
                     type: string
                   type:
+                    description: controller type (generic, kafka, nginx)
                     enum:
                     - generic
                     - kafka
