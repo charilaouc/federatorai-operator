@@ -415,6 +415,7 @@ __EOF__
     else
         if [ "$cluster_name" != "" ]; then
             echo -e "$(tput setaf 3)Use \"$cluster_name\" as cluster name and DD_TAGS$(tput sgr 0)"
+            echo -e "$(tput setaf 3)Please remember to set DD_TAGS using this value in your datadog agent setting$(tput sgr 0)"
             sed -i "s|\bclusterName:.*|clusterName: ${cluster_name}|g" $alamedascaler_cluster_filename
         fi
     fi
