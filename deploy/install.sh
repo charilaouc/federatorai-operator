@@ -550,7 +550,7 @@ fi
 alamedaservice_example="alamedaservice_sample.yaml"
 cr_files=( "alamedascaler.yaml" "alamedadetection.yaml" "alamedanotificationchannel.yaml" "alamedanotificationtopic.yaml" )
 
-echo -e "\nDownloading alameda CR sample files ..."
+echo -e "\nDownloading Federator.ai CR sample files ..."
 if ! curl -sL --fail https://raw.githubusercontent.com/containers-ai/federatorai-operator/${tag_number}/example/${alamedaservice_example} -O; then
     echo -e "\n$(tput setaf 1)Abort, download alamedaservice sample file failed!!!$(tput sgr 0)"
     exit 2
@@ -803,7 +803,7 @@ fi
 
 get_grafana_route $install_namespace
 get_restapi_route $install_namespace
-echo -e "$(tput setaf 6)\nInstall Alameda $tag_number successfully$(tput sgr 0)"
+echo -e "$(tput setaf 6)\nInstall Federator.ai $tag_number successfully$(tput sgr 0)"
 leave_prog
 exit 0
 
