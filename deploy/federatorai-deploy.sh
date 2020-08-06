@@ -73,7 +73,7 @@ fi
 while [ "$run_installation" != "y" ] && [ "$run_installation" != "n" ]
 do
     default="y"
-    read -r -p "$(tput setaf 2)Do you want to lunch Federator.ai installation script? [default: $default]: $(tput sgr 0)" run_installation </dev/tty
+    read -r -p "$(tput setaf 2)Do you want to launch Federator.ai installation script? [default: $default]: $(tput sgr 0)" run_installation </dev/tty
     run_installation=${run_installation:-$default}
     run_installation=$(echo "$run_installation" | tr '[:upper:]' '[:lower:]')
 done
