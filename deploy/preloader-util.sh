@@ -5,7 +5,6 @@
 #   This script is created for demo purpose.
 #   Usage:
 #       [-p] # Prepare environment
-#       [-x pod autoscaling method] # Specified hpa or vpa as pod autoscaling method 
 #       [-c] # clean environment for preloader test
 #       [-e] # Enable preloader pod
 #       [-r] # Run preloader
@@ -17,6 +16,8 @@
 #   Standalone options:
 #       [-i] # Install Nginx
 #       [-k] # Remove Nginx
+#       [-t replica number] # Nginx default replica number (default:10) [e.g., -t 5]
+#       [-s enable execution] # Enable(default) or disable execution [e.g., -s false]
 #
 #################################################################################################################
 
@@ -26,7 +27,6 @@ show_usage()
 
     Usage:
         [-p] # Prepare environment
-        [-x pod autoscaling method] # Specified hpa or vpa as pod autoscaling method
         [-c] # clean environment for preloader test
         [-e] # Enable preloader pod
         [-r] # Run preloader
@@ -38,6 +38,8 @@ show_usage()
     Standalone options:
         [-i] # Install Nginx
         [-k] # Remove Nginx
+        [-t replica number] # Nginx default replica number (default:10) [e.g., -t 5]
+        [-s enable execution] # Enable(default) or disable execution [e.g., -s false]
 
 __EOF__
     exit 1
@@ -221,7 +223,7 @@ wait_for_cluster_status_data_ready()
     sleep_interval="20"
     for i in $(seq 1 $repeat_count)
     do
-        kubectl exec $influxdb_pod_name -n $install_namespace -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_cluster_status -execute "select * from pod" 2>/dev/null |grep -q "nginx-app"
+        kubectl exec $influxdb_pod_name -n $install_namespace -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_cluster_status -execute "select * from pod" 2>/dev/null |grep -q "${alamedascaler_name}"
         if [ "$?" != 0 ]; then
             echo "Not ready, keep retrying cluster status..."
             sleep $sleep_interval
@@ -486,7 +488,7 @@ verify_metrics_exist()
     echo -e "\n$(tput setaf 6)Verifying metrics in influxdb ...$(tput sgr 0)"
     influxdb_pod_name="`kubectl get pods -n $install_namespace |grep "alameda-influxdb-"|awk '{print $1}'|head -1`"
     metrics_list=$(kubectl exec $influxdb_pod_name -n $install_namespace -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_metric -execute "show measurements")
-    metrics_num=$(echo "$metrics_list"| egrep "application_cpu|application_memory|cluster_cpu|cluster_memory|container_cpu|container_memory|controller_cpu|controller_memory|namespace_cpu|namespace_memory|node_cpu|node_memory" |wc -l)
+    metrics_num=$(echo "$metrics_list"| egrep "container_cpu|container_memory|namespace_cpu|namespace_memory|node_cpu|node_memory" |wc -l)
 
     echo "metrics_num = $metrics_num"
     if [ "$metrics_num" -lt "12" ]; then
@@ -550,7 +552,7 @@ new_nginx_example()
                 "name": "${nginx_name}"
             },
             "spec": {
-                "replicas": 1,
+                "replicas": ${replica_number},
                 "selector": {
                     "app": "${nginx_name}",
                     "deploymentconfig": "${nginx_name}"
@@ -589,8 +591,8 @@ new_nginx_example()
                                 {
                                     "limits":
                                         {
-                                        "cpu": "150m",
-                                        "memory": "400Mi"
+                                        "cpu": "100m",
+                                        "memory": "200Mi"
                                         },
                                     "requests":
                                         {
@@ -682,7 +684,7 @@ spec:
   selector:
     matchLabels:
       app: ${nginx_name}
-  replicas: 1
+  replicas: ${replica_number}
   template:
     metadata:
       labels:
@@ -693,8 +695,8 @@ spec:
         image: nginx:1.7.9
         resources:
             limits:
-                cpu: "150m"
-                memory: "400Mi"
+                cpu: "100m"
+                memory: "200Mi"
             requests:
                 cpu: "100m"
                 memory: "50Mi"
@@ -751,6 +753,23 @@ __EOF__
     echo "Duration new_nginx_example = $duration" >> $debug_log
 }
 
+get_datadog_agent_info()
+{
+    while read a b c
+    do
+        dd_namespace=$a
+        dd_key=$b
+        dd_api_secret_name=$c
+    done<<<"$(kubectl get daemonset --all-namespaces -o jsonpath='{range .items[*]}{@.metadata.namespace}{"\t"}{range .spec.template.spec.containers[*]}{.env[?(@.name=="DD_API_KEY")].name}{"\t"}{.env[?(@.name=="DD_API_KEY")].valueFrom.secretKeyRef.name}{"\n"}{end}{"\t"}{end}' 2>/dev/null| grep DD_API_KEY | head -1)"
+
+    if [ "$dd_key" = "" ] || [ "$dd_namespace" = "" ] || [ "$dd_api_secret_name" = "" ]; then
+        return
+    fi
+    dd_api_key="`kubectl get secret -n $dd_namespace $dd_api_secret_name -o jsonpath='{.data.api-key}'`"
+    dd_app_key="`kubectl get secret -n $dd_namespace -o jsonpath='{range .items[*]}{.data.app-key}'`"
+    dd_cluster_name="`kubectl describe ds -n $dd_namespace|grep "DD_TAG"|head -1|awk '{print $2}'|cut -d ':' -f2`"
+}
+
 add_alamedascaler_for_nginx()
 {
     start=`date +%s`
@@ -765,19 +784,19 @@ add_alamedascaler_for_nginx()
         kind_type="DeploymentConfig"
     fi
 
-    kubectl get alamedascaler -n ${nginx_ns} 2>/dev/null|grep -q "nginx-alamedascaler"
+    kubectl get alamedascaler ${alamedascaler_name} -n ${install_namespace} >/dev/null 2>&1
     if [ "$?" != "0" ]; then
         cat > ${nginx_alamedascaler_file} << __EOF__
 apiVersion: autoscaling.containers.ai/v1alpha2
 kind: AlamedaScaler
 metadata:
-    name: nginx-alamedascaler
-    namespace: ${nginx_ns}
+    name: ${alamedascaler_name}
+    namespace: ${install_namespace}
 spec:
-    clusterName: ${cluster_name}
+    clusterName: ${dd_cluster_name}
     controllers:
     - type: generic
-      enableExecution: false
+      enableExecution: ${enable_execution}
       scaling: ${autoscaling_method}
       generic:
         target:
@@ -1006,10 +1025,12 @@ disable_preloader_in_alamedaservice()
 
 get_cluster_name()
 {
-    cluster_name=`kubectl get cm cluster-info -n default -o yaml|grep uid|awk '{print $2}'`
+    cluster_name=`kubectl get cm cluster-info -n default -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
     if [ "$cluster_name" = "" ];then
-        echo -e "\n$(tput setaf 1)Error! Failed to get cluster name from cluster-info configmap.$(tput sgr 0)"
-        exit 3
+        cluster_name=`kubectl get cm cluster-info -n kube-public -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
+        if [ "$cluster_name" = "" ];then
+            cluster_name=`kubectl get cm cluster-info -n kube-service-catalog’ -o yaml 2>/dev/null|grep uid|awk '{print $2}'`
+        fi
     fi
 }
 
@@ -1049,10 +1070,18 @@ while getopts "f:x:ecpvrdhikn:" o; do
             future_mode_enabled="y"
             f_arg=${OPTARG}
             ;;
-        x)
-            autoscaling_specified="y"
-            x_arg=${OPTARG}
+        t)
+            replica_num_specified="y"
+            t_arg=${OPTARG}
             ;;
+        s)
+            enable_execution_specified="y"
+            s_arg=${OPTARG}
+            ;;
+        # x)
+        #     autoscaling_specified="y"
+        #     x_arg=${OPTARG}
+        #     ;;
         n)
             nginx_name_specified="y"
             n_arg=${OPTARG}
@@ -1081,14 +1110,35 @@ if [ "$future_mode_enabled" = "y" ]; then
     esac
 fi
 
-if [ "$autoscaling_specified" = "y" ]; then
-    autoscaling_method=$x_arg
-    if [ "$autoscaling_method" != "vpa" ] && [ "$autoscaling_method" != "hpa" ]; then
-        echo -e "\n$(tput setaf 1) Pod autoscaling method needs to be \"vpa\" or \"hpa\".$(tput sgr 0)" && show_usage
+if [ "$replica_num_specified" = "y" ]; then
+    replica_number=$t_arg
+    case $replica_number in
+        ''|*[!0-9]*) echo -e "\n$(tput setaf 1)replica number needs to be integer.$(tput sgr 0)" && show_usage ;;
+        *) ;;
+    esac
+else
+    # default replica
+    replica_number="10"
+fi
+
+if [ "$enable_execution_specified" = "y" ]; then
+    enable_execution=$s_arg
+    if [ "$enable_execution" != "true" ] && [ "$enable_execution" != "false" ]; then
+        echo -e "\n$(tput setaf 1) Enable execution value needs to be \"true\" or \"false\".$(tput sgr 0)" && show_usage
     fi
 else
-    autoscaling_method="hpa"
+    enable_execution="true"
 fi
+
+# if [ "$autoscaling_specified" = "y" ]; then
+#     autoscaling_method=$x_arg
+#     if [ "$autoscaling_method" != "vpa" ] && [ "$autoscaling_method" != "hpa" ]; then
+#         echo -e "\n$(tput setaf 1) Pod autoscaling method needs to be \"vpa\" or \"hpa\".$(tput sgr 0)" && show_usage
+#     fi
+# else
+#     autoscaling_method="hpa"
+# fi
+autoscaling_method="hpa"
 
 if [ "$nginx_name_specified" = "y" ]; then
     nginx_name=$n_arg
@@ -1110,7 +1160,7 @@ echo "Checking environment version..."
 check_version
 echo "...Passed"
 
-install_namespace="`kubectl get pods --all-namespaces |grep "alameda-ai-"|awk '{print $1}'|head -1`"
+install_namespace="`kubectl get pods --all-namespaces |grep "alameda-datahub-"|awk '{print $1}'|head -1`"
 
 if [ "$install_namespace" = "" ];then
     echo -e "\n$(tput setaf 1)Error! Please Install Federatorai before running this script.$(tput sgr 0)"
@@ -1126,6 +1176,7 @@ fi
 
 file_folder="/tmp/preloader"
 nginx_ns="nginx-preloader-sample"
+alamedascaler_name="nginx-alamedascaler"
 
 debug_log="debug.log"
 
@@ -1135,7 +1186,15 @@ current_location=`pwd`
 cd $file_folder
 echo "Receiving command '$0 $@'" >> $debug_log
 
-get_cluster_name
+get_datadog_agent_info
+if [ "$dd_cluster_name" = "" ]; then
+    echo -e "$(tput setaf 1)Error! Failed to find DD_TAGS setting in your datadog agent.$(tput sgr 0)"
+    echo -e "\nYou can use command \"kubectl get cm cluster-info -n <namespace> --template={{.metadata.uid}}\" to get cluster name"
+    echo -e "Where '<namespace>' is either 'default' or 'kube-public' or 'kube-service-catalog'."
+    echo -e "If multiple cluster-info exist, pick either one would work as long as you always use the same one to configure Datadog Agent(DD_TAGS)/Cluster Agent/WPA and other data source agents."
+else
+    echo -e "$(tput setaf 3)Use \"$dd_cluster_name\" as cluster name.$(tput sgr 0)"
+fi
 
 if [ "$prepare_environment" = "y" ]; then
     delete_all_alamedascaler
