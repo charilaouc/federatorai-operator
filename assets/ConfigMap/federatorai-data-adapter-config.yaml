@@ -420,10 +420,8 @@ data:
 
       ## This plugin is for past 24 hours fedemeter metrics
       [[inputs.alameda_datahub_query]]
-        url = "$DATAHUB_URL"
-        port = "$DATAHUB_PORT"
-        query_start_time_offset = "-24h"
-        query_end_time_offset = "0m"
+        query_start_time_offset = "-25h"
+        query_end_time_offset = "-1h"
         # If use_query_timestamp is true, agent will use queried timestamp from database as timestamp of the metric.
         # If use_query_timestamp is false, agent will use current timestamp as timestamp of the metric.
         use_query_timestamp = true
