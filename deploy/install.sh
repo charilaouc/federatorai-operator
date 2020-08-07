@@ -373,7 +373,7 @@ __EOF__
         monitor_cluster=$(echo "$monitor_cluster" | tr '[:upper:]' '[:lower:]')
     done
 
-    if [ "monitor_cluster" = "n" ]; then
+    if [ "$monitor_cluster" = "n" ]; then
         display_cluster_scaler_file_location
         return
     fi
