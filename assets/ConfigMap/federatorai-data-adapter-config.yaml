@@ -34,6 +34,10 @@ data:
         ## set collect_metadata_only=true to only collect resource metadata
         collect_metadata_only = false
 
+        ## set collect_metadata_only=false to collect resource metadata and metrics
+        ## set collect_metadata_only=true to only collect resource metadata
+        collect_metadata_only = false
+
       [[aggregators.basicstats]]
         period = "1m"
         granularity = "1m"
@@ -105,13 +109,15 @@ data:
         ## Fedemeter ##
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.prediction.namespace.cost"
-            expression = "sum(sum_over_time(federatorai_prediction_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
+            # Scale the metrics if the metrics count is not enough
+            expression = "sum(sum_over_time(federatorai_prediction_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider) / count(federatorai_prediction_namespace_cost)by(kube_cluster,kube_namespace,prediction_window,provider) * 30"
             origin_information_from = "federatorai_prediction_namespace_cost"
             fields = ["value"]
 
         [[aggregators.federatorai.metric]]
             measurement_name = "federatorai.cost_analysis.namespace.cost"
-            expression = "sum(sum_over_time(federatorai_cost_analysis_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider)"
+            # Send metrics if count is equals to 24
+            expression = "sum(sum_over_time(federatorai_cost_analysis_namespace_cost[1m]))by(kube_cluster,kube_namespace,prediction_window,provider) and count(federatorai_cost_analysis_namespace_cost)by(kube_cluster,kube_namespace,prediction_window,provider) == 24"
             origin_information_from = "federatorai_cost_analysis_namespace_cost"
             fields = ["value"]
 
