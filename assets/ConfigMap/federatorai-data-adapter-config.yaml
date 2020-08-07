@@ -30,6 +30,9 @@ data:
         alamedascaler_enable = true
         datahub_url = "$DATAHUB_URL"
         datahub_port = "$DATAHUB_PORT"
+        ## set collect_metadata_only=false to collect resource metadata and metrics
+        ## set collect_metadata_only=true to only collect resource metadata
+        collect_metadata_only = false
 
       [[aggregators.basicstats]]
         period = "1m"
