@@ -47,7 +47,7 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "f1734ad21bdc8e85f1986e1b6276c36e345cf960"
+  revision = "485f9971a0430a3d924d8c82087a01b42e721cd0"
 
 [[projects]]
   branch = "4.3-husky"
