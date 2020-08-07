@@ -486,14 +486,29 @@ verify_metrics_exist()
 {
     start=`date +%s`
     echo -e "\n$(tput setaf 6)Verifying metrics in influxdb ...$(tput sgr 0)"
+    metricsArray=("container_cpu" "container_memory" "namespace_cpu" "namespace_memory" "node_cpu" "node_memory")
+    metrics_required_number=`echo "${#metricsArray[@]}"`
     influxdb_pod_name="`kubectl get pods -n $install_namespace |grep "alameda-influxdb-"|awk '{print $1}'|head -1`"
     metrics_list=$(kubectl exec $influxdb_pod_name -n $install_namespace -- influx -ssl -unsafeSsl -precision rfc3339 -username admin -password adminpass -database alameda_metric -execute "show measurements")
-    metrics_num=$(echo "$metrics_list"| egrep "container_cpu|container_memory|namespace_cpu|namespace_memory|node_cpu|node_memory" |wc -l)
+    metrics_num_found="0"
+    for i in $(seq 0 $((metrics_required_number-1)))
+    do
+        echo $metrics_list|grep -q "${metricsArray[$i]}"
+        if [ "$?" = "0" ]; then
+            metrics_num_found=$((metrics_num_found+1))
+        fi
+    done
 
-    echo "metrics_num = $metrics_num"
-    if [ "$metrics_num" -lt "12" ]; then
+    if [ "$metrics_num_found" -lt "$metrics_required_number" ]; then
         echo -e "\n$(tput setaf 1)Error! metrics in alameda_metric is not complete.$(tput sgr 0)"
+        echo "=============================="
+        echo "Required metrics number: $metrics_required_number"
+        echo "Required metrics: ${metricsArray[*]}"
+        echo "=============================="
+        echo "Required metrics found = $metrics_num_found"
+        echo "Current metrics:"
         echo "$metrics_list"
+        echo "=============================="
         leave_prog
         exit 8
     fi
