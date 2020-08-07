@@ -63,61 +63,90 @@ var ControllerKindMap = map[ControllerKind]entities.Kind{
 }
 
 type Target struct {
-	Namespace string         `json:"namespace"`
-	Name      string         `json:"name"`
-	Kind      ControllerKind `json:"kind"`
+	// controller namespace
+	Namespace string `json:"namespace"`
+	// controller name
+	Name string `json:"name"`
+	// controller kind (deployment/deploymentConfig/statefulSet)
+	Kind ControllerKind `json:"kind"`
 }
 
 type GenericHPAParameters struct {
+	// minimum limit of number of replicas
 	// +optional
 	MinReplicas *int32 `json:"minReplicas,omitempty"`
+	// maximum limit of number of replicas
 	// +optional
 	MaxReplicas *int32 `json:"maxReplicas,omitempty"`
 }
 
 type Generic struct {
+	// reference to generic application to be managed
 	Target Target `json:"target"`
+	// HPA autoscaling parameters for generic application
 	// +optional
 	HpaParameters *GenericHPAParameters `json:"hpaParameters,omitempty"`
 }
 
 type ConsumerGroup struct {
-	Namespace string         `json:"namespace"`
-	Name      string         `json:"name"`
-	Kind      ControllerKind `json:"kind"`
-	Topic     string         `json:"topic"`
+	// namespace of the consumer group
+	Namespace string `json:"namespace"`
+	// name of the consumer group
+	Name string `json:"name"`
+	// controller kind of the consumer group
+	Kind ControllerKind `json:"kind"`
+	// topic name that the consumer group subscribed
+	Topic string `json:"topic"`
+	// the name of the consumer group a Kafka consumer belongs to.
+	// It’s the group ID given by Kafka, not the consumer group deployment name.
 	// +optional
 	GroupId *string `json:"groupId"`
 }
 
 type KafkaHPAParameters struct {
+	// minimum limit of number of replicas
 	// +optional
 	MinReplicas *int32 `json:"minReplicas,omitempty"`
+	// maximum limit of number of replicas
 	// +optional
 	MaxReplicas *int32 `json:"maxReplicas,omitempty"`
 }
 
 type Kafka struct {
-	ConsumerGroup    ConsumerGroup `json:"consumerGroup"`
-	ExporterNamespce string        `json:"exporterNamespace"`
+	// reference to kafka consumer group
+	ConsumerGroup ConsumerGroup `json:"consumerGroup"`
+	// namespace of kafka broker; namespace of the metrics service where kafka metrics are read from
+	ExporterNamespce string `json:"exporterNamespace"`
+	// HPA autoscaling parameters for kafka
 	// +optional
 	HpaParameters *KafkaHPAParameters `json:"hpaParameters,omitempty"`
 }
 
 type Controller struct {
+	// enable Federator.ai autoscaling execution.
+	// This flag is to control the execution by Federator.ai executor.
+	// It is usable only if the application and Federator.ai are running in the same cluster.
+	// In the cases of using Datadog WPA to do execution or the application is running in a different target cluster,
+	// ‘enableExecution’ is noneffective.
 	// +optional
-	EnableExecution *bool       `json:"enableExecution,omitempty"`
-	Type            TargetType  `json:"type"`
-	Scaling         ScalingType `json:"scaling"`
+	EnableExecution *bool `json:"enableExecution,omitempty"`
+	// controller type (generic, kafka, nginx)
+	Type TargetType `json:"type"`
+	// scaling methods (hpa, predictionOnly)
+	Scaling ScalingType `json:"scaling"`
+	// generic application metadata
 	// +optional
 	Generic *Generic `json:"generic,omitempty"`
+	// kafka metadata
 	// +optional
 	Kafka *Kafka `json:"kafka,omitempty"`
 }
 
 // AlamedaScalerSpec defines the desired state of AlamedaScaler
 type AlamedaScalerSpec struct {
+	// target cluster name; the cluster where applications to be managed are running
 	ClusterName string `json:"clusterName"`
+	// list of controllers (deployment/deploymentConfig/statefulSet) to be managed
 	// +optional
 	Controllers []Controller `json:"controllers,omitempty"`
 }

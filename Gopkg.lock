@@ -35,7 +35,7 @@
 
 [[projects]]
   branch = "4.3-husky"
-  digest = "1:0527e9cad92eb2321e04d45452518849a654235ebbbf2fa63d2a2d371a284e7b"
+  digest = "1:3cc90843bd958b0c94357c5cc90ae8c6ba77825f091c03cc77052612250b70fc"
   name = "github.com/containers-ai/alameda"
   packages = [
     "datahub/pkg/entities",
@@ -47,7 +47,7 @@
     "pkg/utils/log",
   ]
   pruneopts = "UT"
-  revision = "d458ea4f9905ee18e3ce069a7510389efb03fc34"
+  revision = "f1734ad21bdc8e85f1986e1b6276c36e345cf960"
 
 [[projects]]
   branch = "4.3-husky"
